@@ -79,37 +79,38 @@ function guidanceList(items){
 }
 
 function productMockup(){
-  const colourCount = Object.values(DS.color).reduce((n, r) => n + Object.keys(r.stops).length, 0);
   return `<article class="product-mockup-card" aria-label="RIB DesignOS product preview">
     <div class="mockup-toolbar">
       <span></span><span></span><span></span>
       <b>RIB DesignOS</b>
     </div>
-    <div class="mockup-grid">
-      <section class="mockup-foundation-panel">
-        <div class="mockup-section-head">
-          <span class="mockup-badge">Foundations</span>
-          <code>tokens.js</code>
+    <div class="mockup-peek">
+      <section class="peek-card peek-primary">
+        <span class="mockup-badge">Foundations</span>
+        <div class="peek-swatches" aria-hidden="true">
+          <span style="--c:#E3530F"></span>
+          <span style="--c:#BE2A2A"></span>
+          <span style="--c:#202428"></span>
+          <span style="--c:#EFF1F6"></span>
         </div>
-        <div class="mockup-token-list">
-          <span><b>Colours</b><i style="--w:92%"></i><em>${colourCount}</em></span>
-          <span><b>Typography</b><i style="--w:74%"></i><em>${DS.type.length}</em></span>
-          <span><b>Spacing</b><i style="--w:58%"></i><em>${DS.space.length}</em></span>
-          <span><b>Radius</b><i style="--w:44%"></i><em>${DS.radius.length}</em></span>
-        </div>
-        <div class="mockup-code-line"><span>DsText.headingMediumSemibold</span></div>
       </section>
-      <section class="mockup-panel mockup-market-panel">
-        <span class="mockup-badge">Pilot market</span>
-        <h3>RIB Canada</h3>
-        <p>Foundations, components and Flutter tokens stay connected in one living workspace.</p>
-        <div class="mockup-list">
-          <span><i class="ti ti-palette"></i> Colour ramps</span>
-          <span><i class="ti ti-components"></i> Component states</span>
-          <span><i class="ti ti-brand-flutter"></i> Flutter export</span>
+      <section class="peek-card peek-type">
+        <span class="peek-label">Typography</span>
+        <strong>Aa</strong>
+        <p>Mulish · 16 / 24</p>
+      </section>
+      <section class="peek-card peek-component">
+        <span class="peek-label">Component</span>
+        <button class="peek-button" type="button">Continue</button>
+      </section>
+      <section class="peek-card peek-pattern">
+        <span class="peek-label">Pattern</span>
+        <div class="peek-steps" aria-hidden="true">
+          <span></span><span></span><span></span>
         </div>
       </section>
     </div>
+    <div class="mockup-caption">A quiet look inside the system.</div>
   </article>`;
 }
 
@@ -144,12 +145,11 @@ function renderHome(){
         <span class="dh-site">Pilot workspace</span>
       </div>
       <div class="dh-title-row">
-        <h1 class="hero-title" data-reveal-words>Design once. Ship every geography.</h1>
+        <h1 class="hero-title" data-reveal-words>DesignOS for RIB Canada.</h1>
       </div>
-      <p class="hero-desc">The living hub for international retail net banking revamps: foundations, component states, product patterns and Flutter tokens in one calm operating system.</p>
+      <p class="hero-desc">A calm home for foundations, components and patterns.</p>
       <div class="hero-foot">
-        <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/c/button">Explore components <i class="ti ti-arrow-right"></i></button>
-        <button class="ds-btn secondary md" data-go="#/f/colors">View foundations</button>
+        <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/f/colors">Explore the system <i class="ti ti-arrow-right"></i></button>
       </div>
     </div>
     ${productMockup()}
@@ -348,7 +348,7 @@ function renderColors(){
       </div>
       <div class="colour-gradient-card button-stroke-card">
         <div><strong>Button stroke gradient</strong><code>DsColors.buttonStroke</code><small>${esc(DS.gradient.buttonStroke.note)}</small></div>
-        <span>linear-gradient(180deg, rgba(255,255,255,.50), rgba(255,255,255,0))</span>
+        <span>1px inside · linear-gradient(180deg, #F4B094, #E8692E, #D44500)</span>
       </div>
     </div>
   </section>`;
@@ -608,10 +608,12 @@ function dartTokens(){
   s += '  static const Gradient buttonPrimaryFill = LinearGradient(\n';
   s += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
   s += '    colors: [Color(0x1FFFFFFF), Color(0x00FFFFFF)],\n  );\n\n';
-  s += '  // Button stroke gradient — 1px inside stroke at 50%\n';
+  s += '  // Button stroke gradient — visible peach-to-orange shell\n';
+  s += '  static const double buttonStrokeWidth = 1;\n';
   s += '  static const Gradient buttonStroke = LinearGradient(\n';
   s += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
-  s += '    colors: [Color(0x80FFFFFF), Color(0x00FFFFFF)],\n  );\n}\n\n';
+  s += '    colors: [Color(0xFFF4B094), Color(0xFFE8692E), Color(0xFFD44500)],\n';
+  s += '    stops: [0, .45, 1],\n  );\n}\n\n';
   s += 'class DsSpacing {\n  DsSpacing._();\n\n';
   DS.space.forEach(t => { s += '  static const double ' + t.dart + ' = ' + t.px + '; // ' + t.use + '\n'; });
   s += '}\n\nclass DsRadius {\n  DsRadius._();\n\n';
@@ -766,15 +768,24 @@ class DsTheme {
 class DsButtonDecorations {
   DsButtonDecorations._();
 
-  static final ShapeDecoration primaryDefault = ShapeDecoration(
+  static final ShapeDecoration primaryStrokeShell = ShapeDecoration(
+    gradient: DsColors.buttonStroke,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(DsRadius.md),
+    ),
+  );
+
+  static final ShapeDecoration primaryFillBase = ShapeDecoration(
     color: DsColors.buttonPrimaryFillBase,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(DsRadius.md - DsColors.buttonStrokeWidth),
+    ),
+  );
+
+  static final ShapeDecoration primaryFillOverlay = ShapeDecoration(
     gradient: DsColors.buttonPrimaryFill,
     shape: RoundedRectangleBorder(
-      side: BorderSide(
-        width: 1,
-        color: Colors.white.withValues(alpha: 0.50),
-      ),
-      borderRadius: BorderRadius.circular(DsRadius.md),
+      borderRadius: BorderRadius.circular(DsRadius.md - DsColors.buttonStrokeWidth),
     ),
   );
 }

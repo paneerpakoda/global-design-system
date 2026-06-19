@@ -100,39 +100,92 @@ function renderInputVariantGrid(){
   return `<div class="input-variant-grid">${INPUT_FIELD_VARIANTS.map(renderInputVariantCard).join('')}</div>`;
 }
 
+const BUTTON_TYPES = [
+  { key: 'primary', title: 'Primary', className: 'primary', note: 'Filled high-emphasis action.' },
+  { key: 'outline', title: 'Outline', className: 'secondary-outline', note: 'Outlined alternative action.' },
+  { key: 'secondary', title: 'Secondary', className: 'secondary-text', sizes: ['sm'], note: 'Text-style action. Figma specifies this as a compact 16px-height button.' },
+  { key: 'pastel', title: 'Pastel', className: 'secondary-pastel', note: 'Soft filled secondary action.' },
+  { key: 'white', title: 'White', className: 'secondary-white', onBrand: true, note: 'White action for brand, image, or dark surfaces.' },
+  { key: 'destructive-outline', title: 'Destructive - Outlined', className: 'destructive-secondary', note: 'Outlined destructive action.' },
+  { key: 'destructive-filled', title: 'Destructive - Filled', className: 'destructive-primary', note: 'Filled destructive confirmation.' }
+];
+
+const BUTTON_SIZES = [
+  { key: 'lg', label: 'Large', figma: '44px high' },
+  { key: 'sm', label: 'Small', figma: '36px high' },
+  { key: 'xs', label: 'X-Small', figma: '28px high' }
+];
+
+const BUTTON_STATES = [
+  { key: 'default', label: 'Active' },
+  { key: 'hover', label: 'Hover', className: 'is-hover' },
+  { key: 'focus', label: 'Focus', className: 'is-focus' },
+  { key: 'disabled', label: 'Disabled', disabled: true }
+];
+
+const BUTTON_ICONS = [
+  { key: 'none', label: 'No Icon' },
+  { key: 'left', label: 'Left', before: '<i class="ti ti-plus"></i>' },
+  { key: 'right', label: 'Right', after: '<i class="ti ti-arrow-right"></i>' }
+];
+
+function buttonLabel(type, icon){
+  if(type.key === 'destructive-outline' || type.key === 'destructive-filled') return 'Delete';
+  if(type.key === 'secondary') return icon.key === 'none' ? 'Edit' : 'Edit details';
+  return 'Continue';
+}
+
+function renderButton(type, size, state, icon){
+  const classes = ['ds-btn', type.className, size.key, state.className].filter(Boolean).join(' ');
+  const label = buttonLabel(type, icon);
+  return `<button class="${classes}"${state.disabled ? ' disabled' : ''}>${icon.before ? icon.before + ' ' : ''}${label}${icon.after ? ' ' + icon.after : ''}</button>`;
+}
+
+function renderButtonMatrix(){
+  return `<div class="button-matrix">
+    <div class="button-matrix-head">
+      <span>Type / Size / Icon</span>
+      ${BUTTON_STATES.map(state => `<span>${state.label}</span>`).join('')}
+    </div>
+    ${BUTTON_TYPES.map(type => {
+      const sizes = BUTTON_SIZES.filter(size => !type.sizes || type.sizes.includes(size.key));
+      return `<section class="button-type-section${type.onBrand ? ' is-onbrand' : ''}">
+        <header>
+          <h3>${type.title}</h3>
+          <p>${type.note}</p>
+        </header>
+        ${sizes.map(size => `<div class="button-size-block">
+          <div class="button-size-label"><b>${size.label}</b><span>${size.figma}</span></div>
+          <div class="button-size-rows">
+            ${BUTTON_ICONS.map(icon => `<div class="button-matrix-row">
+              <span class="button-icon-label">${icon.label}</span>
+              ${BUTTON_STATES.map(state => `<div class="button-cell">${renderButton(type, size, state, icon)}</div>`).join('')}
+            </div>`).join('')}
+          </div>
+        </div>`).join('')}
+      </section>`;
+    }).join('')}
+  </div>`;
+}
+
 const COMPONENTS = {
 
   button: {
-    title: 'Buttons', group: 'Actions', status: 'stable', version: '1.3', updated: '18 Jun 2026',
+    title: 'Buttons', group: 'Actions', status: 'stable', version: '1.4', updated: '18 Jun 2026',
     desc: 'Buttons trigger clear actions across web and mobile. Use one primary action per decision area, keep labels verb-first, and reserve destructive styles for actions that remove, cancel or permanently change customer data.',
     sections: [
-      { title: 'Variant architecture',
-        note: 'Primary and destructive primary are the only filled high-emphasis actions. Secondary styles handle alternatives, Tertiary is for quiet local actions.',
-        html: `<div class="button-variant-grid">
-          <article class="button-variant-card"><span>Primary</span><button class="ds-btn primary lg">Continue</button><p>Main forward action. Use once per screen region.</p></article>
-          <article class="button-variant-card"><span>Destructive primary</span><button class="ds-btn destructive-primary lg">Delete</button><p>Final destructive confirmation after context is clear.</p></article>
-          <article class="button-variant-card"><span>Secondary / Outline</span><button class="ds-btn secondary-outline lg">Continue</button><p>Parallel action with visible boundary and lower emphasis.</p></article>
-          <article class="button-variant-card"><span>Secondary / Pastel</span><button class="ds-btn secondary-pastel lg">Continue</button><p>Soft alternative on white or cool-grey surfaces.</p></article>
-          <article class="button-variant-card is-onbrand"><span>Secondary / White</span><button class="ds-btn secondary-white lg">Continue</button><p>Translucent white action for brand or dark image surfaces.</p></article>
-          <article class="button-variant-card"><span>Destructive secondary</span><button class="ds-btn destructive-secondary lg">Remove</button><p>Destructive alternative before final confirmation.</p></article>
-          <article class="button-variant-card"><span>Tertiary</span><button class="ds-btn tertiary lg">Skip for now</button><p>Low-emphasis action, helper action or inline escape.</p></article>
-        </div>` },
-      { title: 'Web buttons',
-        note: 'Web buttons keep compact vertical rhythm. Minimum width is 120px for every standalone button.',
-        html: `<div class="button-size-panel">
-          <div class="button-size-row"><span><b>Large</b><small>40px high · 14/16 text · default web action</small></span><button class="ds-btn primary lg">Continue</button><button class="ds-btn secondary-outline lg"><i class="ti ti-plus"></i> Continue</button><button class="ds-btn secondary-outline lg">Continue <i class="ti ti-arrow-right"></i></button></div>
-          <div class="button-size-row"><span><b>Small</b><small>36px high · 12/16 text · cards, tables, filters</small></span><button class="ds-btn primary sm">Continue</button><button class="ds-btn secondary-pastel sm"><i class="ti ti-plus"></i> Continue</button><button class="ds-btn destructive-secondary sm">Remove</button></div>
-          <div class="button-size-row"><span><b>X-Small</b><small>28px high · 12/16 text · dense toolbars only</small></span><button class="ds-btn primary xs">Continue</button><button class="ds-btn secondary-outline xs"><i class="ti ti-plus"></i> Continue</button><button class="ds-btn tertiary xs">Continue <i class="ti ti-arrow-right"></i></button></div>
-        </div>` },
+      { title: 'Figma component structure',
+        note: 'Matches the Components RIB button page: Type sections, Size groups, Icon rows, and State columns. The Figma file labels the default column as active.',
+        html: renderButtonMatrix() },
       { title: 'Figma anatomy',
-        note: 'The primary default state follows the Figma button anatomy: 356px reference width, 36px container, Primary Orange 100 base fill, 12% white linear overlay, 1px white 50% inside stroke, 12px radius, and 12/16 Mulish semibold text.',
+        note: 'The primary default state follows the Figma button anatomy: 356px reference width, 36px container, Primary Orange 100 base fill, 12% white linear overlay, a visible gradient stroke shell, 12px radius, and 12/16 Mulish semibold text.',
         html: `<div class="button-spec-card">
           <div class="button-spec-preview"><button class="ds-btn primary sm figma-default" style="width:min(356px,100%)">Continue</button></div>
           <div class="shape-token-table">
             <div class="shape-token-head"><span>Property</span><span>Value</span><span>Code reference</span></div>
             <div class="shape-token-row"><b>Width</b><code>356px · min 120px</code><span>Container(width: 356) inside BoxConstraints(minWidth: 120).</span></div>
             <div class="shape-token-row"><b>Fill</b><code>DsColors.buttonPrimaryFill</code><span>Primary Orange 100 base with a white-to-transparent linear overlay at 12%.</span></div>
-            <div class="shape-token-row"><b>Stroke</b><code>DsColors.buttonStroke · 1px</code><span>Inside stroke: white-to-transparent linear gradient at 50%.</span></div>
+            <div class="shape-token-row"><b>Stroke</b><code>DsColors.buttonStroke · 1px inside</code><span>Peach-to-orange gradient rim, strongest at the top and resolving into the fill at the bottom.</span></div>
             <div class="shape-token-row"><b>Min width</b><code>120px</code><span>BoxConstraints(minWidth: 120)</span></div>
             <div class="shape-token-row"><b>Height</b><code>36px</code><span>Container(height: 36)</span></div>
             <div class="shape-token-row"><b>Padding</b><code>12px / 10px</code><span>EdgeInsets.symmetric(horizontal: 12, vertical: 10)</span></div>
@@ -156,29 +209,18 @@ const COMPONENTS = {
             <button class="ds-btn destructive-secondary sm mobile block">Remove</button>
           </article>
         </div>` },
-      { title: 'States',
-        note: 'Define default, hover, focus and disabled for every variant. Hover is web-only; focus must be visible for keyboard and assisted-input users.',
-        html: `<div class="button-state-table">
-          <div class="button-state-head"><span>Variant</span><span>Default</span><span>Hover</span><span>Focus</span><span>Disabled</span></div>
-          ${['primary','secondary-outline','secondary-pastel','secondary-white','destructive-primary','destructive-secondary','tertiary'].map(v => `<div class="button-state-row">
-            <b>${v.replace('-', ' ')}</b>
-            <button class="ds-btn ${v} sm">Continue</button>
-            <button class="ds-btn ${v} sm is-hover">Continue</button>
-            <button class="ds-btn ${v} sm is-focus">Continue</button>
-            <button class="ds-btn ${v} sm" disabled>Continue</button>
-          </div>`).join('')}
-        </div>` },
-      { title: 'Icon placement',
-        note: 'Icons are optional. Use a left icon when it identifies the action, and a right icon when it implies forward movement or disclosure.',
-        html: `<div class="canvas button-icon-demo">
-          <button class="ds-btn primary lg">Continue</button>
-          <button class="ds-btn primary lg"><i class="ti ti-plus"></i> Continue</button>
-          <button class="ds-btn primary lg">Continue <i class="ti ti-arrow-right"></i></button>
+      { title: 'Secondary state rule',
+        note: 'Secondary is a text-style button in the RIB file. Orange100 states are shown in the matrix; other colour variants follow the same rule using the next darker colour for hover and focus, while disabled stays Grey110.',
+        html: `<div class="button-rule-card">
+          <button class="ds-btn secondary-text sm">Edit</button>
+          <button class="ds-btn secondary-text sm is-hover">Edit</button>
+          <button class="ds-btn secondary-text sm is-focus">Edit</button>
+          <button class="ds-btn secondary-text sm" disabled>Edit</button>
         </div>` }
     ],
     props: [
       ['label','String','required','Button text. Sentence case, verb first.'],
-      ['variant','DsButtonVariant','primary','primary · destructivePrimary · secondaryOutline · secondaryPastel · secondaryWhite · destructiveSecondary · tertiary'],
+      ['variant','DsButtonVariant','primary','primary · outline · secondary · pastel · white · destructiveOutline · destructiveFilled'],
       ['size','DsButtonSize','large','large · small · xSmall'],
       ['platform','DsButtonPlatform','web','web · mobile. Mobile increases height and defaults expanded.'],
       ['leadingIcon','IconData?','null','Optional icon before the label.'],
@@ -189,45 +231,66 @@ const COMPONENTS = {
     ],
     flutter: `ConstrainedBox(
   constraints: BoxConstraints(minWidth: 120),
-  child: Container(
+  child: SizedBox(
     width: 356,
     height: 36,
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    decoration: ShapeDecoration(
-      color: DsColors.buttonPrimaryFillBase,
-      gradient: DsColors.buttonPrimaryFill,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          width: 1,
-          color: Colors.white.withValues(alpha: 0.50),
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      spacing: 8,
+    child: Stack(
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 4,
-          children: [
-            Text(
-              'Continue',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontFamily: 'Mulish',
-                fontWeight: FontWeight.w600,
-                height: 1.33,
-                letterSpacing: 0.25,
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: DsButtonDecorations.primaryStrokeShell,
+          ),
+        ),
+        Positioned.fill(
+          child: Padding(
+            padding: EdgeInsets.all(DsColors.buttonStrokeWidth),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                12 - DsColors.buttonStrokeWidth,
+              ),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: DsButtonDecorations.primaryFillBase,
+                    ),
+                  ),
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: DsButtonDecorations.primaryFillOverlay,
+                    ),
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 8,
+                        children: [
+                          Text(
+                            'Continue',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontFamily: 'Mulish',
+                              fontWeight: FontWeight.w600,
+                              height: 1.33,
+                              letterSpacing: 0.25,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ],
     ),

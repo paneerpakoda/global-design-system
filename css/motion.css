@@ -2,7 +2,8 @@
    ICICI Global DS — app shell motion & typeface
    Unlumen-inspired polish applied to the DESIGNOS HUB ONLY
    (sidebar, page transitions, home). The DS components stay
-   motion-free and Flutter-faithful — nothing here targets ds-* .
+   motion-free and Flutter-faithful; this file only guards their
+   documented Mulish typeface.
    Colour values are never introduced; brand tokens only.
    Motion is deliberately restrained — tilt + magnetic pull are
    kept very subtle on purpose.
@@ -24,7 +25,21 @@
    what's "documented" always renders in the real product font.
    ------------------------------------------------------------ */
 body{font-family:var(--app-font)}
-.canvas, .sb-preview, .ds-phone, .type-specimen, .type-row .type-sample{font-family:var(--font)}
+.canvas,
+.sb-preview,
+.ds-phone,
+.type-specimen,
+.type-row .type-sample,
+[class^="ds-"],
+[class*=" ds-"],
+[class^="ifield"],
+[class*=" ifield"]{font-family:var(--font)}
+
+:where([class^="ds-"],[class*=" ds-"],[class^="ifield"],[class*=" ifield"])
+  :where(button,input,textarea,select){font-family:var(--font)}
+
+.cta-band-light .ds-btn.primary,
+.cta-band-light .ds-btn.secondary{font-family:var(--font)}
 
 /* ------------------------------------------------------------
    Respect reduced motion.

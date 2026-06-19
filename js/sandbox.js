@@ -10,7 +10,7 @@ const SANDBOX = {
     label: 'Button',
     controls: [
       { key:'text',    label:'Label',        type:'text',   value:'Send money' },
-      { key:'variant', label:'Variant',      type:'select', options:['primary','destructive-primary','secondary-outline','secondary-pastel','secondary-white','destructive-secondary','tertiary'], value:'primary' },
+      { key:'variant', label:'Variant',      type:'select', options:['primary','secondary-outline','secondary-text','secondary-pastel','secondary-white','destructive-secondary','destructive-primary'], value:'primary' },
       { key:'size',    label:'Size',         type:'select', options:['lg','sm','xs'], value:'lg' },
       { key:'state',   label:'State',        type:'select', options:['default','hover','focus','disabled','loading'], value:'default' },
       { key:'icon',    label:'Icon',         type:'select', options:['none','left','right'], value:'left' },
@@ -28,9 +28,18 @@ const SANDBOX = {
       return '<button class="' + cls + '"' + dis + style + '>' + inner + '</button>';
     },
     dart(p){
+      const variantMap = {
+        'primary': 'primary',
+        'secondary-outline': 'outline',
+        'secondary-text': 'secondary',
+        'secondary-pastel': 'pastel',
+        'secondary-white': 'white',
+        'destructive-secondary': 'destructiveOutline',
+        'destructive-primary': 'destructiveFilled'
+      };
       const lines = [
         "label: '" + p.text.replace(/'/g, "\\'") + "'",
-        'variant: DsButtonVariant.' + p.variant.replace(/-([a-z])/g, (_, c) => c.toUpperCase()),
+        'variant: DsButtonVariant.' + (variantMap[p.variant] || p.variant.replace(/-([a-z])/g, (_, c) => c.toUpperCase())),
         'size: DsButtonSize.' + (p.size === 'lg' ? 'large' : p.size === 'sm' ? 'small' : 'xSmall')
       ];
       if (p.icon === 'left') lines.push('leadingIcon: TablerIcons.send');

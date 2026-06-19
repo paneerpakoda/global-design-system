@@ -74,11 +74,8 @@ const DS = {
         { color:'#FFFFFF', opacity:0 }
       ], angle: 180,
       note: 'Primary button fill style: Primary Orange 100 base with a white-to-transparent linear gradient overlay at 12%.' },
-    buttonStroke: { stops: [
-        { color:'#FFFFFF', opacity:.5 },
-        { color:'#FFFFFF', opacity:0 }
-      ], angle: 180,
-      note: 'Primary button inside stroke: white-to-transparent linear gradient at 50%, drawn inside at 1px.' }
+    buttonStroke: { width:1, stops: ['#F4B094', '#E8692E', '#D44500'], angle: 180,
+      note: 'Primary button inside stroke shell: a 1px peach-to-orange gradient rim. This is the composited result of a white alpha stroke over Primary Orange 100.' }
   },
 
   alpha: {

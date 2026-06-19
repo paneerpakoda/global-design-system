@@ -90,11 +90,13 @@ class DsColors {
     colors: [Color(0x1FFFFFFF), Color(0x00FFFFFF)],
   );
 
-  // Button stroke gradient — 1px inside stroke at 50%
+  // Button stroke gradient — visible peach-to-orange shell
+  static const double buttonStrokeWidth = 1;
   static const Gradient buttonStroke = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [Color(0x80FFFFFF), Color(0x00FFFFFF)],
+    colors: [Color(0xFFF4B094), Color(0xFFE8692E), Color(0xFFD44500)],
+    stops: [0, .45, 1],
   );
 }
 

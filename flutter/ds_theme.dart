@@ -134,15 +134,24 @@ class DsTheme {
 class DsButtonDecorations {
   DsButtonDecorations._();
 
-  static final ShapeDecoration primaryDefault = ShapeDecoration(
+  static final ShapeDecoration primaryStrokeShell = ShapeDecoration(
+    gradient: DsColors.buttonStroke,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(DsRadius.md),
+    ),
+  );
+
+  static final ShapeDecoration primaryFillBase = ShapeDecoration(
     color: DsColors.buttonPrimaryFillBase,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(DsRadius.md - DsColors.buttonStrokeWidth),
+    ),
+  );
+
+  static final ShapeDecoration primaryFillOverlay = ShapeDecoration(
     gradient: DsColors.buttonPrimaryFill,
     shape: RoundedRectangleBorder(
-      side: BorderSide(
-        width: 1,
-        color: Colors.white.withValues(alpha: 0.50),
-      ),
-      borderRadius: BorderRadius.circular(DsRadius.md),
+      borderRadius: BorderRadius.circular(DsRadius.md - DsColors.buttonStrokeWidth),
     ),
   );
 }
