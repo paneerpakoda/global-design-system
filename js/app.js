@@ -173,20 +173,51 @@ function renderHome(){
     <h2 class="section-title">Product UI fragments</h2>
     <div class="cards-grid feature-showcase">
       <div class="link-card product-fragment" style="cursor:default" data-tilt="3" data-spotlight>
-        <span class="fragment-kicker">Token sync</span>
-        <div class="fragment-bars"><span></span><span></span><span></span></div>
+        <div class="fragment-stage">
+          <span class="fragment-kicker">Token sync</span>
+          <div class="fx-window">
+            <div class="fx-window-bar"><span></span><span></span><span></span><b>tokens.js</b></div>
+            <div class="fx-window-body">
+              <div class="fx-swatches"><i style="--c:var(--brand-400)"></i><i style="--c:var(--brand-maroon)"></i><i style="--c:var(--dos-ink)"></i><i style="--c:var(--dos-hairline)"></i></div>
+              <div class="fx-type"><strong>Aa</strong><span></span></div>
+            </div>
+          </div>
+        </div>
         <h3>Generated from one source</h3>
         <p>Colour, type, spacing, radius and Flutter exports stay tied to the same token object.</p>
       </div>
       <div class="link-card product-fragment" style="cursor:default" data-tilt="3" data-spotlight>
-        <span class="fragment-kicker">Patterns</span>
-        <div class="fragment-steps"><span class="done"></span><span class="done"></span><span></span></div>
+        <div class="fragment-stage">
+          <span class="fragment-kicker">Patterns</span>
+          <div class="fx-window">
+            <div class="fx-window-bar"><span></span><span></span><span></span><b>patterns</b></div>
+            <div class="fx-window-body">
+              <div class="fx-flow">
+                <i class="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></i>
+                <u class="done"></u>
+                <i class="done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></i>
+                <u></u>
+                <i class="live"></i>
+              </div>
+              <div class="fx-flow-labels"><span>Login</span><span>OTP</span><span>Done</span></div>
+            </div>
+          </div>
+        </div>
         <h3>Flows over theory</h3>
         <p>Login, OTP and transfer patterns show real states instead of abstract documentation.</p>
       </div>
       <div class="link-card product-fragment" style="cursor:default" data-tilt="3" data-spotlight>
-        <span class="fragment-kicker">Handoff</span>
-        <div class="fragment-code">DsTheme.light</div>
+        <div class="fragment-stage">
+          <span class="fragment-kicker">Handoff</span>
+          <div class="fx-window">
+            <div class="fx-window-bar"><span></span><span></span><span></span><b>theme.dart</b></div>
+            <div class="fx-window-body fx-code">
+              <div class="fx-line"><em>MaterialApp</em><span class="pun">(</span></div>
+              <div class="fx-line indent"><em class="prop">theme</em><span class="pun">:</span> <b class="tok">DsTheme.light</b><span class="pun">,</span></div>
+              <div class="fx-line"><span class="pun">)</span></div>
+            </div>
+          </div>
+        </div>
         <h3>Buildable by default</h3>
         <p>The Flutter page gives production-ready theme and token files from the app itself.</p>
       </div>
