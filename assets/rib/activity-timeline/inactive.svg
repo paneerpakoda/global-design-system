@@ -1,0 +1,19 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon/General/Filled/Radio button-on" clip-path="url(#clip0_0_208)">
+<g id="Vector">
+</g>
+<g id="radio_button_unchecked_black_24dp 1" clip-path="url(#clip1_0_208)">
+<g id="Vector_2">
+</g>
+<path id="Subtract" fill-rule="evenodd" clip-rule="evenodd" d="M1.33333 8C1.33333 4.32 4.32 1.33333 8 1.33333C11.68 1.33333 14.6667 4.32 14.6667 8C14.6667 11.68 11.68 14.6667 8 14.6667C4.32 14.6667 1.33333 11.68 1.33333 8ZM5.33333 8C5.33333 6.528 6.528 5.33333 8 5.33333C9.472 5.33333 10.6667 6.528 10.6667 8C10.6667 9.472 9.472 10.6667 8 10.6667C6.528 10.6667 5.33333 9.472 5.33333 8Z" fill="#B2B5B8"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_208">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+<clipPath id="clip1_0_208">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
+</svg>

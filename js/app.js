@@ -13,7 +13,7 @@ const NAV = [
     { route: '#/f/shape',      label: 'Radius & effects', icon: 'ti-square-rounded' },
     { route: '#/f/icons',      label: 'Iconography',        icon: 'ti-star' }
   ]},
-  { section: 'Components', items: Object.keys(COMPONENTS).map(id => ({
+  { section: 'Components', items: PUBLISHED_COMPONENT_IDS.map(id => ({
     route: '#/c/' + id, label: COMPONENTS[id].title, icon: null, status: COMPONENTS[id].status
   }))},
   { section: 'Patterns', items: [
@@ -141,7 +141,7 @@ function appFooter(){
       </div>
       <nav aria-label="Footer">
         <a href="#/f/colors">Foundations</a>
-        <a href="#/c/button">Components</a>
+        <a href="#/c/accordions">Components</a>
         <a href="#/patterns">Patterns</a>
         <a href="#/developers">Exports</a>
       </nav>
@@ -152,7 +152,7 @@ function appFooter(){
 /* ---------- pages ---------- */
 
 function renderHome(){
-  const compCount = Object.keys(COMPONENTS).length;
+  const compCount = PUBLISHED_COMPONENT_IDS.length;
   const tokenCount = DS.foundationCoverage.total;
   return `
   <div class="hero cal-hero">
@@ -167,7 +167,7 @@ function renderHome(){
       <p class="hero-desc">Explore the shared visual language for ICICI products. The portal turns the audited RIB foundation into practical guidance for designers, product teams and engineers across desktop and mobile.</p>
       <div class="hero-foot">
         <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/f/colors">Explore the system <i class="ti ti-arrow-right"></i></button>
-        <button class="ds-btn secondary md" data-go="#/c/button">Browse components</button>
+        <button class="ds-btn secondary md" data-go="#/c/accordions">Browse components</button>
       </div>
     </div>
     ${productMockup()}
@@ -193,7 +193,7 @@ function renderHome(){
     <h2 class="section-title">Start here</h2>
     <div class="cards-grid">
       <div class="link-card" data-go="#/f/colors" data-tilt="3" data-spotlight><i class="ti ti-palette"></i><h3>Foundations</h3><p>Colours, type, spacing, radius — the raw material of every screen.</p></div>
-      <div class="link-card" data-go="#/c/button" data-tilt="3" data-spotlight><i class="ti ti-components"></i><h3>Components</h3><p>Visual specifications, behavior, states and implementation guidance for reusable building blocks.</p></div>
+      <div class="link-card" data-go="#/c/accordions" data-tilt="3" data-spotlight><i class="ti ti-components"></i><h3>Components</h3><p>Visual specifications, behavior, states and implementation guidance for reusable building blocks.</p></div>
       <div class="link-card" data-go="#/sandbox" data-tilt="3" data-spotlight><i class="ti ti-flask"></i><h3>Playground</h3><p>Explore component properties and states live before moving into platform implementation.</p></div>
       <div class="link-card" data-go="#/patterns" data-tilt="3" data-spotlight><i class="ti ti-layout-grid"></i><h3>Pattern lab</h3><p>Login, OTP, transfers — full flows with switchable states.</p></div>
     </div>
@@ -693,7 +693,7 @@ function renderShape(){
 
 function renderComponent(id){
   const c = COMPONENTS[id];
-  if (!c) return '<div class="empty">Component not found.</div>';
+  if (!c || !PUBLISHED_COMPONENT_IDS.includes(id)) return '<div class="empty">Component not found.</div>';
   let html = pageHeader({ crumbs:['Components', c.group, c.title], title:c.title,
     status:c.status, version:c.version, updated:c.updated, desc:c.desc });
   c.sections.forEach(s => {
@@ -709,7 +709,8 @@ function renderComponent(id){
       <tbody>${c.props.map(r => '<tr>' + r.map(cell => '<td>' + esc(cell) + '</td>').join('') + '</tr>').join('')}</tbody>
     </table></div></section>`;
   html += `<section class="section"><h2 class="section-title">Flutter</h2>${codeblock(c.flutter, 'dart')}</section>`;
-  html += `<div class="callout"><i class="ti ti-flask"></i><div>Want to try the props live? Open this component in the <a href="#/sandbox" style="font-weight:600;color:var(--brand-600)">sandbox</a>.</div></div>`;
+  const sandboxHref = c.sandbox ? '#/sandbox/' + c.sandbox : '#/sandbox';
+  html += `<div class="callout"><i class="ti ti-flask"></i><div>Want to try the props live? Open this component in the <a href="${sandboxHref}" style="font-weight:600;color:var(--brand-600)">sandbox</a>.</div></div>`;
   return html;
 }
 
@@ -718,6 +719,7 @@ let patState = {};
 
 function renderPatternsPage(){
   const p = PATTERNS[patCurrent];
+  const publishedUses = p.uses.filter(id => PUBLISHED_COMPONENT_IDS.includes(id));
   if (!(patCurrent in patState)) patState[patCurrent] = p.states[0];
   const cur = patState[patCurrent];
   let html = pageHeader({ crumbs:['Patterns','Pattern lab'], title:'Pattern lab', status:'beta', version:'0.9',
@@ -732,9 +734,9 @@ function renderPatternsPage(){
       <h3>State</h3>
       <div class="seg" id="patStates" style="margin-bottom:24px">${p.states.map(s =>
         '<button data-pat-state="' + s + '"' + (s === cur ? ' class="active"' : '') + '>' + s + '</button>').join('')}</div>
-      <h3>Built from</h3>
-      <div class="uses">${p.uses.map(u =>
-        '<span class="use-link" data-go="#/c/' + u + '"><i class="ti ti-components"></i>' + esc(COMPONENTS[u].title) + '<i class="ti ti-chevron-right" style="margin-left:auto;color:var(--gray-400)"></i></span>').join('')}</div>
+      ${publishedUses.length ? `<h3>Built from</h3>
+      <div class="uses">${publishedUses.map(u =>
+        '<span class="use-link" data-go="#/c/' + u + '"><i class="ti ti-components"></i>' + esc(COMPONENTS[u].title) + '<i class="ti ti-chevron-right" style="margin-left:auto;color:var(--gray-400)"></i></span>').join('')}</div>` : ''}
       ${guidanceHtml('Pattern guidance', '<p class="guidance-note">' + esc(p.desc) + '</p>')}
     </div>
   </div>`;
@@ -1229,7 +1231,10 @@ function route(){
   }
   else if (parts[0] === 'c') html = renderComponent(parts[1]);
   else if (parts[0] === 'patterns') html = renderPatternsPage();
-  else if (parts[0] === 'sandbox') html = renderSandboxRoute();
+  else if (parts[0] === 'sandbox') {
+    selectSandboxComponent(parts[1]);
+    html = renderSandboxRoute();
+  }
   else if (parts[0] === 'developers' || parts[0] === 'flutter') html = renderDevelopers();
   else html = renderHome();
   mainEl.innerHTML = '<div class="page">' + html + appFooter() + '</div>';

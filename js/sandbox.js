@@ -4,6 +4,108 @@
    matching Flutter call generated underneath.
    ============================================================ */
 
+const RIB_ACCORDION_FAQS = [
+  {
+    question: 'When will the beneficiary receive my transfer?',
+    category: 'Delivery time',
+    answer: 'Most international transfers arrive within 1–3 business days. The receiving bank, destination country and local holidays can affect the final delivery time.'
+  },
+  {
+    question: 'What exchange rate will be applied?',
+    category: 'Exchange rate',
+    answer: 'The applicable exchange rate and fees are shown before you confirm the transfer. Review the final debit amount and beneficiary amount before continuing.'
+  },
+  {
+    question: 'Why is my transfer still pending?',
+    category: 'Transfer status',
+    answer: 'A transfer may remain pending while beneficiary details, compliance checks or the receiving bank are being verified. You can track its latest status from Transfer history.'
+  },
+  {
+    question: 'Can I cancel an international transfer?',
+    category: 'Cancellation',
+    answer: 'You can request cancellation while the transfer is still eligible. Once processing has started with the receiving bank, cancellation may no longer be available.'
+  }
+];
+
+function renderRibAccordionScenario(p){
+  const webVariant = p.variant.replace(/[A-Z]/g, letter => '-' + letter.toLowerCase());
+  const expandedIndex = Number(p.expandedIndex);
+  return `<section class="rib-accordion-scenario" aria-label="International transfer FAQ example">
+    <header class="rib-accordion-scenario__header">
+      <span>Help centre</span>
+      <h2>International transfers</h2>
+      <p>Find answers to common questions about sending money abroad.</p>
+    </header>
+    <div class="rib-accordion-scenario__list is-${webVariant}">
+      ${RIB_ACCORDION_FAQS.map((item, index) => `<div class="rib-accordion-preview-scale">${renderRibAccordion({
+          id:`sandbox-faq-${index}`,
+          index,
+          variant:webVariant,
+          expanded:expandedIndex === index,
+          title:item.question,
+          subtitle:item.category,
+          body:item.answer
+        })}</div>`).join('')}
+    </div>
+    <footer class="rib-accordion-scenario__footer"><i class="ti ti-lock" aria-hidden="true"></i><span>Answers are shown in a secure banking help context.</span></footer>
+  </section>`;
+}
+
+const RIB_ACTIVITY_CALENDAR_EVENTS = [
+  { dateLabel:'Today', label:'Label text', subLabel:'Sub label', state:'current' },
+  { dateLabel:'02 Jan', label:'Label text', subLabel:'Sub label', state:'completed' },
+  { dateLabel:'2023', divider:true },
+  { dateLabel:'02 Dec', label:'Label text', subLabel:'Sub label', state:'inactive' },
+  { dateLabel:'02 Nov', label:'Label text', subLabel:'Sub label', state:'failed' }
+];
+
+function renderRibActivityScenario(p){
+  return renderRibActivityCalendar({
+    ariaLabel:'Calendar activity timeline',
+    currentState:p.todayState === 'inactive' ? 'inactive' : 'current',
+    showYearDivider:Boolean(p.showYearDivider),
+    items:RIB_ACTIVITY_CALENDAR_EVENTS
+  });
+}
+
+function renderRibAvatarScenario(p){
+  if(p.presentation === 'group'){
+    return `<section class="rib-avatar-scenario" aria-label="International transfer beneficiaries">
+      <span class="rib-avatar-scenario__eyebrow">Beneficiaries</span>
+      ${renderRibAvatarGroup({ headline:p.headline, ariaLabel:'Saved beneficiaries' })}
+    </section>`;
+  }
+  return `<section class="rib-avatar-scenario is-single" aria-label="Selected beneficiary">
+    <span class="rib-avatar-scenario__eyebrow">Selected beneficiary</span>
+    ${renderRibAvatar({
+      label:p.label,
+      initials:p.initials,
+      color:p.color,
+      bankLogo:Boolean(p.bankLogo)
+    })}
+  </section>`;
+}
+
+function ribBreadcrumbItems(p){
+  const count = Math.min(3, Math.max(1, Number(p.itemCount) || 1));
+  const labels = String(p.items || '').split(',').map(label => label.trim()).filter(Boolean).slice(0, count);
+  while(labels.length < count) labels.push(`Item ${labels.length + 1}`);
+  return labels;
+}
+
+function renderRibBreadcrumbScenario(p){
+  return `<section class="rib-breadcrumb-scenario" aria-label="Account services page header">
+    <span class="rib-breadcrumb-scenario__eyebrow">Account services</span>
+    ${renderRibBreadcrumb({
+      items:ribBreadcrumbItems(p),
+      title:p.title,
+      web:Boolean(p.web),
+      dropDown:Boolean(p.dropDown),
+      ariaLabel:'Account services breadcrumb'
+    })}
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -48,6 +150,122 @@ const SANDBOX = {
       lines.push('expanded: ' + p.block);
       lines.push(p.state === 'disabled' ? 'onPressed: null' : 'onPressed: () => handleTap()');
       return 'DsButton(\n  ' + lines.join(',\n  ') + ',\n)';
+    }
+  },
+
+  accordion: {
+    label: 'RIB Accordion',
+    defaults: { expandedIndex:0 },
+    controls: [
+      { key:'variant', label:'Variant', type:'select', options:['plain','noContainer','colouredBackground','standardContainer','explanationContainer'], value:'standardContainer' },
+      { key:'allowCollapseAll', label:'Allow all items closed', type:'toggle', value:true }
+    ],
+    render(p){
+      return renderRibAccordionScenario(p);
+    },
+    dart(p){
+      const subtitle = p.variant === 'explanationContainer'
+        ? '            subtitle: item.category,\n'
+        : '';
+      const collapsedValue = p.allowCollapseAll ? 'null' : 'index';
+      return `Column(
+  children: List.generate(faqItems.length, (index) {
+    final item = faqItems[index];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsSpacing.md),
+      child: RibAccordion(
+        title: item.question,
+        content: Text(item.answer),
+${subtitle}        expanded: expandedQuestionIndex == index,
+        variant: RibAccordionVariant.${p.variant},
+        onChanged: (isExpanded) {
+          setState(() {
+            expandedQuestionIndex = isExpanded ? index : ${collapsedValue};
+          });
+        },
+      ),
+    );
+  }),
+)`;
+    }
+  },
+
+  'activity-timeline': {
+    label: 'RIB Activity timeline',
+    controls: [
+      { key:'todayState', label:"Today's state", type:'select', options:['default','inactive'], value:'default' },
+      { key:'showYearDivider', label:'Year divider', type:'toggle', value:true }
+    ],
+    render(p){
+      return renderRibActivityScenario(p);
+    },
+    dart(p){
+      const currentState = p.todayState === 'inactive' ? 'inactive' : 'current';
+      return `RibActivityCalendarTimeline(
+  items: calendarEvents,
+  currentState: RibActivityTimelineState.${currentState},
+  showYearDivider: ${p.showYearDivider},
+)`;
+    }
+  },
+
+  avatar: {
+    label: 'RIB Avatar',
+    controls: [
+      { key:'presentation', label:'Presentation', type:'select', options:['single','group'], value:'group' },
+      { key:'color', label:'Mnemonic colour', type:'select', options:['picture','orange','blue','gold','maroon','multi'], value:'picture' },
+      { key:'label', label:'Name', type:'text', value:'Amar' },
+      { key:'initials', label:'Initials', type:'text', value:'A' },
+      { key:'headline', label:'Group headline', type:'text', value:'Recent beneficiaries' },
+      { key:'bankLogo', label:'Bank logo', type:'toggle', value:false }
+    ],
+    render(p){
+      return renderRibAvatarScenario(p);
+    },
+    dart(p){
+      if(p.presentation === 'group'){
+        return `RibAvatarGroup(
+  headline: '${p.headline.replace(/'/g, "\\'")}',
+  avatars: beneficiaries,
+)`;
+      }
+      const image = p.color === 'picture'
+        ? "\n  image: const AssetImage('assets/rib/avatar/amar.jpeg'),"
+        : '';
+      const bankLogo = p.bankLogo
+        ? '\n  bankLogo: bankLogo,'
+        : '';
+      return `RibAvatar(
+  label: '${p.label.replace(/'/g, "\\'")}',
+  initials: '${p.initials.replace(/'/g, "\\'")}',
+  color: RibAvatarColor.${p.color},${image}${bankLogo}
+)`;
+    }
+  },
+
+  breadcrumbs: {
+    label: 'RIB Breadcrumb',
+    controls: [
+      { key:'itemCount', label:'Number of items', type:'select', options:['1','2','3'], value:'3' },
+      { key:'items', label:'Path labels (comma separated)', type:'text', value:'Transfers, Beneficiaries, Add beneficiary' },
+      { key:'title', label:'Page title', type:'text', value:'Add beneficiary' },
+      { key:'web', label:'Show web path', type:'toggle', value:true },
+      { key:'dropDown', label:'Title dropdown', type:'toggle', value:false }
+    ],
+    render(p){
+      return renderRibBreadcrumbScenario(p);
+    },
+    dart(p){
+      const items = ribBreadcrumbItems(p).map(label => `    RibBreadcrumbItem(label: '${label.replace(/'/g, "\\'")}'),`).join('\n');
+      return `RibBreadcrumb(
+  items: const [
+${items}
+  ],
+  title: '${p.title.replace(/'/g, "\\'")}',
+  web: ${p.web},
+  showDropdown: ${p.dropDown},
+  onBack: navigation.goBack,
+)`;
     }
   },
 
@@ -215,22 +433,30 @@ const SANDBOX = {
 
 /* ---------- sandbox page rendering ---------- */
 
-let sbCurrent = 'button';
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['accordion','activity-timeline','avatar','breadcrumbs']);
+
+let sbCurrent = 'accordion';
 let sbProps = {};
 
 function sbDefaults(id){
-  const out = {};
+  const out = { ...(SANDBOX[id].defaults || {}) };
   SANDBOX[id].controls.forEach(c => { out[c.key] = c.type === 'toggle' ? !!c.value : String(c.value); });
   return out;
 }
 
+function selectSandboxComponent(id){
+  if(id && PUBLISHED_SANDBOX_IDS.includes(id)) sbCurrent = id;
+  else if(!PUBLISHED_SANDBOX_IDS.includes(sbCurrent)) sbCurrent = PUBLISHED_SANDBOX_IDS[0];
+  return sbCurrent;
+}
+
 function renderSandboxPage(){
   if (!sbProps[sbCurrent]) sbProps[sbCurrent] = sbDefaults(sbCurrent);
-  const picker = Object.keys(SANDBOX).map(id =>
+  const picker = PUBLISHED_SANDBOX_IDS.map(id =>
     '<button data-sb-pick="' + id + '"' + (id === sbCurrent ? ' class="active"' : '') + '>' + esc(SANDBOX[id].label) + '</button>'
   ).join('');
   return '<div class="seg" id="sbPicker">' + picker + '</div>' +
-    '<div class="sb-layout">' +
+    '<div class="sb-layout is-' + sbCurrent + '">' +
     '<div class="sb-panel" id="sbControls">' + sbControlsHtml() + '</div>' +
     '<div class="sb-preview" id="sbPreview">' + SANDBOX[sbCurrent].render(sbProps[sbCurrent]) + '</div>' +
     '<div class="sb-code" id="sbCode">' + codeblock(SANDBOX[sbCurrent].dart(sbProps[sbCurrent]), 'dart — generated live') + '</div>' +
@@ -242,16 +468,17 @@ function sbControlsHtml(){
   const p = sbProps[sbCurrent];
   let html = '<h3>Properties</h3>';
   def.controls.forEach(c => {
+    const controlId = `sb-${sbCurrent}-${c.key}`;
     if (c.type === 'select') {
-      html += '<div class="sb-ctl"><label>' + esc(c.label) + '</label><select data-sb-key="' + c.key + '">' +
+      html += '<div class="sb-ctl"><label for="' + controlId + '">' + esc(c.label) + '</label><select id="' + controlId + '" name="' + c.key + '" data-sb-key="' + c.key + '">' +
         c.options.map(o => '<option value="' + o + '"' + (p[c.key] === o ? ' selected' : '') + '>' + o + '</option>').join('') +
         '</select></div>';
     } else if (c.type === 'text') {
-      html += '<div class="sb-ctl"><label>' + esc(c.label) + '</label>' +
-        '<input type="text" data-sb-key="' + c.key + '" value="' + esc(p[c.key]) + '"></div>';
+      html += '<div class="sb-ctl"><label for="' + controlId + '">' + esc(c.label) + '</label>' +
+        '<input id="' + controlId + '" name="' + c.key + '" type="text" data-sb-key="' + c.key + '" value="' + esc(p[c.key]) + '"></div>';
     } else if (c.type === 'toggle') {
       html += '<div class="sb-toggle"><span>' + esc(c.label) + '</span>' +
-        '<span class="ds-switch' + (p[c.key] ? ' on' : '') + '" data-sb-key="' + c.key + '" data-sb-toggle role="switch" tabindex="0" aria-checked="' + p[c.key] + '"></span></div>';
+        '<span class="ds-switch' + (p[c.key] ? ' on' : '') + '" data-sb-key="' + c.key + '" data-sb-toggle role="switch" tabindex="0" aria-label="' + esc(c.label) + '" aria-checked="' + p[c.key] + '"></span></div>';
     }
   });
   return html;
@@ -271,8 +498,25 @@ function bindSandbox(root){
     const pick = e.target.closest('[data-sb-pick]');
     if (pick) {
       sbCurrent = pick.getAttribute('data-sb-pick');
+      history.replaceState(null, '', '#/sandbox/' + sbCurrent);
       const main = document.getElementById('sandboxRoot');
       if (main) { main.innerHTML = renderSandboxPage(); }
+      return;
+    }
+    const accordionToggle = e.target.closest('[data-rib-accordion-toggle]');
+    if (accordionToggle && sbCurrent === 'accordion') {
+      const accordion = accordionToggle.closest('[data-rib-accordion-index]');
+      const nextIndex = Number(accordion && accordion.getAttribute('data-rib-accordion-index'));
+      const currentIndex = Number(sbProps[sbCurrent].expandedIndex);
+      sbProps[sbCurrent].expandedIndex = currentIndex === nextIndex && sbProps[sbCurrent].allowCollapseAll
+        ? -1
+        : nextIndex;
+      const main = document.getElementById('sandboxRoot');
+      if (main) {
+        main.innerHTML = renderSandboxPage();
+        const nextToggle = main.querySelector(`[data-rib-accordion-index="${nextIndex}"] [data-rib-accordion-toggle]`);
+        nextToggle?.focus();
+      }
       return;
     }
     const tgl = e.target.closest('[data-sb-toggle]');

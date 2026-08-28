@@ -168,6 +168,347 @@ function renderButtonMatrix(){
   </div>`;
 }
 
+const RIB_ACCORDION_VARIANTS = [
+  { key:'plain', label:'Default', width:276 },
+  { key:'no-container', label:'No container', width:276 },
+  { key:'coloured-background', label:'Coloured background', width:386 },
+  { key:'standard-container', label:'Container standard', width:276 },
+  { key:'explanation-container', label:'Container explanation', width:516 }
+];
+
+function ribAccordionLeading(variant){
+  if(variant === 'plain') return '';
+  if(variant === 'standard-container') {
+    return `<span class="rib-accordion__icon-plate" aria-hidden="true">
+      <img src="assets/rib/accordion/shield.svg" alt="" width="13" height="14">
+    </span>`;
+  }
+  const asset = variant === 'coloured-background'
+    ? 'assets/rib/accordion/briefcase.svg'
+    : variant === 'explanation-container'
+      ? 'assets/rib/accordion/shield-explanation.svg'
+      : 'assets/rib/accordion/shield.svg';
+  return `<span class="rib-accordion__leading" aria-hidden="true">
+    <img src="${asset}" alt="">
+  </span>`;
+}
+
+function ribAccordionId(value){
+  return String(value).replace(/[^a-zA-Z0-9_-]+/g, '-');
+}
+
+function renderRibAccordion(options = {}){
+  const variant = RIB_ACCORDION_VARIANTS.some(item => item.key === options.variant)
+    ? options.variant
+    : 'plain';
+  const expanded = Boolean(options.expanded);
+  const title = options.title || 'Subject line';
+  const body = options.body || 'Dummy text for long sentences here';
+  const subtitle = options.subtitle || 'Long subline here';
+  const uid = ribAccordionId('rib-accordion-' + (options.id || `${variant}-${expanded ? 'expanded' : 'collapsed'}`));
+  const spec = RIB_ACCORDION_VARIANTS.find(item => item.key === variant);
+  const interactive = options.interactive !== false;
+  const triggerTag = interactive ? 'button' : 'div';
+  const triggerAttributes = interactive
+    ? ` type="button" aria-expanded="${expanded}" aria-controls="${uid}-panel" data-rib-accordion-toggle`
+    : '';
+  const indexAttribute = Number.isInteger(options.index)
+    ? ` data-rib-accordion-index="${options.index}"`
+    : '';
+  const titleHtml = variant === 'explanation-container'
+    ? `<span class="rib-accordion__title-stack"><span class="rib-accordion__title">${esc(title)}</span><span class="rib-accordion__subtitle">${esc(subtitle)}</span></span>`
+    : `<span class="rib-accordion__title">${esc(title)}</span>`;
+
+  return `<div class="rib-accordion rib-accordion--${variant}${expanded ? ' is-expanded' : ''}" style="--rib-accordion-width:${spec.width}px"${indexAttribute}>
+    <${triggerTag} class="rib-accordion__trigger" id="${uid}-trigger"${triggerAttributes}>
+      ${ribAccordionLeading(variant)}
+      ${titleHtml}
+      <img class="rib-accordion__chevron" src="assets/rib/accordion/chevron-${expanded ? 'up' : 'down'}.svg" alt="" width="20" height="20" aria-hidden="true">
+    </${triggerTag}>
+    ${expanded ? `<div class="rib-accordion__body" id="${uid}-panel" role="region" aria-labelledby="${uid}-trigger">${esc(body)}</div>` : ''}
+    ${variant === 'plain' || variant === 'no-container' ? '<span class="rib-accordion__divider" aria-hidden="true"></span>' : ''}
+  </div>`;
+}
+
+function renderRibAccordionShowcase(){
+  return `<div class="rib-accordion-source"><span>RIB only</span><div class="rib-accordion-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10048" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-accordion-try" href="#/sandbox/accordion"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-accordion-showcase">
+    ${RIB_ACCORDION_VARIANTS.map((variant, index) => `<article class="rib-accordion-showcase__card is-variant-${variant.key}${variant.width > 386 ? ' is-wide' : ''}">
+      <header class="rib-accordion-showcase__card-head"><div><span>${index === 0 ? 'Standard' : index < 3 ? 'Icons' : 'Container'}</span><h3>${variant.label}</h3></div><code>${variant.width}px Figma · 118% preview</code></header>
+      <div class="rib-accordion-showcase__state"><b>Collapsed</b><div class="rib-accordion-showcase__stage"><div class="rib-accordion-preview-scale">${renderRibAccordion({ variant:variant.key, expanded:false, interactive:false, id:`matrix-${variant.key}-collapsed` })}</div></div></div>
+      <div class="rib-accordion-showcase__state"><b>Expanded</b><div class="rib-accordion-showcase__stage"><div class="rib-accordion-preview-scale">${renderRibAccordion({ variant:variant.key, expanded:true, interactive:false, id:`matrix-${variant.key}-expanded` })}</div></div></div>
+    </article>`).join('')}
+  </div>`;
+}
+
+const RIB_ACTIVITY_STATES = [
+  { key:'inactive', label:'Inactive', icon:'inactive.svg', status:'' },
+  { key:'completed', label:'Completed', icon:'completed.svg', status:'Completed' },
+  { key:'warning', label:'Warning', icon:'warning.svg', status:'Pending' },
+  { key:'failed', label:'Failed', icon:'failed.svg', status:'Failed' }
+];
+
+const RIB_ACTIVITY_VARIANTS = [
+  { key:'single', label:'With single line cards', rightIcon:false },
+  { key:'double', label:'With double line cards', rightIcon:false },
+  { key:'double', label:'Double line + trailing icon', rightIcon:true }
+];
+
+const RIB_ACTIVITY_CURRENT_STATE = Object.freeze({
+  key:'current', label:'Current', icon:'calendar-current.svg', status:''
+});
+
+function ribActivityState(value){
+  if(value === RIB_ACTIVITY_CURRENT_STATE.key) return RIB_ACTIVITY_CURRENT_STATE;
+  return RIB_ACTIVITY_STATES.find(state => state.key === value) || RIB_ACTIVITY_STATES[0];
+}
+
+function renderRibActivityCard(item = {}, options = {}, index = 0){
+  const type = options.type === 'double' ? 'double' : 'single';
+  const stateSpec = ribActivityState(item.state);
+  const label = item.label || 'Label text';
+  const subLabel = item.subLabel || 'Sub label';
+  const value = item.value || '₹ 1,000';
+  const status = item.status || stateSpec.status;
+  const rightIcon = Boolean(options.rightIcon);
+  const interactive = Boolean(options.interactive && rightIcon);
+  const showTrailing = options.showTrailing !== false;
+  const cardTag = interactive ? 'button' : 'div';
+  const cardAttributes = interactive
+    ? ` type="button" data-rib-activity-index="${index}"`
+    : '';
+  const typeClass = type === 'double' ? 'is-double' : 'is-single';
+  const labelStack = type === 'double'
+    ? `<span class="rib-activity-card__text"><span class="rib-activity-card__label">${esc(label)}</span><span class="rib-activity-card__sub-label">${esc(subLabel)}</span></span>`
+    : `<span class="rib-activity-card__label">${esc(label)}</span>`;
+  const trailing = showTrailing
+    ? type === 'double'
+      ? `<span class="rib-activity-card__value-stack"><span class="rib-activity-card__value">${esc(value)}</span>${status ? `<span class="rib-activity-card__status">${esc(status)}</span>` : ''}</span>`
+      : `<span class="rib-activity-card__trailing-label">${esc(subLabel)}</span>`
+    : '';
+  const trailingGroup = trailing || rightIcon
+    ? `<span class="rib-activity-card__trailing">
+        ${trailing}
+        ${rightIcon ? '<img class="rib-activity-card__chevron" src="assets/rib/activity-timeline/chevron-right.svg" alt="" width="20" height="20" aria-hidden="true">' : ''}
+      </span>`
+    : '';
+
+  return `<${cardTag} class="rib-activity-card ${typeClass} is-${stateSpec.key}"${cardAttributes}>
+    <span class="rib-activity-card__state-label">${esc(stateSpec.label)}</span>
+    <span class="rib-activity-card__leading">
+      <img src="assets/rib/activity-timeline/${stateSpec.icon}" alt="" width="16" height="16" aria-hidden="true">
+      ${labelStack}
+    </span>
+    ${trailingGroup}
+  </${cardTag}>`;
+}
+
+function renderRibActivityTimeline(options = {}){
+  const type = options.type === 'double' ? 'double' : 'single';
+  const items = Array.isArray(options.items) && options.items.length
+    ? options.items
+    : RIB_ACTIVITY_STATES.map(state => ({ state:state.key }));
+  const typeClass = type === 'double' ? 'is-double' : 'is-single';
+  const itemHtml = items.map((item, index) => {
+    const stateSpec = ribActivityState(item.state);
+    const label = item.label || 'Label text';
+
+    return `<li class="rib-activity-timeline__item" aria-label="${esc(stateSpec.label)}: ${esc(label)}">
+      ${renderRibActivityCard(item, options, index)}
+    </li>`;
+  }).join('');
+
+  return `<ol class="rib-activity-timeline ${typeClass}" aria-label="${esc(options.ariaLabel || 'Activity timeline')}">
+    <img class="rib-activity-timeline__connector" src="assets/rib/activity-timeline/connector.svg" alt="" aria-hidden="true">
+    ${itemHtml}
+  </ol>`;
+}
+
+function renderRibActivityCalendar(options = {}){
+  const sourceItems = Array.isArray(options.items) ? options.items : [];
+  const items = options.showYearDivider === false
+    ? sourceItems.filter(item => !item.divider)
+    : sourceItems;
+  const currentState = options.currentState === 'inactive' ? 'inactive' : 'current';
+  const itemHtml = items.map((item, index) => {
+    const dateLabel = item.dateLabel || '';
+    const state = item.state === 'current' ? currentState : item.state;
+    const markerClass = state === 'current' ? ' is-current' : '';
+    if(item.divider){
+      return `<li class="rib-activity-calendar__row is-divider" aria-label="${esc(dateLabel)}">
+        <span class="rib-activity-calendar__marker${markerClass}"><span class="rib-activity-calendar__date">${esc(dateLabel)}</span><span class="rib-activity-calendar__dot" aria-hidden="true"></span></span>
+        <span class="rib-activity-calendar__divider" aria-hidden="true"></span>
+      </li>`;
+    }
+    const cardItem = { ...item, state };
+    const stateSpec = ribActivityState(state);
+    return `<li class="rib-activity-calendar__row" aria-label="${esc(dateLabel)}: ${esc(stateSpec.label)}: ${esc(item.label || 'Label text')}">
+      <span class="rib-activity-calendar__marker${markerClass}"><span class="rib-activity-calendar__date">${esc(dateLabel)}</span><span class="rib-activity-calendar__dot" aria-hidden="true"></span></span>
+      ${renderRibActivityCard(cardItem, { type:'double', showTrailing:false }, index)}
+    </li>`;
+  }).join('');
+
+  return `<ol class="rib-activity-calendar" aria-label="${esc(options.ariaLabel || 'Calendar activity timeline')}" data-figma-node="4235:18074">
+    <img class="rib-activity-calendar__connector" src="assets/rib/activity-timeline/calendar-connector.svg" alt="" aria-hidden="true">
+    ${itemHtml}
+  </ol>`;
+}
+
+function renderRibActivityTimelineShowcase(){
+  return `<div class="rib-activity-source"><span>RIB only</span><div class="rib-activity-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10047" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-activity-try" href="#/sandbox/activity-timeline"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-activity-showcase">
+    ${RIB_ACTIVITY_VARIANTS.map(variant => `<article class="rib-activity-showcase__card">
+      <header><div><span>Activity timeline</span><h3>${variant.label}</h3></div><code>288px · ${variant.key === 'single' ? '40px' : '60px'} cards</code></header>
+      <div class="rib-activity-showcase__stage">${renderRibActivityTimeline({ type:variant.key, rightIcon:variant.rightIcon })}</div>
+    </article>`).join('')}
+  </div>`;
+}
+
+const RIB_AVATAR_COLORS = [
+  { key:'picture', label:'Picture' },
+  { key:'orange', label:'Orange' },
+  { key:'blue', label:'Blue' },
+  { key:'gold', label:'Gold' },
+  { key:'maroon', label:'Maroon' },
+  { key:'multi', label:'Multi' }
+];
+
+const RIB_AVATAR_GROUP_PEOPLE = [
+  { label:'Amar', color:'picture', imageUrl:'assets/rib/avatar/amar.jpeg' },
+  { label:'Sunidhi', initials:'S', color:'gold' },
+  { label:'Aditya', initials:'A', color:'maroon' },
+  { label:'Preksha', initials:'P', color:'multi' },
+  { label:'Udita', initials:'U', color:'orange' },
+  { label:'Roshan', initials:'R', color:'blue' }
+];
+
+function renderRibAvatar(options = {}){
+  const color = RIB_AVATAR_COLORS.some(item => item.key === options.color)
+    ? options.color
+    : 'picture';
+  const label = String(options.label || 'Amar');
+  const initials = String(options.initials || label.trim().charAt(0) || 'A').slice(0, 2).toUpperCase();
+  const imageUrl = options.imageUrl || 'assets/rib/avatar/amar.jpeg';
+  const bankLogo = Boolean(options.bankLogo);
+  const visual = color === 'picture'
+    ? `<img class="rib-avatar__image" src="${esc(imageUrl)}" alt="" width="40" height="40">`
+    : `<span class="rib-avatar__initials" aria-hidden="true">${esc(initials)}</span>`;
+  const bankBadge = bankLogo
+    ? `<span class="rib-avatar__bank-badge">
+        <img src="assets/rib/avatar/icici-bank-mark.svg" alt="" width="12" height="12" aria-hidden="true">
+        <span class="rib-avatar__bank-name" aria-hidden="true">ICICI Bank</span>
+      </span>`
+    : '';
+  const accessibleLabel = options.ariaLabel || `${label}${bankLogo ? ', ICICI Bank' : ''}`;
+
+  return `<figure class="rib-avatar rib-avatar--${color}" role="img" aria-label="${esc(accessibleLabel)}">
+    <span class="rib-avatar__visual">${visual}</span>
+    <figcaption class="rib-avatar__label" aria-hidden="true">${esc(label)}</figcaption>
+    ${bankBadge}
+  </figure>`;
+}
+
+function renderRibAvatarGroup(options = {}){
+  const people = Array.isArray(options.people) && options.people.length
+    ? options.people
+    : RIB_AVATAR_GROUP_PEOPLE;
+  const headline = String(options.headline || 'Headline');
+  const itemHtml = people.map(person => `<li class="rib-avatar-group__item">${renderRibAvatar(person)}</li>`).join('');
+
+  return `<section class="rib-avatar-group" aria-label="${esc(options.ariaLabel || headline)}">
+    <h3 class="rib-avatar-group__headline">${esc(headline)}</h3>
+    <div class="rib-avatar-group__scroller" tabindex="0" aria-label="${esc(headline)} avatars">
+      <ul class="rib-avatar-group__list">${itemHtml}</ul>
+    </div>
+  </section>`;
+}
+
+function renderRibAvatarShowcase(){
+  return `<div class="rib-avatar-source"><span>RIB only</span><div class="rib-avatar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10046" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-avatar-try" href="#/sandbox/avatar"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-avatar-showcase">
+    <article class="rib-avatar-showcase__card">
+      <header><div><span>Standard</span><h3>Picture and mnemonic colours</h3></div><code>40px visual · 64px label</code></header>
+      <div class="rib-avatar-showcase__stage">${RIB_AVATAR_COLORS.map(color => renderRibAvatar({ color:color.key, bankLogo:color.key === 'picture' })).join('')}</div>
+    </article>
+    <article class="rib-avatar-showcase__card">
+      <header><div><span>Group</span><h3>Labelled people</h3></div><code>6 avatars · 12px gap</code></header>
+      <div class="rib-avatar-showcase__stage is-group">${renderRibAvatarGroup()}</div>
+    </article>
+  </div>`;
+}
+
+const RIB_BREADCRUMB_STATES = [
+  { key:'default', label:'Default' },
+  { key:'hover', label:'Hover' },
+  { key:'active', label:'Active' }
+];
+
+function renderRibBreadcrumbUnit(item, state = 'default', isCurrent = false){
+  const stateName = RIB_BREADCRUMB_STATES.some(option => option.key === state) ? state : 'default';
+  const className = `rib-breadcrumb__unit is-${stateName}`;
+  if(isCurrent || stateName === 'active') {
+    return `<span class="${className}" aria-current="page">${esc(item.label)}</span>`;
+  }
+  return `<a class="${className}" href="${esc(item.href || '#/c/breadcrumbs')}">${esc(item.label)}</a>`;
+}
+
+function renderRibBreadcrumb(options = {}){
+  const sourceItems = Array.isArray(options.items) && options.items.length
+    ? options.items.slice(0, 3)
+    : ['Item 1'];
+  const items = sourceItems.map((item, index) => typeof item === 'string'
+    ? { label:item || `Item ${index + 1}`, href:'#/c/breadcrumbs' }
+    : { label:String(item.label || `Item ${index + 1}`), href:String(item.href || '#/c/breadcrumbs') });
+  const title = String(options.title || 'Title');
+  const showPath = options.web !== false;
+  const dropDown = options.dropDown === undefined ? items.length < 3 : Boolean(options.dropDown);
+  const path = showPath
+    ? `<nav class="rib-breadcrumb__path" aria-label="${esc(options.ariaLabel || 'Breadcrumb')}">
+        <ol class="rib-breadcrumb__list">${items.map((item, index) => `<li class="rib-breadcrumb__item">
+          ${renderRibBreadcrumbUnit(item, index === items.length - 1 ? 'active' : 'default', index === items.length - 1)}
+          ${index < items.length - 1 ? '<img class="rib-breadcrumb__separator" src="assets/rib/breadcrumb/chevron-right.svg" alt="" width="12" height="12" aria-hidden="true">' : ''}
+        </li>`).join('')}</ol>
+      </nav>`
+    : '';
+  const titleControl = dropDown
+    ? `<button class="rib-breadcrumb__title-action" type="button" aria-expanded="false">
+        <span class="rib-breadcrumb__title-text">${esc(title)}</span>
+        <img class="rib-breadcrumb__dropdown" src="assets/rib/breadcrumb/chevron-down.svg" alt="" width="16" height="16" aria-hidden="true">
+      </button>`
+    : `<span class="rib-breadcrumb__title-text">${esc(title)}</span>`;
+
+  return `<div class="rib-breadcrumb" data-figma-node="1415:737">
+    ${path}
+    <div class="rib-breadcrumb__title-row">
+      <button class="rib-breadcrumb__back" type="button" aria-label="Back">
+        <img src="assets/rib/breadcrumb/back.svg" alt="" width="24" height="24" aria-hidden="true">
+      </button>
+      ${titleControl}
+    </div>
+  </div>`;
+}
+
+function renderRibBreadcrumbShowcase(){
+  const variants = [
+    { label:'1 item', items:['Item 1'] },
+    { label:'2 items', items:['Item 1','Item 2'] },
+    { label:'3 items', items:['Item 1','Item 2','Item 3'] }
+  ];
+  return `<div class="rib-breadcrumb-source"><span>RIB only</span><div class="rib-breadcrumb-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=875-4938" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-breadcrumb-try" href="#/sandbox/breadcrumbs"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-breadcrumb-showcase">
+    <article class="rib-breadcrumb-showcase__card is-variants">
+      <header><div><span>Breadcrumb</span><h3>1 item · 2 items · 3 items</h3></div><code>472px · 48px</code></header>
+      <div class="rib-breadcrumb-showcase__stage">${variants.map(variant => `<div class="rib-breadcrumb-showcase__variant"><b>${variant.label}</b>${renderRibBreadcrumb({ items:variant.items })}</div>`).join('')}</div>
+    </article>
+    <article class="rib-breadcrumb-showcase__card is-states">
+      <header><div><span>Breadcrumb unit</span><h3>Interaction states</h3></div><code>10 / 16</code></header>
+      <div class="rib-breadcrumb-showcase__states">${RIB_BREADCRUMB_STATES.map(state => `<div><b>${state.label}</b>${renderRibBreadcrumbUnit({ label:state.label }, state.key, state.key === 'active')}</div>`).join('')}</div>
+    </article>
+  </div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['accordions','activity-timeline','avatar','breadcrumbs']);
+
 const COMPONENTS = {
 
   button: {
@@ -677,28 +1018,33 @@ DsChip(
   },
 
   avatar: {
-    title: 'Avatar', group: 'Display', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Avatars identify people, payees and sessions. Use initials by default; use photos only when customer-provided or trusted.',
+    title: 'Avatar and Avatar groups', group: 'Display', status: 'beta', version: '0.1', updated: '29 Aug 2026',
+    sandbox: 'avatar',
+    desc: 'The RIB Avatar identifies a person with a trusted picture or one of five mnemonic colour treatments. AvatarGroup keeps a short, labelled set of people in a predictable order.',
     sections: [
-      { title: 'Sizes',
-        html: `<div class="canvas">
-          <span class="ds-avatar sm">DH</span>
-          <span class="ds-avatar">DH</span>
-          <span class="ds-avatar lg">DH</span>
-          <span class="ds-avatar icon"><i class="ti ti-user"></i></span>
-        </div>` },
-      { title: 'Payee row',
-        html: `<div class="canvas">
-          <div class="ds-avatar-row"><span class="ds-avatar">SC</span><span><b>Sarah Chen</b><small>Interac e-Transfer payee</small></span></div>
+      { title: 'RIB variants',
+        note: 'Source: Components - RIB, Avatar and Avatar groups node 3981:10046. The component preserves the Figma 40px visual, 64px label width, five mnemonic colour treatments, optional 12px ICICI Bank badge, and exact exported picture and bank mark.',
+        html: renderRibAvatarShowcase() },
+      { title: 'Usage contract',
+        note: 'The visible name is always part of the component. Initials and pictures reinforce identity; they never replace a readable label. Groups retain the Figma order and become horizontally scrollable when 444px is not available.',
+        html: `<div class="shape-rule-grid">
+          <article class="shape-rule-card"><span><i class="ti ti-user"></i></span><div><h3>Name stays visible</h3><code>label: String</code><p>Use a concise recognisable name and keep it visible below the 40px visual.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-photo"></i></span><div><h3>Pictures are trusted</h3><code>color: picture</code><p>Only render an image supplied by a trusted customer or product source; otherwise use a mnemonic.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-building-bank"></i></span><div><h3>Bank badge is explicit</h3><code>bankLogo</code><p>The optional ICICI mark is announced in the accessible name and should only indicate a verified bank relationship.</p></div></article>
         </div>` }
     ],
     props: [
-      ['initials','String?','null','Two-letter fallback'],
-      ['imageUrl','String?','null','Trusted photo source'],
-      ['size','DsAvatarSize','medium','small · medium · large'],
-      ['status','DsPresence?','null','Optional online/verified state']
+      ['label','String','required','Visible person name and semantic identity.'],
+      ['color','RibAvatarColor','picture','picture · orange · blue · gold · maroon · multi'],
+      ['initials','String?','label initial','One or two mnemonic characters.'],
+      ['image','ImageProvider?','null','Trusted picture source; required for picture.'],
+      ['bankLogo','Widget?','null','Optional exact bank mark rendered inside the badge.']
     ],
-    flutter: `DsAvatar(initials: 'SC', size: DsAvatarSize.medium)`
+    flutter: `RibAvatar(
+  label: 'Amar',
+  color: RibAvatarColor.picture,
+  image: const AssetImage('assets/rib/avatar/amar.jpeg'),
+)`
   },
 
   pagination: {
@@ -760,19 +1106,37 @@ DsChip(
   },
 
   breadcrumbs: {
-    title: 'Breadcrumbs', group: 'Navigation', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Breadcrumbs orient web users in multi-level flows. Keep labels short and hide middle levels on narrow widths.',
+    title: 'Breadcrumb', group: 'Navigation', status: 'beta', version: '0.1', updated: '29 Aug 2026',
+    sandbox: 'breadcrumbs',
+    desc: 'The RIB Breadcrumb orients customers within a short hierarchy and pairs that path with a back action and page title. Use one to three concise levels.',
     sections: [
-      { title: 'Default',
-        html: `<div class="canvas">
-          <nav class="ds-breadcrumbs"><a>Accounts</a><i class="ti ti-chevron-right"></i><a>Savings</a><i class="ti ti-chevron-right"></i><span>Statement</span></nav>
+      { title: 'RIB variants',
+        note: 'Source: Components - RIB, Breadcrumb node 875:4938. The component preserves the 1–3 item matrix, 472px title row, 8px vertical spacing, and exact exported back, down, and right glyphs.',
+        html: renderRibBreadcrumbShowcase() },
+      { title: 'Usage contract',
+        note: 'The final path item is the current page and is not a link. Earlier levels remain navigable. On narrow screens the title truncates rather than forcing the page wider.',
+        html: `<div class="shape-rule-grid">
+          <article class="shape-rule-card"><span><i class="ti ti-route"></i></span><div><h3>Keep the path short</h3><code>1–3 items</code><p>Use concise hierarchy labels and stop at three levels, matching the RIB source variants.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-accessible"></i></span><div><h3>Current page is announced</h3><code>aria-current="page"</code><p>The final item is readable but not interactive; separators stay decorative.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-contrast"></i></span><div><h3>Readable by default</h3><code>neutralGrey.120</code><p>GlobalDS raises the source Black 40% label to an AA-safe neutral while retaining the Figma hover treatment.</p></div></article>
         </div>` }
     ],
     props: [
-      ['items','List<DsBreadcrumbItem>','required','Ordered crumb list'],
-      ['onTap','ValueChanged<int>?','null','Crumb navigation handler']
+      ['items','List<RibBreadcrumbItem>','required','One to three ordered path items.'],
+      ['title','String','required','Current page title in the 16/20 title row.'],
+      ['web','bool','true','Shows the breadcrumb path above the title.'],
+      ['showDropdown','bool?','item-count rule','Defaults on for one or two items and off for three.'],
+      ['onBack','VoidCallback?','null','Back action; null disables interaction.'],
+      ['onTitleTap','VoidCallback?','null','Optional title menu action when dropdown is shown.']
     ],
-    flutter: `DsBreadcrumbs(items: crumbs, onTap: navigation.goToCrumb)`
+    flutter: `RibBreadcrumb(
+  items: const [
+    RibBreadcrumbItem(label: 'Transfers'),
+    RibBreadcrumbItem(label: 'Beneficiaries'),
+  ],
+  title: 'Add beneficiary',
+  onBack: navigation.goBack,
+)`
   },
 
   toast: {
@@ -1131,20 +1495,73 @@ DsChip(
   },
 
   accordions: {
-    title: 'Accordions', group: 'Display', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Accordions reveal supporting information while keeping dense screens scannable. Use them for FAQs, fee details and optional explanations.',
+    title: 'Accordion', group: 'Display', status: 'beta', version: '0.1', updated: '28 Aug 2026',
+    sandbox: 'accordion',
+    desc: 'The RIB Accordion is a controlled Flutter disclosure component for the International Geographies Internet Banking Revamp. This contract is intentionally scoped to RIB and mirrors the five presentations in Components - RIB.',
     sections: [
-      { title: 'Disclosure list',
-        html: `<div class="canvas">
-          <div class="ds-accordion"><div class="open"><button>Transfer limits <i class="ti ti-chevron-up"></i></button><p>You can send up to CA$ 10,000 per day from eligible accounts.</p></div><div><button>Fees <i class="ti ti-chevron-down"></i></button></div><div><button>Processing time <i class="ti ti-chevron-down"></i></button></div></div>
+      { title: 'RIB variants and states',
+        note: 'Source: Components - RIB, Accordion node 3981:10048. The matrix preserves the Figma typography, spacing, borders, surfaces and exported glyphs. Specimens are uniformly previewed at 118% for review on a 1200 × 800 desktop frame; typography, sizing, spacing and surface behaviour remain 1:1 with Figma.',
+        html: renderRibAccordionShowcase() },
+      { title: 'Behaviour contract',
+        note: 'Use one controlled expanded value per item. The parent decides whether a group permits one or several open items, which keeps business behaviour outside the visual component. Preview scaling is presentation-only and does not change the component contract. AA contrast correction: Figma\'s Grey 110 body copy is promoted to Grey 120 on Cool Grey 90, increasing contrast from 3.78:1 to 5.41:1 while preserving the layout.',
+        html: `<div class="shape-rule-grid">
+          <article class="shape-rule-card"><span><i class="ti ti-click"></i></span><div><h3>Whole header toggles</h3><code>onChanged(!expanded)</code><p>The complete header is one semantic button with an exposed expanded state.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-accessible"></i></span><div><h3>Keyboard and screen reader ready</h3><code>Semantics(expanded: …)</code><p>Enter or Space activates the disclosure and collapsed content leaves the semantic tree.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-language"></i></span><div><h3>Content owns wrapping</h3><code>title + Widget content</code><p>Titles and body content wrap without fixed-height clipping for internationalised copy.</p></div></article>
         </div>` }
     ],
     props: [
-      ['items','List<DsAccordionItem>','required','Accordion rows'],
-      ['expandedIndex','int?','null','Expanded row index'],
-      ['onChanged','ValueChanged<int>?','required','Expansion callback']
+      ['title','String','required','Visible disclosure label.'],
+      ['content','Widget','required','Expanded content; text is styled through DefaultTextStyle.'],
+      ['expanded','bool','required','Controlled collapsed or expanded state.'],
+      ['onChanged','ValueChanged<bool>','required','Receives the requested next state.'],
+      ['variant','RibAccordionVariant','plain','plain · noContainer · colouredBackground · standardContainer · explanationContainer'],
+      ['subtitle','String?','null','Supporting line used by explanationContainer.'],
+      ['leading','Widget?','variant default','Override the RIB leading icon when product context requires it.'],
+      ['animationDuration','Duration','200ms','Expand/collapse motion duration.']
     ],
-    flutter: `DsAccordion(items: faqItems, expandedIndex: 0, onChanged: setExpanded)`
+    flutter: `RibAccordion(
+  title: 'Where will my LAS Account be opened?',
+  content: const Text(
+    'Your LAS Account will be opened at the branch specified by you.',
+  ),
+  expanded: expandedQuestion == 0,
+  variant: RibAccordionVariant.plain,
+  onChanged: (expanded) {
+    setState(() => expandedQuestion = expanded ? 0 : null);
+  },
+)`
+  },
+
+  'activity-timeline': {
+    title: 'Activity timeline', group: 'Display', status: 'beta', version: '0.1', updated: '29 Aug 2026',
+    sandbox: 'activity-timeline',
+    desc: 'The RIB Activity timeline presents the ordered state of banking events as compact connected cards. It supports single- and double-line content, four operational states, and an optional trailing navigation affordance.',
+    sections: [
+      { title: 'RIB variants and states',
+        note: 'Source: Components - RIB, Activity timeline node 3981:10047. Cards preserve the Figma 288px width, 12px rhythm, 12px radius, Button White shadow, exact exported state glyphs, and single- or double-line typography. AA contrast correction: completed status copy uses Success 110 and warning status copy uses Neutral Grey 140; the Figma glyph colour and geometry remain exact.',
+        html: renderRibActivityTimelineShowcase() },
+      { title: 'Behaviour contract',
+        note: 'The timeline is an ordered list, not a stepper: it reports events that have happened or are in progress and does not imply that customers can move between stages. State is always exposed through text and semantics, never colour alone.',
+        html: `<div class="shape-rule-grid">
+          <article class="shape-rule-card"><span><i class="ti ti-list-numbers"></i></span><div><h3>Order carries meaning</h3><code>List&lt;RibActivityTimelineItem&gt;</code><p>Render events in chronological or reverse-chronological order and keep that policy explicit at the call site.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-accessible"></i></span><div><h3>State is announced</h3><code>Semantics(label: …)</code><p>Icons reinforce Inactive, Completed, Warning and Failed labels; colour never communicates the state by itself.</p></div></article>
+          <article class="shape-rule-card"><span><i class="ti ti-chevron-right"></i></span><div><h3>Chevron means action</h3><code>rightIcon + onItemTap</code><p>Only show the trailing chevron when the complete card opens a related activity detail.</p></div></article>
+        </div>` }
+    ],
+    props: [
+      ['items','List<RibActivityTimelineItem>','required','Ordered activity events with label, supporting content, value and state.'],
+      ['type','RibActivityTimelineType','singleLine','singleLine · doubleLine'],
+      ['rightIcon','bool','false','Shows a trailing chevron when items open details.'],
+      ['onItemTap','ValueChanged<int>?','null','Activates a card by index; required when rightIcon is true.'],
+      ['shrinkWrap','bool','true','Sizes the timeline to its content for embedded banking surfaces.']
+    ],
+    flutter: `RibActivityTimeline(
+  type: RibActivityTimelineType.doubleLine,
+  rightIcon: true,
+  items: transferEvents,
+  onItemTap: (index) => openTransferEvent(transferEvents[index]),
+)`
   },
 
   banners: {
