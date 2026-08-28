@@ -208,6 +208,10 @@ enum GlobalDSTypography {
     static let captionSemibold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold)
     // TOKEN_TYPE: typography.microSemibold
     static let microSemibold = GlobalDSTextStyle(size: 10, lineHeight: 14, weight: .semibold)
+    // TOKEN_TYPE: typography.labelLargeSemibold
+    static let labelLargeSemibold = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
+    // TOKEN_TYPE: typography.microRegular
+    static let microRegular = GlobalDSTextStyle(size: 10, lineHeight: 16, weight: .regular)
     // TOKEN_TYPE: typography.inputLargeRegular
     static let inputLargeRegular = GlobalDSTextStyle(size: 16, lineHeight: 24, weight: .regular)
     // TOKEN_TYPE: typography.inputLargeSemibold

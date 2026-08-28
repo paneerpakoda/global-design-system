@@ -362,6 +362,24 @@ class DsText {
     fontFeatures: [FontFeature.tabularFigures()],
   );
 
+  /// TOKEN_TYPE: typography.labelLargeSemibold
+  static const TextStyle labelLargeSemibold = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 12,
+    height: 1.33,
+    fontWeight: FontWeight.w600,
+    fontFeatures: [FontFeature.tabularFigures()],
+  );
+
+  /// TOKEN_TYPE: typography.microRegular
+  static const TextStyle microRegular = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 10,
+    height: 1.60,
+    fontWeight: FontWeight.w400,
+    fontFeatures: [FontFeature.tabularFigures()],
+  );
+
   /// TOKEN_TYPE: typography.inputLargeRegular
   static const TextStyle inputLargeRegular = TextStyle(
     fontFamily: fontFamily,

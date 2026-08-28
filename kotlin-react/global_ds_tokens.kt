@@ -321,6 +321,22 @@ object GlobalDSTypography {
         fontWeight = 600,
     )
 
+    // TOKEN_TYPE: typography.labelLargeSemibold
+    val labelLargeSemibold = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 12.0,
+        lineHeightPx = 16.0,
+        fontWeight = 600,
+    )
+
+    // TOKEN_TYPE: typography.microRegular
+    val microRegular = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 10.0,
+        lineHeightPx = 16.0,
+        fontWeight = 400,
+    )
+
     // TOKEN_TYPE: typography.inputLargeRegular
     val inputLargeRegular = GlobalDSTextStyle(
         fontFamily = fontFamily,

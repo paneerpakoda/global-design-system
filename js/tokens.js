@@ -178,6 +178,8 @@ const DS = {
     { group:'Labels & micro', token:'captionRegular', size:11, height:16, weight:400, use:'Timestamps and small support text' },
     { group:'Labels & micro', token:'captionSemibold', size:11, height:16, weight:600, use:'Small labels and captions' },
     { group:'Labels & micro', token:'microSemibold', size:10, height:14, weight:600, use:'Rare badges, legal and tiny UI' },
+    { group:'Labels & micro', token:'labelLargeSemibold', size:12, height:16, weight:600, use:'Large compact labels' },
+    { group:'Labels & micro', token:'microRegular', size:10, height:16, weight:400, use:'Legal copy and quiet micro text' },
 
     { group:'Usage aliases', token:'inputLargeRegular', size:16, height:24, weight:400, use:'Large input value text' },
     { group:'Usage aliases', token:'inputLargeSemibold', size:16, height:24, weight:600, use:'Large emphasized input text' },

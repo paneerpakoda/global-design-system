@@ -114,3 +114,22 @@ test('publishes accessible foreground pairings for filled operational states', (
     },
   });
 });
+
+test('publishes all 35 GlobalDS typography entries from the comparison audit', () => {
+  assert.equal(DS.type.length, 35);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(
+      DS.type.filter(token => ['labelLargeSemibold', 'microRegular'].includes(token.token)),
+    )),
+    [
+      {
+        group: 'Labels & micro', token: 'labelLargeSemibold', size: 12,
+        height: 16, weight: 600, use: 'Large compact labels',
+      },
+      {
+        group: 'Labels & micro', token: 'microRegular', size: 10,
+        height: 16, weight: 400, use: 'Legal copy and quiet micro text',
+      },
+    ],
+  );
+});
