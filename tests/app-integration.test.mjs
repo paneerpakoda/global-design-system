@@ -18,14 +18,14 @@ test('loads the export contract after tokens and before the app shell', () => {
   assert.ok(appIndex > exportsIndex);
 });
 
-test('exposes one Developers destination for all three platforms', () => {
+test('exposes one Developers destination for all three development targets', () => {
   const app = read('js/app.js');
   assert.match(app, /route: '#\/developers'/);
   assert.match(app, /Platform exports/);
   assert.match(app, /Kotlin · ReactJS/);
   assert.match(app, /Flutter/);
   assert.match(app, /SwiftUI/);
-  assert.match(app, /3 platforms/);
+  assert.match(app, /Three native targets/);
 });
 
 test('routes every download through the shared export contract', () => {

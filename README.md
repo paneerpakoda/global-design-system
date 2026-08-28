@@ -1,6 +1,6 @@
-# ICICI Global DS
+# GlobalDS OS
 
-The living design-system hub for **ICICI Global Design System** and the international retail net-banking revamps. The app documents foundations, components and patterns, provides a live playground, and generates platform-native token and theme exports from one source.
+The living design-system hub for **ICICI Bank GlobalDS OS**. It begins with the converged iMobile Android, iMobile iOS and RIB foundations, keeps the wider ICICI platform estate visible, and generates platform-native token and theme exports from one source.
 
 ## Run it
 

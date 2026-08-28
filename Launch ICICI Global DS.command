@@ -1,5 +1,5 @@
 #!/bin/bash
-# Double-click this file in Finder to launch ICICI Global DS.
+# Double-click this file in Finder to launch GlobalDS OS.
 # It serves the app on localhost and opens it in your browser.
 # Close this Terminal window (or press Ctrl-C) to stop the server.
 
@@ -8,12 +8,12 @@ PORT=8790
 
 # If something is already serving on the port, just open the browser.
 if curl -s "http://localhost:$PORT" >/dev/null 2>&1; then
-  echo "ICICI Global DS is already running."
+  echo "GlobalDS OS is already running."
   open "http://localhost:$PORT"
   exit 0
 fi
 
-echo "Starting ICICI Global DS on http://localhost:$PORT"
+echo "Starting GlobalDS OS on http://localhost:$PORT"
 echo "Keep this window open while you use the app."
 echo "Close it (or press Ctrl-C) to stop."
 echo ""

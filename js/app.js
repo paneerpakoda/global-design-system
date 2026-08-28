@@ -79,10 +79,10 @@ function guidanceList(items){
 }
 
 function productMockup(){
-  return `<article class="product-mockup-card" aria-label="RIB DesignOS product preview">
+  return `<article class="product-mockup-card" aria-label="GlobalDS OS product preview">
     <div class="mockup-toolbar">
       <span></span><span></span><span></span>
-      <b>RIB DesignOS</b>
+      <b>GlobalDS OS</b>
     </div>
     <div class="mockup-peek">
       <section class="peek-card peek-primary">
@@ -118,8 +118,8 @@ function appFooter(){
   return `<footer class="app-footer">
     <div class="app-footer-inner">
       <div>
-        <strong>RIB DesignOS</strong>
-        <p>GlobalDS hub for international retail net banking revamps.</p>
+        <strong>GlobalDS OS</strong>
+        <p>One governed design-system foundation for ICICI Bank products and journeys.</p>
       </div>
       <nav aria-label="Footer">
         <a href="#/f/colors">Foundations</a>
@@ -141,13 +141,13 @@ function renderHome(){
   <div class="hero cal-hero">
     <div class="hero-copy">
       <div class="hero-top">
-        <div class="dh-crumbs"><span class="dh-mark">i</span><span>Design system</span><i class="ti ti-arrow-right"></i><span class="cur">RIB Canada</span></div>
-        <span class="dh-site">Pilot workspace</span>
+        <div class="dh-crumbs"><span class="dh-mark">i</span><span>ICICI Bank</span><i class="ti ti-arrow-right"></i><span class="cur">GlobalDS OS</span></div>
+        <span class="dh-site">Multi-platform foundation</span>
       </div>
       <div class="dh-title-row">
-        <h1 class="hero-title" data-reveal-words>DesignOS for RIB Canada.</h1>
+        <h1 class="hero-title" data-reveal-words>One system for every ICICI experience.</h1>
       </div>
-      <p class="hero-desc">A calm home for foundations, components and patterns.</p>
+      <p class="hero-desc">GlobalDS OS converges today’s iMobile Android, iMobile iOS and RIB systems into one governed foundation—with the wider platform estate in view.</p>
       <div class="hero-foot">
         <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/f/colors">Explore the system <i class="ti ti-arrow-right"></i></button>
       </div>
@@ -158,8 +158,9 @@ function renderHome(){
     <div class="metric"><small>Components</small><strong data-countup>${compCount}</strong></div>
     <div class="metric"><small>Design tokens</small><strong data-countup>${tokenCount}+</strong></div>
     <div class="metric"><small>Patterns</small><strong data-countup>${Object.keys(PATTERNS).length}</strong></div>
-    <div class="metric"><small>Targets</small><strong>3 platforms</strong></div>
+    <div class="metric"><small>Platform estate</small><strong>8 platforms</strong></div>
   </div>
+  ${renderPlatformScope()}
   <section class="section">
     <h2 class="section-title">Start here</h2>
     <div class="cards-grid">
@@ -232,7 +233,7 @@ function renderHome(){
     <h2 class="section-title">Principles</h2>
     <div class="cards-grid">
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-accessible"></i><h3>Accessible by default</h3><p>AA contrast everywhere, 44px touch targets, labels that survive translation.</p></div>
-      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-world"></i><h3>One system, many markets</h3><p>Canada, UK, Germany — geography lives in content and config, not in forked components.</p></div>
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-world"></i><h3>One system, many platforms</h3><p>Channel and journey differences live in configuration, not in forked foundations.</p></div>
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-code"></i><h3>One source, three targets</h3><p>Kotlin/React, Flutter and SwiftUI receive native APIs generated from the same token identity.</p></div>
     </div>
   </section>`;
@@ -503,7 +504,7 @@ function renderShape(){
   ];
   let html = pageHeader({ crumbs:['Foundations','Radius & elevation'], title:'Radius & elevation', status:'stable', version:'1.0',
     updated:'20 May 2026',
-    desc:'A restrained shape and shadow system for international RIB. Corners should feel precise and approachable; shadows are used only when a surface is genuinely floating above the interface.' });
+    desc:'A restrained shape and shadow system for ICICI Bank experiences. Corners should feel precise and approachable; shadows are used only when a surface is genuinely floating above the interface.' });
   html += `<section class="section shape-section">
     <article class="foundation-card shape-scale-card">
       <div class="foundation-card-head">
@@ -648,9 +649,9 @@ function dartColorTokenName(ramp, stop){
 function dartTokens(){
   let s = "import 'dart:ui' show FontFeature;\n";
   s += "import 'package:flutter/material.dart';\n\n";
-  s += '/// ICICI Global DS tokens — generated by ICICI Global DS v' + DS.meta.version + '\n';
+  s += '/// GlobalDS OS tokens — generated by GlobalDS OS v' + DS.meta.version + '\n';
   s += '/// Source of truth: icici-global-ds/js/tokens.js\n';
-  s += '/// Regenerate from the DesignOS Developers page; do not edit by hand.\n\n';
+  s += '/// Regenerate from the GlobalDS OS Developers page; do not edit by hand.\n\n';
   s += 'class DsColors {\n  DsColors._();\n\n';
   for (const [ramp, def] of Object.entries(DS.color)) {
     s += '  // ' + def.label + '\n';
@@ -695,7 +696,7 @@ function dartTheme(){
   return `import 'package:flutter/material.dart';
 import 'ds_tokens.dart';
 
-/// ICICI Global DS ThemeData — generated by ICICI Global DS v` + DS.meta.version + `
+/// GlobalDS OS ThemeData — generated by GlobalDS OS v` + DS.meta.version + `
 /// Wire it up once: MaterialApp(theme: DsTheme.light)
 class DsTheme {
   DsTheme._();
@@ -912,7 +913,7 @@ class RibApp extends StatelessWidget {
       <button class="ds-btn secondary md" data-dl="ds_tokens.dart"><i class="ti ti-download"></i> ds_tokens.dart</button>
       <button class="ds-btn secondary md" data-dl="ds_theme.dart"><i class="ti ti-download"></i> ds_theme.dart</button></div>`,
     guidance:{ label:'Export guidance', html:'<p class="guidance-note">Importing into FlutterFlow or syncing a token plugin? Use the raw JSON. For app builds, use the generated Dart files.</p>' } });
-  html += guidanceHtml('End-to-end pipeline', '<p class="guidance-note">tokens.js in RIB DesignOS generates ds_tokens.dart, feeds DsTheme.light and keeps product widgets aligned to one GlobalDS source of truth.</p>');
+  html += guidanceHtml('End-to-end pipeline', '<p class="guidance-note">tokens.js in GlobalDS OS generates each native token package and keeps product widgets aligned to one shared source of truth.</p>');
   return html;
 }
 

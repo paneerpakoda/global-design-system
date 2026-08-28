@@ -25,9 +25,9 @@ const DS = {
   ],
 
   sourceSystems: [
-    { id:'imobile-android', name:'iMobile Android', basis:'Stable foundation colour system' },
-    { id:'imobile-ios', name:'iMobile iOS', basis:'As On WIP colour system' },
-    { id:'rib', name:'RIB', basis:'RIB Design System colour system' }
+    { id:'imobile-android', name:'iMobile Android', basis:'Existing Android design system' },
+    { id:'imobile-ios', name:'iMobile iOS', basis:'Existing iOS design system' },
+    { id:'rib', name:'RIB', basis:'Existing RIB design system' }
   ],
 
   deferredSystems: [
@@ -146,7 +146,7 @@ const DS = {
 
   typeface: {
     family: 'Mulish',
-    note: 'Rounded, calm and highly legible for RIB interfaces. Use tabular figures for balances, amounts and OTP-like numeric UI.'
+    note: 'Rounded, calm and highly legible across ICICI Bank interfaces. Use tabular figures for balances, amounts and OTP-like numeric UI.'
   },
 
   /* Typography — core styles first, usage aliases second */
