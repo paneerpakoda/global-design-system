@@ -1,5 +1,5 @@
 /* ============================================================
-   ICICI Global DS — app shell: navigation, pages and exports UI
+   GlobalDS OS — app shell: navigation, pages and exports UI
    ============================================================ */
 
 const NAV = [
@@ -322,14 +322,33 @@ function renderColors(){
     ['Quiet border', '--border-quiet', '#E7E8E9', 'Low-emphasis component edges and separators.'],
     ['Strong border', '--border-strong', '#CDCFD0', 'Page header edges and primary surface separation.']
   ];
-  const alphaRows = [
-    ['White overlay 20', 'alpha.white.20', 'rgba(255,255,255,.20)', 'Light overlay for image/gradient treatments. Keep it decorative, not structural.'],
-    ['White overlay 40', 'alpha.white.40', 'rgba(255,255,255,.40)', 'Stronger overlay where branded surfaces need a calmer layer.'],
-    ['White stroke 50', 'alpha.white.50', 'rgba(255,255,255,.50)', 'One-pixel border side on primary button anatomy.']
-  ];
+  const alphaRows = Object.entries(DS.alpha).flatMap(([colour, stops]) =>
+    Object.entries(stops).map(([stop, value]) => [
+      `${colour.charAt(0).toUpperCase() + colour.slice(1)} overlay ${stop}`,
+      `alpha.${colour}.${stop}`,
+      value,
+      stop === '50'
+        ? 'Component-specific white stroke used by primary button anatomy.'
+        : `${stop}% ${colour} overlay for scrims, media and layered surfaces.`
+    ])
+  );
   let html = pageHeader({ crumbs:['Foundations','Colours'], title:'Colours', status:'stable', version:'1.0',
-    updated:'20 May 2026',
-    desc:'The colour foundation for international RIB: fixed ICICI brand colours, primary action colours for UI behaviour, calm neutrals for structure, and pastels for controlled extended expression.' });
+    updated:DS.meta.updated,
+    desc:'The canonical colour foundation for iMobile Android, iMobile iOS and RIB—ready to become the shared base for every ICICI Bank platform.' });
+
+  html += `<section class="section colour-section">
+    <h2 class="section-title">Convergence decision</h2>
+    <p class="section-note">The final palette keeps source-system history visible while publishing one unambiguous token contract.</p>
+    ${guidanceHtml('How the final values were selected', `
+      ${guidanceList([
+        { term:'Brand pair', token:'#E3530F / #BE2A2A', text:'Preserve the fixed ICICI identity colours; they are not repurposed as semantic state colours.' },
+        { term:'Action ramps', token:'primaryOrange / primaryMaroon', text:'Use the stable foundation ramps. Orange 100 supports white CTA text at AA contrast, unlike the lighter WIP and RIB defaults.' },
+        { term:'Neutrals', token:'neutralGrey / surfaceCoolGrey', text:'Adopt the complete values shared by the stable foundation and RIB system.' },
+        { term:'Pastels', token:'pastel*', text:'Use values shared by at least two source systems when individual stops diverge.' },
+        { term:'Operational states', token:'success / warning / error / info', text:'Use the exact 90–110 indicative ramps shared by iMobile iOS and RIB.' }
+      ])}
+    `)}
+  </section>`;
 
   html += `<section class="section colour-section">
     <h2 class="section-title">Brand and primary colours</h2>
@@ -344,15 +363,25 @@ function renderColors(){
 
   html += `<section class="section colour-section">
     <h2 class="section-title">Neutrals and surfaces</h2>
-    <div class="colour-ramp-stack">${['neutralBase','neutralGrey','surfaceCoolGrey'].map(rampCard).join('')}</div>
+    <div class="colour-ramp-stack">${['neutralBase','neutralGrey','surfaceCoolGrey','backgroundGrey'].map(rampCard).join('')}</div>
     ${guidanceHtml('Roles, surface & alpha tokens', `
       <p class="guidance-note">Neutrals are split by job: absolute endpoints, neutral greys for ink and structure, and cool surface greys for page planes — calm without flattening everything into one pale field.</p>
-      ${rampNotes(['neutralBase','neutralGrey','surfaceCoolGrey'])}
+      ${rampNotes(['neutralBase','neutralGrey','surfaceCoolGrey','backgroundGrey'])}
       <h4 class="guidance-subhead">Surface tokens</h4>
       ${surfaceGridHtml(surfaceRows)}
       <h4 class="guidance-subhead">Alpha overlays</h4>
       <p class="guidance-note">Alpha tokens stay separate from the colour ramp because their appearance depends on what sits underneath them.</p>
       ${surfaceGridHtml(alphaRows)}
+    `)}
+  </section>`;
+
+  html += `<section class="section colour-section">
+    <h2 class="section-title">Pastel ramps</h2>
+    <p class="section-note">Pastels provide controlled tinted surfaces without borrowing the meaning of operational state colours.</p>
+    <div class="colour-ramp-stack compact">${['pastelBlue','pastelBrown','pastelGreen','pastelAmber','pastelPeach'].map(rampCard).join('')}</div>
+    ${guidanceHtml('Pastel usage guidance', `
+      <p class="guidance-note">Use these for low-emphasis panels, decorative illustrations and category distinction. Pair them with explicit text or icons when meaning matters.</p>
+      ${rampNotes(['pastelBlue','pastelBrown','pastelGreen','pastelAmber','pastelPeach'])}
     `)}
   </section>`;
 
@@ -677,7 +706,7 @@ class DsTheme {
       onPrimary: Colors.white,
       secondary: DsColors.primaryMaroon100,
       onSecondary: Colors.white,
-      error: DsColors.error500,
+      error: DsColors.error100,
       onError: Colors.white,
       surface: Colors.white,
       onSurface: DsColors.neutralGrey150,
@@ -751,7 +780,7 @@ class DsTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
-          borderSide: const BorderSide(color: DsColors.error500),
+          borderSide: const BorderSide(color: DsColors.error100),
         ),
         labelStyle: DsText.inputMediumRegular,
         hintStyle: DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
@@ -828,7 +857,11 @@ function tokensJson(){
   for (const [ramp, def] of Object.entries(DS.color)) colors[ramp] = def.stops;
   return JSON.stringify({
     meta: DS.meta,
+    platforms: DS.platforms,
+    sourceSystems: DS.sourceSystems,
+    deferredSystems: DS.deferredSystems,
     colors: colors,
+    semanticColors: DS.semanticColor,
     gradient: DS.gradient.hero,
     gradients: DS.gradient,
     alpha: DS.alpha,

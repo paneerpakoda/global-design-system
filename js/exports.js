@@ -1,5 +1,5 @@
 /* ============================================================
-   ICICI Global DS — deterministic platform exports
+   GlobalDS OS — deterministic platform exports
    Every generated file projects the shared DS object from tokens.js.
    ============================================================ */
 
@@ -30,7 +30,7 @@ function exportPascalCase(value){
 }
 
 function exportHeader(commentPrefix){
-  return commentPrefix + ' ICICI Global DS v' + DS.meta.version + '\n' +
+  return commentPrefix + ' GlobalDS OS v' + DS.meta.version + '\n' +
     commentPrefix + ' Generated from js/tokens.js. Do not edit by hand.\n';
 }
 
@@ -107,7 +107,7 @@ data class GlobalDSTheme(
             onSecondary = GlobalDSColors.neutralBaseWhite,
             surface = GlobalDSColors.neutralBaseWhite,
             onSurface = GlobalDSColors.neutralGrey150,
-            error = GlobalDSColors.error500,
+            error = GlobalDSColors.error100,
         )
     }
 }
@@ -174,7 +174,7 @@ import 'ds_tokens.dart';
       onPrimary: DsColors.neutralBaseWhite,
       secondary: DsColors.primaryMaroon100,
       onSecondary: DsColors.neutralBaseWhite,
-      error: DsColors.error500,
+      error: DsColors.error100,
       onError: DsColors.neutralBaseWhite,
       surface: DsColors.neutralBaseWhite,
       onSurface: DsColors.neutralGrey150,
@@ -248,7 +248,7 @@ import 'ds_tokens.dart';
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
-          borderSide: const BorderSide(color: DsColors.error500),
+          borderSide: const BorderSide(color: DsColors.error100),
         ),
         labelStyle: DsText.inputMediumRegular,
         hintStyle: DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
@@ -392,7 +392,7 @@ function swiftUITheme(){
         onSecondary: GlobalDSColors.neutralBaseWhite,
         surface: GlobalDSColors.neutralBaseWhite,
         onSurface: GlobalDSColors.neutralGrey150,
-        error: GlobalDSColors.error500
+        error: GlobalDSColors.error100
     )
 }
 
@@ -420,7 +420,11 @@ function platformNeutralTokensJson(){
   for (const [ramp, definition] of Object.entries(DS.color)) colors[ramp] = definition.stops;
   return JSON.stringify({
     meta: DS.meta,
+    platforms: DS.platforms,
+    sourceSystems: DS.sourceSystems,
+    deferredSystems: DS.deferredSystems,
     colors,
+    semanticColors: DS.semanticColor,
     gradient: DS.gradient.hero,
     gradients: DS.gradient,
     alpha: DS.alpha,

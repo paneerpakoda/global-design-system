@@ -1,17 +1,39 @@
 /* ============================================================
-   ICICI Global DS — design tokens (single source of truth)
+   GlobalDS OS — design tokens (single source of truth)
    The app renders foundations from this object AND generates
    Kotlin/React, Flutter, SwiftUI and JSON exports from it.
    ============================================================ */
 
 const DS = {
   meta: {
-    name: 'ICICI Global DS',
-    fullName: 'ICICI Global Design System',
-    org: 'ICICI Bank · International retail net banking',
-    version: '0.2.0',
+    name: 'GlobalDS OS',
+    fullName: 'ICICI Bank Global Design System OS',
+    org: 'ICICI Bank · Multi-platform design system',
+    version: '0.3.0',
     updated: '28 Aug 2026'
   },
+
+  platforms: [
+    { id:'rib', name:'RIB', fullName:'Retail Internet Banking', channel:'Retail · Web', adoption:'now' },
+    { id:'imobile', name:'iMobile', fullName:'Retail Mobile Banking', channel:'Retail · Mobile', adoption:'now' },
+    { id:'cib', name:'CIB', fullName:'Corporate Internet Banking', channel:'Corporate · Web', adoption:'deferred' },
+    { id:'instabiz', name:'InstaBiz', fullName:'Corporate Mobile Banking', channel:'Corporate · Mobile', adoption:'deferred' },
+    { id:'ucj', name:'UCJ', fullName:'Unified Customer Journey', channel:'Onboarding journeys', adoption:'future' },
+    { id:'csp', name:'CSP', fullName:'Common Service Platforms', channel:'Service journeys', adoption:'future' },
+    { id:'public-website', name:'Public Website', fullName:'Non Logged In (NLI)', channel:'Public web', adoption:'future' },
+    { id:'m2i', name:'M2I', fullName:'M2I', channel:'Platform', adoption:'future' }
+  ],
+
+  sourceSystems: [
+    { id:'imobile-android', name:'iMobile Android', basis:'Stable foundation colour system' },
+    { id:'imobile-ios', name:'iMobile iOS', basis:'As On WIP colour system' },
+    { id:'rib', name:'RIB', basis:'RIB Design System colour system' }
+  ],
+
+  deferredSystems: [
+    { id:'cib', name:'CIB', reason:'DFF is not yet ready for GlobalDS convergence.' },
+    { id:'instabiz', name:'InstaBiz', reason:'DFF is not yet ready for GlobalDS convergence.' }
+  ],
 
   color: {
     brand: {
@@ -44,26 +66,65 @@ const DS = {
       note: 'Page canvas, sidebar, quiet panels and structural backgrounds. Keep separate from text/border greys.',
       stops: { 90:'#FCFCFD',100:'#F8F9FB',110:'#EFF1F6' }
     },
-    success: {
-      label: 'Success green',
-      note: 'Positive amounts, confirmations, completed states.',
-      stops: { 50:'#ECFDF3',100:'#D1FADF',500:'#12B76A',600:'#039855',700:'#027A48' }
+    backgroundGrey: {
+      label: 'Background grey',
+      note: 'A neutral application background shared by the iMobile iOS and RIB systems.',
+      stops: { 100:'#F9F9F9' }
     },
-    error: {
-      label: 'Error red',
-      note: 'Validation errors, failed transactions, destructive actions.',
-      stops: { 50:'#FEF3F2',100:'#FEE4E2',500:'#F04438',600:'#D92D20',700:'#B42318' }
+    pastelBlue: {
+      label: 'Pastel blue',
+      note: 'Quiet informational and cool decorative surfaces. Values are shared across all three source systems.',
+      stops: { 80:'#F7FAFC',90:'#EBF1F8',100:'#E3EDF8',110:'#99ADC2',120:'#7993AF' }
+    },
+    pastelBrown: {
+      label: 'Pastel brown',
+      note: 'Warm neutral surfaces. Uses the majority-agreed values where the source systems diverge.',
+      stops: { 80:'#FDFDFC',90:'#F9F9F5',100:'#F6F5F0',110:'#E9E6D9',120:'#CFCAAF' }
+    },
+    pastelGreen: {
+      label: 'Pastel green',
+      note: 'Positive and reassuring tinted surfaces, separate from operational success colours.',
+      stops: { 80:'#F8FCFA',90:'#F1F9F6',100:'#E5F4EE',110:'#E2F0EA',120:'#BFDED1' }
+    },
+    pastelAmber: {
+      label: 'Pastel amber',
+      note: 'Warm attention and decorative surfaces, separate from operational warning colours.',
+      stops: { 80:'#FEFCFB',90:'#FCF6F2',100:'#FAEFE8',110:'#F7E1D4',120:'#FACAAD' }
+    },
+    pastelPeach: {
+      label: 'Pastel peach',
+      note: 'Soft brand-adjacent surfaces, separate from error and alert colours.',
+      stops: { 80:'#FEFBFB',90:'#FDF4F4',100:'#FCEEEE',110:'#F8E8E9',120:'#EEC9CC' }
+    },
+    success: {
+      label: 'Indicative success',
+      note: 'Positive amounts, confirmations and completed states. Shared exactly by iMobile iOS and RIB.',
+      stops: { 90:'#00C26F',100:'#008F52',110:'#005C35' }
     },
     warning: {
-      label: 'Warning amber',
-      note: 'Pending states, maintenance notices, actions needing attention.',
-      stops: { 50:'#FFFAEB',100:'#FEF0C7',500:'#F79009',600:'#DC6803',700:'#B54708' }
+      label: 'Indicative warning',
+      note: 'Pending states, maintenance notices and actions needing attention. Shared exactly by iMobile iOS and RIB.',
+      stops: { 90:'#FFC633',100:'#FFB800',110:'#CC9300' }
+    },
+    error: {
+      label: 'Indicative error',
+      note: 'Validation errors, failed transactions and destructive actions. Shared exactly by iMobile iOS and RIB.',
+      stops: { 90:'#E05257',100:'#D8272D',110:'#AD1F24' }
     },
     info: {
-      label: 'Info blue',
-      note: 'Informational banners, tips, neutral notices.',
-      stops: { 50:'#EFF8FF',100:'#D1E9FF',500:'#2E90FA',600:'#1570EF',700:'#175CD3' }
+      label: 'Indicative information',
+      note: 'Informational banners, tips and neutral notices. Shared exactly by iMobile iOS and RIB.',
+      stops: { 90:'#6B97FF',100:'#3772FF',110:'#054FFF' }
     }
+  },
+
+  semanticColor: {
+    primary: { default:'primaryOrange.100', hover:'primaryOrange.110', pressed:'primaryOrange.120', subtle:'primaryOrange.80' },
+    secondary: { default:'primaryMaroon.100', hover:'primaryMaroon.110', pressed:'primaryMaroon.120', subtle:'primaryMaroon.80' },
+    surface: { canvas:'surfaceCoolGrey.110', default:'neutralBase.white', subtle:'surfaceCoolGrey.100', alternate:'backgroundGrey.100' },
+    content: { primary:'neutralGrey.150', secondary:'neutralGrey.130', muted:'neutralGrey.110', inverse:'neutralBase.white' },
+    border: { quiet:'neutralGrey.70', default:'neutralGrey.80', strong:'neutralGrey.100' },
+    state: { success:'success.100', warning:'warning.110', error:'error.100', info:'info.100' }
   },
 
   gradient: {
@@ -79,7 +140,8 @@ const DS = {
   },
 
   alpha: {
-    white: { 20:'rgba(255,255,255,.20)', 40:'rgba(255,255,255,.40)', 50:'rgba(255,255,255,.50)' }
+    black: { 20:'rgba(0,0,0,.20)', 40:'rgba(0,0,0,.40)', 60:'rgba(0,0,0,.60)', 80:'rgba(0,0,0,.80)', 100:'rgba(0,0,0,1)' },
+    white: { 20:'rgba(255,255,255,.20)', 40:'rgba(255,255,255,.40)', 50:'rgba(255,255,255,.50)', 60:'rgba(255,255,255,.60)', 80:'rgba(255,255,255,.80)', 100:'rgba(255,255,255,1)' }
   },
 
   typeface: {

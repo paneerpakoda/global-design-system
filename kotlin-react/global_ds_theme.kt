@@ -1,4 +1,4 @@
-// ICICI Global DS v0.2.0
+// GlobalDS OS v0.3.0
 // Generated from js/tokens.js. Do not edit by hand.
 package com.icici.globalds
 
@@ -31,7 +31,7 @@ data class GlobalDSTheme(
             onSecondary = GlobalDSColors.neutralBaseWhite,
             surface = GlobalDSColors.neutralBaseWhite,
             onSurface = GlobalDSColors.neutralGrey150,
-            error = GlobalDSColors.error500,
+            error = GlobalDSColors.error100,
         )
     }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ds_tokens.dart';
 
-/// ICICI Global DS v0.2.0
+/// GlobalDS OS v0.3.0
 /// Generated from js/tokens.js. Do not edit by hand.
 class DsTheme {
   DsTheme._();
@@ -12,7 +12,7 @@ class DsTheme {
       onPrimary: DsColors.neutralBaseWhite,
       secondary: DsColors.primaryMaroon100,
       onSecondary: DsColors.neutralBaseWhite,
-      error: DsColors.error500,
+      error: DsColors.error100,
       onError: DsColors.neutralBaseWhite,
       surface: DsColors.neutralBaseWhite,
       onSurface: DsColors.neutralGrey150,
@@ -86,7 +86,7 @@ class DsTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
-          borderSide: const BorderSide(color: DsColors.error500),
+          borderSide: const BorderSide(color: DsColors.error100),
         ),
         labelStyle: DsText.inputMediumRegular,
         hintStyle: DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),

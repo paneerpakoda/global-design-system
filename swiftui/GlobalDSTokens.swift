@@ -1,6 +1,6 @@
 import SwiftUI
 
-// ICICI Global DS v0.2.0
+// GlobalDS OS v0.3.0
 // Generated from js/tokens.js. Do not edit by hand.
 enum GlobalDSColors {
     // TOKEN_COLOR: color.brand.orange
@@ -57,46 +57,82 @@ enum GlobalDSColors {
     static let surfaceCoolGrey100 = Color(.sRGB, red: 0.9725, green: 0.9765, blue: 0.9843, opacity: 1)
     // TOKEN_COLOR: color.surfaceCoolGrey.110
     static let surfaceCoolGrey110 = Color(.sRGB, red: 0.9373, green: 0.9451, blue: 0.9647, opacity: 1)
-    // TOKEN_COLOR: color.success.50
-    static let success50 = Color(.sRGB, red: 0.9255, green: 0.9922, blue: 0.9529, opacity: 1)
+    // TOKEN_COLOR: color.backgroundGrey.100
+    static let backgroundGrey100 = Color(.sRGB, red: 0.9765, green: 0.9765, blue: 0.9765, opacity: 1)
+    // TOKEN_COLOR: color.pastelBlue.80
+    static let pastelBlue80 = Color(.sRGB, red: 0.9686, green: 0.9804, blue: 0.9882, opacity: 1)
+    // TOKEN_COLOR: color.pastelBlue.90
+    static let pastelBlue90 = Color(.sRGB, red: 0.9216, green: 0.9451, blue: 0.9725, opacity: 1)
+    // TOKEN_COLOR: color.pastelBlue.100
+    static let pastelBlue100 = Color(.sRGB, red: 0.8902, green: 0.9294, blue: 0.9725, opacity: 1)
+    // TOKEN_COLOR: color.pastelBlue.110
+    static let pastelBlue110 = Color(.sRGB, red: 0.6, green: 0.6784, blue: 0.7608, opacity: 1)
+    // TOKEN_COLOR: color.pastelBlue.120
+    static let pastelBlue120 = Color(.sRGB, red: 0.4745, green: 0.5765, blue: 0.6863, opacity: 1)
+    // TOKEN_COLOR: color.pastelBrown.80
+    static let pastelBrown80 = Color(.sRGB, red: 0.9922, green: 0.9922, blue: 0.9882, opacity: 1)
+    // TOKEN_COLOR: color.pastelBrown.90
+    static let pastelBrown90 = Color(.sRGB, red: 0.9765, green: 0.9765, blue: 0.9608, opacity: 1)
+    // TOKEN_COLOR: color.pastelBrown.100
+    static let pastelBrown100 = Color(.sRGB, red: 0.9647, green: 0.9608, blue: 0.9412, opacity: 1)
+    // TOKEN_COLOR: color.pastelBrown.110
+    static let pastelBrown110 = Color(.sRGB, red: 0.9137, green: 0.902, blue: 0.851, opacity: 1)
+    // TOKEN_COLOR: color.pastelBrown.120
+    static let pastelBrown120 = Color(.sRGB, red: 0.8118, green: 0.7922, blue: 0.6863, opacity: 1)
+    // TOKEN_COLOR: color.pastelGreen.80
+    static let pastelGreen80 = Color(.sRGB, red: 0.9725, green: 0.9882, blue: 0.9804, opacity: 1)
+    // TOKEN_COLOR: color.pastelGreen.90
+    static let pastelGreen90 = Color(.sRGB, red: 0.9451, green: 0.9765, blue: 0.9647, opacity: 1)
+    // TOKEN_COLOR: color.pastelGreen.100
+    static let pastelGreen100 = Color(.sRGB, red: 0.898, green: 0.9569, blue: 0.9333, opacity: 1)
+    // TOKEN_COLOR: color.pastelGreen.110
+    static let pastelGreen110 = Color(.sRGB, red: 0.8863, green: 0.9412, blue: 0.9176, opacity: 1)
+    // TOKEN_COLOR: color.pastelGreen.120
+    static let pastelGreen120 = Color(.sRGB, red: 0.749, green: 0.8706, blue: 0.8196, opacity: 1)
+    // TOKEN_COLOR: color.pastelAmber.80
+    static let pastelAmber80 = Color(.sRGB, red: 0.9961, green: 0.9882, blue: 0.9843, opacity: 1)
+    // TOKEN_COLOR: color.pastelAmber.90
+    static let pastelAmber90 = Color(.sRGB, red: 0.9882, green: 0.9647, blue: 0.949, opacity: 1)
+    // TOKEN_COLOR: color.pastelAmber.100
+    static let pastelAmber100 = Color(.sRGB, red: 0.9804, green: 0.9373, blue: 0.9098, opacity: 1)
+    // TOKEN_COLOR: color.pastelAmber.110
+    static let pastelAmber110 = Color(.sRGB, red: 0.9686, green: 0.8824, blue: 0.8314, opacity: 1)
+    // TOKEN_COLOR: color.pastelAmber.120
+    static let pastelAmber120 = Color(.sRGB, red: 0.9804, green: 0.7922, blue: 0.6784, opacity: 1)
+    // TOKEN_COLOR: color.pastelPeach.80
+    static let pastelPeach80 = Color(.sRGB, red: 0.9961, green: 0.9843, blue: 0.9843, opacity: 1)
+    // TOKEN_COLOR: color.pastelPeach.90
+    static let pastelPeach90 = Color(.sRGB, red: 0.9922, green: 0.9569, blue: 0.9569, opacity: 1)
+    // TOKEN_COLOR: color.pastelPeach.100
+    static let pastelPeach100 = Color(.sRGB, red: 0.9882, green: 0.9333, blue: 0.9333, opacity: 1)
+    // TOKEN_COLOR: color.pastelPeach.110
+    static let pastelPeach110 = Color(.sRGB, red: 0.9725, green: 0.9098, blue: 0.9137, opacity: 1)
+    // TOKEN_COLOR: color.pastelPeach.120
+    static let pastelPeach120 = Color(.sRGB, red: 0.9333, green: 0.7882, blue: 0.8, opacity: 1)
+    // TOKEN_COLOR: color.success.90
+    static let success90 = Color(.sRGB, red: 0.0, green: 0.7608, blue: 0.4353, opacity: 1)
     // TOKEN_COLOR: color.success.100
-    static let success100 = Color(.sRGB, red: 0.8196, green: 0.9804, blue: 0.8745, opacity: 1)
-    // TOKEN_COLOR: color.success.500
-    static let success500 = Color(.sRGB, red: 0.0706, green: 0.7176, blue: 0.4157, opacity: 1)
-    // TOKEN_COLOR: color.success.600
-    static let success600 = Color(.sRGB, red: 0.0118, green: 0.5961, blue: 0.3333, opacity: 1)
-    // TOKEN_COLOR: color.success.700
-    static let success700 = Color(.sRGB, red: 0.0078, green: 0.4784, blue: 0.2824, opacity: 1)
-    // TOKEN_COLOR: color.error.50
-    static let error50 = Color(.sRGB, red: 0.9961, green: 0.9529, blue: 0.949, opacity: 1)
-    // TOKEN_COLOR: color.error.100
-    static let error100 = Color(.sRGB, red: 0.9961, green: 0.8941, blue: 0.8863, opacity: 1)
-    // TOKEN_COLOR: color.error.500
-    static let error500 = Color(.sRGB, red: 0.9412, green: 0.2667, blue: 0.2196, opacity: 1)
-    // TOKEN_COLOR: color.error.600
-    static let error600 = Color(.sRGB, red: 0.851, green: 0.1765, blue: 0.1255, opacity: 1)
-    // TOKEN_COLOR: color.error.700
-    static let error700 = Color(.sRGB, red: 0.7059, green: 0.1373, blue: 0.0941, opacity: 1)
-    // TOKEN_COLOR: color.warning.50
-    static let warning50 = Color(.sRGB, red: 1.0, green: 0.9804, blue: 0.9216, opacity: 1)
+    static let success100 = Color(.sRGB, red: 0.0, green: 0.5608, blue: 0.3216, opacity: 1)
+    // TOKEN_COLOR: color.success.110
+    static let success110 = Color(.sRGB, red: 0.0, green: 0.3608, blue: 0.2078, opacity: 1)
+    // TOKEN_COLOR: color.warning.90
+    static let warning90 = Color(.sRGB, red: 1.0, green: 0.7765, blue: 0.2, opacity: 1)
     // TOKEN_COLOR: color.warning.100
-    static let warning100 = Color(.sRGB, red: 0.9961, green: 0.9412, blue: 0.7804, opacity: 1)
-    // TOKEN_COLOR: color.warning.500
-    static let warning500 = Color(.sRGB, red: 0.9686, green: 0.5647, blue: 0.0353, opacity: 1)
-    // TOKEN_COLOR: color.warning.600
-    static let warning600 = Color(.sRGB, red: 0.8627, green: 0.4078, blue: 0.0118, opacity: 1)
-    // TOKEN_COLOR: color.warning.700
-    static let warning700 = Color(.sRGB, red: 0.7098, green: 0.2784, blue: 0.0314, opacity: 1)
-    // TOKEN_COLOR: color.info.50
-    static let info50 = Color(.sRGB, red: 0.9373, green: 0.9725, blue: 1.0, opacity: 1)
+    static let warning100 = Color(.sRGB, red: 1.0, green: 0.7216, blue: 0.0, opacity: 1)
+    // TOKEN_COLOR: color.warning.110
+    static let warning110 = Color(.sRGB, red: 0.8, green: 0.5765, blue: 0.0, opacity: 1)
+    // TOKEN_COLOR: color.error.90
+    static let error90 = Color(.sRGB, red: 0.8784, green: 0.3216, blue: 0.3412, opacity: 1)
+    // TOKEN_COLOR: color.error.100
+    static let error100 = Color(.sRGB, red: 0.8471, green: 0.1529, blue: 0.1765, opacity: 1)
+    // TOKEN_COLOR: color.error.110
+    static let error110 = Color(.sRGB, red: 0.6784, green: 0.1216, blue: 0.1412, opacity: 1)
+    // TOKEN_COLOR: color.info.90
+    static let info90 = Color(.sRGB, red: 0.4196, green: 0.5922, blue: 1.0, opacity: 1)
     // TOKEN_COLOR: color.info.100
-    static let info100 = Color(.sRGB, red: 0.8196, green: 0.9137, blue: 1.0, opacity: 1)
-    // TOKEN_COLOR: color.info.500
-    static let info500 = Color(.sRGB, red: 0.1804, green: 0.5647, blue: 0.9804, opacity: 1)
-    // TOKEN_COLOR: color.info.600
-    static let info600 = Color(.sRGB, red: 0.0824, green: 0.4392, blue: 0.9373, opacity: 1)
-    // TOKEN_COLOR: color.info.700
-    static let info700 = Color(.sRGB, red: 0.0902, green: 0.3608, blue: 0.8275, opacity: 1)
+    static let info100 = Color(.sRGB, red: 0.2157, green: 0.4471, blue: 1.0, opacity: 1)
+    // TOKEN_COLOR: color.info.110
+    static let info110 = Color(.sRGB, red: 0.0196, green: 0.3098, blue: 1.0, opacity: 1)
 }
 
 enum GlobalDSSpacing {

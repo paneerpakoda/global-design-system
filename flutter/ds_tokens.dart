@@ -1,7 +1,7 @@
 import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 
-/// ICICI Global DS v0.2.0
+/// GlobalDS OS v0.3.0
 /// Generated from js/tokens.js. Do not edit by hand.
 class DsColors {
   DsColors._();
@@ -60,46 +60,82 @@ class DsColors {
   static const Color surfaceCoolGrey100 = Color(0xFFF8F9FB);
   /// TOKEN_COLOR: color.surfaceCoolGrey.110
   static const Color surfaceCoolGrey110 = Color(0xFFEFF1F6);
-  /// TOKEN_COLOR: color.success.50
-  static const Color success50 = Color(0xFFECFDF3);
+  /// TOKEN_COLOR: color.backgroundGrey.100
+  static const Color backgroundGrey100 = Color(0xFFF9F9F9);
+  /// TOKEN_COLOR: color.pastelBlue.80
+  static const Color pastelBlue80 = Color(0xFFF7FAFC);
+  /// TOKEN_COLOR: color.pastelBlue.90
+  static const Color pastelBlue90 = Color(0xFFEBF1F8);
+  /// TOKEN_COLOR: color.pastelBlue.100
+  static const Color pastelBlue100 = Color(0xFFE3EDF8);
+  /// TOKEN_COLOR: color.pastelBlue.110
+  static const Color pastelBlue110 = Color(0xFF99ADC2);
+  /// TOKEN_COLOR: color.pastelBlue.120
+  static const Color pastelBlue120 = Color(0xFF7993AF);
+  /// TOKEN_COLOR: color.pastelBrown.80
+  static const Color pastelBrown80 = Color(0xFFFDFDFC);
+  /// TOKEN_COLOR: color.pastelBrown.90
+  static const Color pastelBrown90 = Color(0xFFF9F9F5);
+  /// TOKEN_COLOR: color.pastelBrown.100
+  static const Color pastelBrown100 = Color(0xFFF6F5F0);
+  /// TOKEN_COLOR: color.pastelBrown.110
+  static const Color pastelBrown110 = Color(0xFFE9E6D9);
+  /// TOKEN_COLOR: color.pastelBrown.120
+  static const Color pastelBrown120 = Color(0xFFCFCAAF);
+  /// TOKEN_COLOR: color.pastelGreen.80
+  static const Color pastelGreen80 = Color(0xFFF8FCFA);
+  /// TOKEN_COLOR: color.pastelGreen.90
+  static const Color pastelGreen90 = Color(0xFFF1F9F6);
+  /// TOKEN_COLOR: color.pastelGreen.100
+  static const Color pastelGreen100 = Color(0xFFE5F4EE);
+  /// TOKEN_COLOR: color.pastelGreen.110
+  static const Color pastelGreen110 = Color(0xFFE2F0EA);
+  /// TOKEN_COLOR: color.pastelGreen.120
+  static const Color pastelGreen120 = Color(0xFFBFDED1);
+  /// TOKEN_COLOR: color.pastelAmber.80
+  static const Color pastelAmber80 = Color(0xFFFEFCFB);
+  /// TOKEN_COLOR: color.pastelAmber.90
+  static const Color pastelAmber90 = Color(0xFFFCF6F2);
+  /// TOKEN_COLOR: color.pastelAmber.100
+  static const Color pastelAmber100 = Color(0xFFFAEFE8);
+  /// TOKEN_COLOR: color.pastelAmber.110
+  static const Color pastelAmber110 = Color(0xFFF7E1D4);
+  /// TOKEN_COLOR: color.pastelAmber.120
+  static const Color pastelAmber120 = Color(0xFFFACAAD);
+  /// TOKEN_COLOR: color.pastelPeach.80
+  static const Color pastelPeach80 = Color(0xFFFEFBFB);
+  /// TOKEN_COLOR: color.pastelPeach.90
+  static const Color pastelPeach90 = Color(0xFFFDF4F4);
+  /// TOKEN_COLOR: color.pastelPeach.100
+  static const Color pastelPeach100 = Color(0xFFFCEEEE);
+  /// TOKEN_COLOR: color.pastelPeach.110
+  static const Color pastelPeach110 = Color(0xFFF8E8E9);
+  /// TOKEN_COLOR: color.pastelPeach.120
+  static const Color pastelPeach120 = Color(0xFFEEC9CC);
+  /// TOKEN_COLOR: color.success.90
+  static const Color success90 = Color(0xFF00C26F);
   /// TOKEN_COLOR: color.success.100
-  static const Color success100 = Color(0xFFD1FADF);
-  /// TOKEN_COLOR: color.success.500
-  static const Color success500 = Color(0xFF12B76A);
-  /// TOKEN_COLOR: color.success.600
-  static const Color success600 = Color(0xFF039855);
-  /// TOKEN_COLOR: color.success.700
-  static const Color success700 = Color(0xFF027A48);
-  /// TOKEN_COLOR: color.error.50
-  static const Color error50 = Color(0xFFFEF3F2);
-  /// TOKEN_COLOR: color.error.100
-  static const Color error100 = Color(0xFFFEE4E2);
-  /// TOKEN_COLOR: color.error.500
-  static const Color error500 = Color(0xFFF04438);
-  /// TOKEN_COLOR: color.error.600
-  static const Color error600 = Color(0xFFD92D20);
-  /// TOKEN_COLOR: color.error.700
-  static const Color error700 = Color(0xFFB42318);
-  /// TOKEN_COLOR: color.warning.50
-  static const Color warning50 = Color(0xFFFFFAEB);
+  static const Color success100 = Color(0xFF008F52);
+  /// TOKEN_COLOR: color.success.110
+  static const Color success110 = Color(0xFF005C35);
+  /// TOKEN_COLOR: color.warning.90
+  static const Color warning90 = Color(0xFFFFC633);
   /// TOKEN_COLOR: color.warning.100
-  static const Color warning100 = Color(0xFFFEF0C7);
-  /// TOKEN_COLOR: color.warning.500
-  static const Color warning500 = Color(0xFFF79009);
-  /// TOKEN_COLOR: color.warning.600
-  static const Color warning600 = Color(0xFFDC6803);
-  /// TOKEN_COLOR: color.warning.700
-  static const Color warning700 = Color(0xFFB54708);
-  /// TOKEN_COLOR: color.info.50
-  static const Color info50 = Color(0xFFEFF8FF);
+  static const Color warning100 = Color(0xFFFFB800);
+  /// TOKEN_COLOR: color.warning.110
+  static const Color warning110 = Color(0xFFCC9300);
+  /// TOKEN_COLOR: color.error.90
+  static const Color error90 = Color(0xFFE05257);
+  /// TOKEN_COLOR: color.error.100
+  static const Color error100 = Color(0xFFD8272D);
+  /// TOKEN_COLOR: color.error.110
+  static const Color error110 = Color(0xFFAD1F24);
+  /// TOKEN_COLOR: color.info.90
+  static const Color info90 = Color(0xFF6B97FF);
   /// TOKEN_COLOR: color.info.100
-  static const Color info100 = Color(0xFFD1E9FF);
-  /// TOKEN_COLOR: color.info.500
-  static const Color info500 = Color(0xFF2E90FA);
-  /// TOKEN_COLOR: color.info.600
-  static const Color info600 = Color(0xFF1570EF);
-  /// TOKEN_COLOR: color.info.700
-  static const Color info700 = Color(0xFF175CD3);
+  static const Color info100 = Color(0xFF3772FF);
+  /// TOKEN_COLOR: color.info.110
+  static const Color info110 = Color(0xFF054FFF);
 
   static const Gradient hero = LinearGradient(
     begin: Alignment.topCenter,
