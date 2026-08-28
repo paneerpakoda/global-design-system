@@ -476,52 +476,6 @@ function renderColors(){
   return html;
 }
 
-function renderTypography(){
-  const groups = [...new Set(DS.type.map(t => t.group || 'Type scale'))];
-  let html = pageHeader({ crumbs:['Foundations','Typography'], title:'Typography', status:'stable', version:'1.0',
-    updated:'20 May 2026',
-    desc:`${DS.typeface.family} across every geography: a compact type scale for calm, legible banking UI with tabular numeric support.` });
-  html += `<section class="type-specimen">
-    <div class="type-specimen-head">
-      <div>
-        <span class="type-specimen-label">Typeface</span>
-        <h2>${esc(DS.typeface.family)}</h2>
-      </div>
-      <code>DsText.fontFamily</code>
-    </div>
-    <div class="type-specimen-panel">
-      <div class="type-specimen-big">Ag</div>
-      <div class="type-glyphs">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 !@#$%^&amp;*()</div>
-    </div>
-  </section>
-  ${guidanceHtml('Typeface & numeric guidance', `
-    <p class="guidance-note">${esc(DS.typeface.note)}</p>
-    ${guidanceList([
-      { term:'Core text styles', token:'DsText.*', text:'Use the named scale directly for foundational Flutter text styles and app theming.' },
-      { term:'Usage aliases', token:'input* / button* / nav*', text:'Use aliases when a component needs a stable contract even if the underlying size changes later.' },
-      { term:'Amounts and balances', token:'tabular figures', text:'Tabular figures keep balances, OTPs and animated numbers aligned without visual jitter.' }
-    ])}
-  `)}`;
-  groups.forEach(group => {
-    const rows = DS.type.filter(t => (t.group || 'Type scale') === group);
-    html += `<section class="section type-section">
-      <h2 class="section-title">${esc(group)}</h2>
-      <div class="type-table">
-        <div class="type-table-head"><span>Preview</span><span>Token</span><span>Weight</span><span>Size</span><span>Use</span><span></span></div>
-        ${rows.map(t => `<button class="type-row" type="button" data-copy-text="DsText.${esc(t.token)}" title="Copy DsText.${esc(t.token)}" aria-label="Copy DsText.${esc(t.token)}">
-          <div class="type-sample" style="font-size:${t.size}px;line-height:${t.height}px;font-weight:${t.weight}">Global money, made simple</div>
-          <b class="type-token">${esc(t.token)}</b>
-          <span class="type-cell">w${t.weight}</span>
-          <span class="type-cell">${t.size}/${t.height}</span>
-          <span class="type-use">${esc(t.use)}</span>
-          <span class="type-copy"><i class="ti ti-copy"></i></span>
-        </button>`).join('')}
-      </div>
-    </section>`;
-  });
-  return html;
-}
-
 function renderSpacing(){
   let html = pageHeader({ crumbs:['Foundations','Spacing & layout'], title:'Spacing & layout', status:'stable', version:'1.0',
     updated:'20 May 2026',
@@ -1232,6 +1186,10 @@ document.getElementById('navSearch').addEventListener('input', e => buildNav(e.t
 GlobalDSSystemTabs.bind(document, {
   tabSelector:'[data-colour-tab]',
   panelSelector:'.colour-system-panel',
+});
+GlobalDSSystemTabs.bind(document, {
+  tabSelector:'[data-typography-tab]',
+  panelSelector:'.typography-system-panel',
 });
 bindSandbox(document);
 
