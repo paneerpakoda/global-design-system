@@ -1,9 +1,8 @@
-const GlobalDSColourTabs = (() => {
-  function activateColourTab(root, tabId, options = {}){
-    const tabs = [...root.querySelectorAll('[data-colour-tab]')];
-    const panels = [...root.querySelectorAll('.colour-system-panel')];
-    const nextTab = tabs.find(tab => tab.getAttribute('data-colour-tab') === tabId);
-    if (!nextTab) return;
+const GlobalDSSystemTabs = (() => {
+  function activateTab(root, nextTab, tabSelector, panelSelector, options = {}){
+    const tabs = [...root.querySelectorAll(tabSelector)];
+    const panels = [...root.querySelectorAll(panelSelector)];
+    if (!tabs.includes(nextTab)) return;
 
     tabs.forEach(tab => {
       const selected = tab === nextTab;
@@ -16,17 +15,17 @@ const GlobalDSColourTabs = (() => {
     if (options.focus) nextTab.focus();
   }
 
-  function bind(root){
+  function bind(root, { tabSelector, panelSelector }){
     root.addEventListener('click', event => {
-      const tab = event.target.closest('[data-colour-tab]');
-      if (tab) activateColourTab(root, tab.getAttribute('data-colour-tab'));
+      const tab = event.target.closest(tabSelector);
+      if (tab) activateTab(root, tab, tabSelector, panelSelector);
     });
 
     root.addEventListener('keydown', event => {
-      const currentTab = event.target.closest?.('[data-colour-tab]');
+      const currentTab = event.target.closest?.(tabSelector);
       if (!currentTab) return;
 
-      const tabs = [...currentTab.closest('[role="tablist"]').querySelectorAll('[data-colour-tab]')];
+      const tabs = [...currentTab.closest('[role="tablist"]').querySelectorAll(tabSelector)];
       const currentIndex = tabs.indexOf(currentTab);
       let nextIndex;
       if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
@@ -36,7 +35,7 @@ const GlobalDSColourTabs = (() => {
       else return;
 
       event.preventDefault();
-      activateColourTab(root, tabs[nextIndex].getAttribute('data-colour-tab'), { focus:true });
+      activateTab(root, tabs[nextIndex], tabSelector, panelSelector, { focus:true });
     });
   }
 

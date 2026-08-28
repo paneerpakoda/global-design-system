@@ -11,7 +11,7 @@ test('loads audited source colours after canonical tokens and before the app', (
   const index = read('index.html');
   const tokensIndex = index.indexOf('js/tokens.js');
   const sourcesIndex = index.indexOf('js/source-colours.js');
-  const controllerIndex = index.indexOf('js/colour-tabs.js');
+  const controllerIndex = index.indexOf('js/system-tabs.js');
   const appIndex = index.indexOf('js/app.js');
 
   assert.ok(tokensIndex >= 0);
@@ -33,16 +33,16 @@ test('renders exactly three colour-system tabs with linked tab panels', () => {
 });
 
 test('supports click and standard keyboard tab navigation', () => {
-  const controller = read('js/colour-tabs.js');
+  const controller = read('js/system-tabs.js');
 
-  assert.match(controller, /activateColourTab/);
+  assert.match(controller, /activateTab/);
   assert.match(controller, /ArrowLeft/);
   assert.match(controller, /ArrowRight/);
   assert.match(controller, /Home/);
   assert.match(controller, /End/);
   assert.match(controller, /aria-selected/);
   assert.match(controller, /tab\.tabIndex/);
-  assert.match(read('js/app.js'), /GlobalDSColourTabs\.bind\(document\)/);
+  assert.match(read('js/app.js'), /GlobalDSSystemTabs\.bind\(document/);
 });
 
 test('styles the tab strip responsively and exposes a visible focus state', () => {

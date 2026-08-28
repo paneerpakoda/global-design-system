@@ -1229,7 +1229,10 @@ document.addEventListener('click', e => {
 
 document.getElementById('navSearch').addEventListener('input', e => buildNav(e.target.value));
 
-GlobalDSColourTabs.bind(document);
+GlobalDSSystemTabs.bind(document, {
+  tabSelector:'[data-colour-tab]',
+  panelSelector:'.colour-system-panel',
+});
 bindSandbox(document);
 
 window.addEventListener('hashchange', route);
