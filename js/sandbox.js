@@ -106,50 +106,64 @@ function renderRibBreadcrumbScenario(p){
   </section>`;
 }
 
+function renderRibButtonScenario(p){
+  const resolvedSize = p.variant === 'secondary' ? 'sm' : p.size;
+  return `<section class="rib-button-scenario" aria-label="Transfer action example">
+    <span class="rib-button-scenario__eyebrow">International transfer</span>
+    <div class="rib-button-scenario__copy">
+      <h2>Ready to send?</h2>
+      <p>Review the beneficiary and transfer amount before continuing.</p>
+    </div>
+    <div class="rib-button-scenario__actions">
+      ${renderRibButton({
+        label:p.text,
+        variant:p.variant,
+        size:resolvedSize,
+        state:p.state,
+        icon:p.icon,
+        expanded:Boolean(p.expanded)
+      })}
+      ${renderRibButton({ label:'Cancel', variant:'outline', size:p.size === 'xs' ? 'xs' : p.size })}
+    </div>
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
-    label: 'Button',
+    label: 'RIB Button',
     controls: [
       { key:'text',    label:'Label',        type:'text',   value:'Send money' },
-      { key:'variant', label:'Variant',      type:'select', options:['primary','secondary-outline','secondary-text','secondary-pastel','secondary-white','destructive-secondary','destructive-primary'], value:'primary' },
+      { key:'variant', label:'Variant',      type:'select', options:['primary','outline','secondary','pastel','white','destructive-outline','destructive-filled'], value:'primary' },
       { key:'size',    label:'Size',         type:'select', options:['lg','sm','xs'], value:'lg' },
-      { key:'state',   label:'State',        type:'select', options:['default','hover','focus','disabled','loading'], value:'default' },
+      { key:'state',   label:'State',        type:'select', options:['default','hover','focus','disabled'], value:'default' },
       { key:'icon',    label:'Icon',         type:'select', options:['none','left','right'], value:'left' },
-      { key:'block',   label:'Full width',   type:'toggle', value:false }
+      { key:'expanded',label:'Full width',    type:'toggle', value:false }
     ],
     render(p){
-      let cls = 'ds-btn ' + p.variant + ' ' + p.size;
-      if (p.state === 'hover') cls += ' is-hover';
-      if (p.state === 'focus') cls += ' is-focus';
-      const dis = (p.state === 'disabled' || p.state === 'loading') ? ' disabled' : '';
-      const inner = p.state === 'loading'
-        ? '<span class="ds-spinner"></span> ' + esc(p.text)
-        : (p.icon === 'left' ? '<i class="ti ti-send"></i> ' : '') + esc(p.text) + (p.icon === 'right' ? ' <i class="ti ti-arrow-right"></i>' : '');
-      const style = p.block ? ' style="width:300px"' : '';
-      return '<button class="' + cls + '"' + dis + style + '>' + inner + '</button>';
+      return renderRibButtonScenario(p);
     },
     dart(p){
+      const resolvedSize = p.variant === 'secondary' ? 'sm' : p.size;
       const variantMap = {
         'primary': 'primary',
-        'secondary-outline': 'outline',
-        'secondary-text': 'secondary',
-        'secondary-pastel': 'pastel',
-        'secondary-white': 'white',
-        'destructive-secondary': 'destructiveOutline',
-        'destructive-primary': 'destructiveFilled'
+        'outline': 'outline',
+        'secondary': 'secondary',
+        'pastel': 'pastel',
+        'white': 'white',
+        'destructive-outline': 'destructiveOutline',
+        'destructive-filled': 'destructiveFilled'
       };
       const lines = [
         "label: '" + p.text.replace(/'/g, "\\'") + "'",
-        'variant: DsButtonVariant.' + (variantMap[p.variant] || p.variant.replace(/-([a-z])/g, (_, c) => c.toUpperCase())),
-        'size: DsButtonSize.' + (p.size === 'lg' ? 'large' : p.size === 'sm' ? 'small' : 'xSmall')
+        'variant: RibButtonVariant.' + (variantMap[p.variant] || p.variant.replace(/-([a-z])/g, (_, c) => c.toUpperCase())),
+        'size: RibButtonSize.' + (resolvedSize === 'lg' ? 'large' : resolvedSize === 'sm' ? 'small' : 'xSmall')
       ];
-      if (p.icon === 'left') lines.push('leadingIcon: TablerIcons.send');
-      if (p.icon === 'right') lines.push('trailingIcon: TablerIcons.arrow_right');
-      if (p.state === 'loading') lines.push('loading: true');
-      lines.push('expanded: ' + p.block);
+      if (p.icon === 'left') lines.push('leadingIcon: const Icon(Icons.add)');
+      if (p.icon === 'right') lines.push('trailingIcon: const Icon(Icons.add)');
+      lines.push('expanded: ' + p.expanded);
       lines.push(p.state === 'disabled' ? 'onPressed: null' : 'onPressed: () => handleTap()');
-      return 'DsButton(\n  ' + lines.join(',\n  ') + ',\n)';
+      return 'RibButton(\n  ' + lines.join(',\n  ') + ',\n)';
     }
   },
 
@@ -433,9 +447,9 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','accordion','activity-timeline','avatar','breadcrumbs']);
 
-let sbCurrent = 'accordion';
+let sbCurrent = 'button';
 let sbProps = {};
 
 function sbDefaults(id){

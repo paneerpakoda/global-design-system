@@ -101,13 +101,13 @@ function renderInputVariantGrid(){
 }
 
 const BUTTON_TYPES = [
-  { key: 'primary', title: 'Primary', className: 'primary', note: 'Filled high-emphasis action.' },
-  { key: 'outline', title: 'Outline', className: 'secondary-outline', note: 'Outlined alternative action.' },
-  { key: 'secondary', title: 'Secondary', className: 'secondary-text', sizes: ['sm'], note: 'Text-style action. Figma specifies this as a compact 16px-height button.' },
-  { key: 'pastel', title: 'Pastel', className: 'secondary-pastel', note: 'Soft filled secondary action.' },
-  { key: 'white', title: 'White', className: 'secondary-white', onBrand: true, note: 'White action for brand, image, or dark surfaces.' },
-  { key: 'destructive-outline', title: 'Destructive - Outlined', className: 'destructive-secondary', note: 'Outlined destructive action.' },
-  { key: 'destructive-filled', title: 'Destructive - Filled', className: 'destructive-primary', note: 'Filled destructive confirmation.' }
+  { key: 'primary', title: 'Primary', note: 'Orange 100 fill; Orange 110 on hover.' },
+  { key: 'outline', title: 'Outline', note: 'White surface with an Orange 100 border.' },
+  { key: 'secondary', title: 'Secondary', sizes: ['sm'], note: 'Compact text action; the source defines Small only.' },
+  { key: 'pastel', title: 'Pastel', note: 'Amber 90 surface with Orange 100 content.' },
+  { key: 'white', title: 'White', note: 'White utility action with a Cool Grey 110 border.' },
+  { key: 'destructive-outline', title: 'Destructive - Outlined', note: 'White surface with an Error 100 border.' },
+  { key: 'destructive-filled', title: 'Destructive - Filled', note: 'Error 100 fill for destructive confirmation.' }
 ];
 
 const BUTTON_SIZES = [
@@ -117,28 +117,31 @@ const BUTTON_SIZES = [
 ];
 
 const BUTTON_STATES = [
-  { key: 'default', label: 'Active' },
+  { key: 'default', label: 'Default' },
   { key: 'hover', label: 'Hover', className: 'is-hover' },
   { key: 'focus', label: 'Focus', className: 'is-focus' },
   { key: 'disabled', label: 'Disabled', disabled: true }
 ];
 
 const BUTTON_ICONS = [
-  { key: 'none', label: 'No Icon' },
-  { key: 'left', label: 'Left', before: '<i class="ti ti-plus"></i>' },
-  { key: 'right', label: 'Right', after: '<i class="ti ti-arrow-right"></i>' }
+  { key: 'none', label: 'No icon' },
+  { key: 'left', label: 'Left' },
+  { key: 'right', label: 'Right' }
 ];
 
-function buttonLabel(type, icon){
-  if(type.key === 'destructive-outline' || type.key === 'destructive-filled') return 'Delete';
-  if(type.key === 'secondary') return icon.key === 'none' ? 'Edit' : 'Edit details';
-  return 'Continue';
-}
+const RIB_BUTTON_ICON_ASSET = '../assets/icons/general/line/add--line--519-38.svg';
 
-function renderButton(type, size, state, icon){
-  const classes = ['ds-btn', type.className, size.key, state.className].filter(Boolean).join(' ');
-  const label = buttonLabel(type, icon);
-  return `<button class="${classes}"${state.disabled ? ' disabled' : ''}>${icon.before ? icon.before + ' ' : ''}${label}${icon.after ? ' ' + icon.after : ''}</button>`;
+function renderRibButton(options = {}){
+  const type = BUTTON_TYPES.find(item => item.key === options.variant) || BUTTON_TYPES[0];
+  const size = BUTTON_SIZES.find(item => item.key === options.size && (!type.sizes || type.sizes.includes(item.key)))
+    || BUTTON_SIZES.find(item => !type.sizes || type.sizes.includes(item.key));
+  const state = BUTTON_STATES.find(item => item.key === options.state) || BUTTON_STATES[0];
+  const icon = BUTTON_ICONS.find(item => item.key === options.icon) || BUTTON_ICONS[0];
+  const label = String(options.label || 'Button');
+  const classes = ['ds-btn', type.key, size.key, state.className, icon.key !== 'none' ? `icon-${icon.key}` : '', options.expanded ? 'block' : ''].filter(Boolean).join(' ');
+  const iconHtml = `<span class="ds-btn__icon" style="--rib-button-icon:url(${RIB_BUTTON_ICON_ASSET})" aria-hidden="true"></span>`;
+
+  return `<button type="button" class="${classes}"${state.disabled ? ' disabled' : ''}>${icon.key === 'left' ? iconHtml : ''}<span class="ds-btn__label">${esc(label)}</span>${icon.key === 'right' ? iconHtml : ''}</button>`;
 }
 
 function renderButtonMatrix(){
@@ -149,7 +152,7 @@ function renderButtonMatrix(){
     </div>
     ${BUTTON_TYPES.map(type => {
       const sizes = BUTTON_SIZES.filter(size => !type.sizes || type.sizes.includes(size.key));
-      return `<section class="button-type-section${type.onBrand ? ' is-onbrand' : ''}">
+      return `<section class="button-type-section">
         <header>
           <h3>${type.title}</h3>
           <p>${type.note}</p>
@@ -159,7 +162,7 @@ function renderButtonMatrix(){
           <div class="button-size-rows">
             ${BUTTON_ICONS.map(icon => `<div class="button-matrix-row">
               <span class="button-icon-label">${icon.label}</span>
-              ${BUTTON_STATES.map(state => `<div class="button-cell">${renderButton(type, size, state, icon)}</div>`).join('')}
+              ${BUTTON_STATES.map(state => `<div class="button-cell">${renderRibButton({ variant:type.key, size:size.key, state:state.key, icon:icon.key })}</div>`).join('')}
             </div>`).join('')}
           </div>
         </div>`).join('')}
@@ -507,136 +510,53 @@ function renderRibBreadcrumbShowcase(){
   </div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['accordions','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
   button: {
-    title: 'Buttons', group: 'Actions', status: 'stable', version: '1.4', updated: '18 Jun 2026',
-    desc: 'Buttons trigger clear actions across web and mobile. Use one primary action per decision area, keep labels verb-first, and reserve destructive styles for actions that remove, cancel or permanently change customer data.',
+    title: 'Button', group: 'Actions', status: 'stable', version: '1.0', updated: '29 Aug 2026',
+    desc: 'The RIB Button triggers a clear action with seven emphasis variants, three compact web sizes, optional leading or trailing icons, and explicit default, hover, focus and disabled states.',
     sections: [
-      { title: 'Figma component structure',
-        note: 'Matches the Components RIB button page: Type sections, Size groups, Icon rows, and State columns. The Figma file labels the default column as active.',
-        html: renderButtonMatrix() },
-      { title: 'Figma anatomy',
-        note: 'The primary default state follows the Figma button anatomy: 356px reference width, 36px container, Primary Orange 100 base fill, 12% white linear overlay, a visible gradient stroke shell, 12px radius, and 12/16 Mulish semibold text.',
-        html: `<div class="button-spec-card">
-          <div class="button-spec-preview"><button class="ds-btn primary sm figma-default" style="width:min(356px,100%)">Continue</button></div>
-          <div class="shape-token-table">
-            <div class="shape-token-head"><span>Property</span><span>Value</span><span>Code reference</span></div>
-            <div class="shape-token-row"><b>Width</b><code>356px · min 120px</code><span>Container(width: 356) inside BoxConstraints(minWidth: 120).</span></div>
-            <div class="shape-token-row"><b>Fill</b><code>DsColors.buttonPrimaryFill</code><span>Primary Orange 100 base with a white-to-transparent linear overlay at 12%.</span></div>
-            <div class="shape-token-row"><b>Stroke</b><code>DsColors.buttonStroke · 1px inside</code><span>Exact RIB stroke: white-to-transparent with the gradient paint set to 50% opacity.</span></div>
-            <div class="shape-token-row"><b>Min width</b><code>120px</code><span>BoxConstraints(minWidth: 120)</span></div>
-            <div class="shape-token-row"><b>Height</b><code>36px</code><span>Container(height: 36)</span></div>
-            <div class="shape-token-row"><b>Padding</b><code>12px / 10px</code><span>EdgeInsets.symmetric(horizontal: 12, vertical: 10)</span></div>
-            <div class="shape-token-row"><b>Radius</b><code>12px</code><span>BorderRadius.circular(12)</span></div>
-            <div class="shape-token-row"><b>Text</b><code>12 / 16 · w600 · 0.25</code><span>Mulish semibold in neutralGrey.150; white on Orange 100 does not meet AA contrast.</span></div>
-          </div>
-        </div>` },
-      { title: 'Mobile buttons',
-        note: 'Mobile uses the same variants but larger touch targets. Primary bottom actions should be full width; paired actions stack when space is tight.',
-        html: `<div class="button-device-grid">
-          <article class="button-device-card">
-            <h3>Mobile large</h3>
-            <p>48px high · 14/16 text · primary page action</p>
-            <button class="ds-btn primary lg mobile block">Continue</button>
-            <button class="ds-btn secondary-outline lg mobile block">Cancel</button>
-          </article>
-          <article class="button-device-card">
-            <h3>Mobile small</h3>
-            <p>40px high · 12/16 text · cards and bottom-sheet utility actions</p>
-            <button class="ds-btn secondary-pastel sm mobile block"><i class="ti ti-plus"></i> Add payee</button>
-            <button class="ds-btn destructive-secondary sm mobile block">Remove</button>
-          </article>
+      { title: 'RIB source component',
+        note: 'The catalogue reproduces the source component set directly: type sections, size groups, icon positions and state columns all map to the Figma properties.',
+        html: `<div class="rib-button-source"><span>RIB only</span><div class="rib-button-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=8-2" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-button-try" href="#/sandbox/button"><i class="ti ti-player-play"></i>Try in playground</a></div></div>${renderButtonMatrix()}` },
+      { title: 'Foundation mapping',
+        note: 'Every visual state resolves to the audited RIB foundations. The source white-on-Orange100 pairing is preserved exactly, but remains below AA contrast for normal text and needs design review before production use.',
+        html: `<div class="button-foundation-grid">
+          <article><span>Primary</span><b>Orange 100 · Orange 110</b><code>#F0792E · #DB5E10</code></article>
+          <article><span>Pastel</span><b>Amber 90 · Amber 100</b><code>#FCF6F2 · #FAEFE8</code></article>
+          <article><span>White</span><b>Cool Grey 90 · Cool Grey 110</b><code>#FCFCFD · #EFF1F6</code></article>
+          <article><span>Disabled</span><b>Grey 70 · Grey 110</b><code>#E7E8E9 · #7D8287</code></article>
+          <article><span>Destructive</span><b>Error 90 · 100 · 110</b><code>#E05257 · #D8272D · #AD1F24</code></article>
+          <article><span>Focus</span><b>Focus Orange · Peach 120</b><code>#FFE8DD · #EEC9CC</code></article>
         </div>` },
       { title: 'Secondary state rule',
         note: 'Secondary is a text-style button in the RIB file. Orange100 states are shown in the matrix; other colour variants follow the same rule using the next darker colour for hover and focus, while disabled stays Grey110.',
         html: `<div class="button-rule-card">
-          <button class="ds-btn secondary-text sm">Edit</button>
-          <button class="ds-btn secondary-text sm is-hover">Edit</button>
-          <button class="ds-btn secondary-text sm is-focus">Edit</button>
-          <button class="ds-btn secondary-text sm" disabled>Edit</button>
+          ${renderRibButton({ variant:'secondary', size:'sm', state:'default', label:'Edit' })}
+          ${renderRibButton({ variant:'secondary', size:'sm', state:'hover', label:'Edit' })}
+          ${renderRibButton({ variant:'secondary', size:'sm', state:'focus', label:'Edit' })}
+          ${renderRibButton({ variant:'secondary', size:'sm', state:'disabled', label:'Edit' })}
         </div>` }
     ],
     props: [
       ['label','String','required','Button text. Sentence case, verb first.'],
-      ['variant','DsButtonVariant','primary','primary · outline · secondary · pastel · white · destructiveOutline · destructiveFilled'],
-      ['size','DsButtonSize','large','large · small · xSmall'],
-      ['platform','DsButtonPlatform','web','web · mobile. Mobile increases height and defaults expanded.'],
-      ['leadingIcon','IconData?','null','Optional icon before the label.'],
-      ['trailingIcon','IconData?','null','Optional icon after the label for forward movement.'],
-      ['loading','bool','false','Shows spinner, blocks taps, keeps label'],
-      ['expanded','bool','false','Fills available width. Mobile primary actions default to true.'],
-      ['onPressed','VoidCallback?','null','null renders the disabled state']
+      ['variant','RibButtonVariant','primary','primary · outline · secondary · pastel · white · destructiveOutline · destructiveFilled'],
+      ['size','RibButtonSize','large','large · small · xSmall. Secondary supports small only.'],
+      ['leadingIcon','Widget?','null','Optional 16px icon before the label; 14px for Secondary.'],
+      ['trailingIcon','Widget?','null','Optional icon after the label. Do not provide both icons.'],
+      ['expanded','bool','false','Fills the available width while preserving the source height.'],
+      ['onPressed','VoidCallback?','null','A null callback renders the source disabled state.']
     ],
-    flutter: `ConstrainedBox(
-  constraints: BoxConstraints(minWidth: 120),
-  child: SizedBox(
-    width: 356,
-    height: 36,
-    child: Stack(
-      children: [
-        Positioned.fill(
-          child: DecoratedBox(
-            decoration: DsButtonDecorations.primaryStrokeShell,
-          ),
-        ),
-        Positioned.fill(
-          child: Padding(
-            padding: EdgeInsets.all(DsColors.buttonStrokeWidth),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(
-                12 - DsColors.buttonStrokeWidth,
-              ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: DsButtonDecorations.primaryFillBase,
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: DsButtonDecorations.primaryFillOverlay,
-                    ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        spacing: 8,
-                        children: [
-                          Text(
-                            'Continue',
-                            style: TextStyle(
-                              color: DsColors.neutralGrey150,
-                              fontSize: 12,
-                              fontFamily: 'Mulish',
-                              fontWeight: FontWeight.w600,
-                              height: 1.33,
-                              letterSpacing: 0.25,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-)`
+    flutter: `RibButton(
+  label: 'Continue',
+  variant: RibButtonVariant.primary,
+  size: RibButtonSize.large,
+  leadingIcon: const Icon(Icons.add),
+  onPressed: submitTransfer,
+)`,
+    sandbox: 'button'
   },
 
   buttongroups: {
