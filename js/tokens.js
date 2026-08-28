@@ -124,7 +124,12 @@ const DS = {
     surface: { canvas:'surfaceCoolGrey.110', default:'neutralBase.white', subtle:'surfaceCoolGrey.100', alternate:'backgroundGrey.100' },
     content: { primary:'neutralGrey.150', secondary:'neutralGrey.130', muted:'neutralGrey.110', inverse:'neutralBase.white' },
     border: { quiet:'neutralGrey.70', default:'neutralGrey.80', strong:'neutralGrey.100' },
-    state: { success:'success.100', warning:'warning.110', error:'error.100', info:'info.100' }
+    state: {
+      success: { default:'success.100', strong:'success.110', onStrong:'neutralBase.white', subtle:'pastelGreen.80', onSubtle:'success.110' },
+      warning: { default:'warning.100', strong:'warning.110', onStrong:'neutralGrey.150', subtle:'pastelAmber.80', onSubtle:'neutralGrey.150' },
+      error: { default:'error.100', strong:'error.110', onStrong:'neutralBase.white', subtle:'pastelPeach.80', onSubtle:'error.110' },
+      info: { default:'info.100', strong:'info.110', onStrong:'neutralBase.white', subtle:'pastelBlue.80', onSubtle:'info.110' }
+    }
   },
 
   gradient: {

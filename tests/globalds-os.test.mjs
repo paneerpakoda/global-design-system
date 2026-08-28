@@ -93,3 +93,24 @@ test('makes the extended palette and alpha overlays visible in the Colours found
     60: 'rgba(255,255,255,.60)', 80: 'rgba(255,255,255,.80)', 100: 'rgba(255,255,255,1)',
   });
 });
+
+test('publishes accessible foreground pairings for filled operational states', () => {
+  assert.deepEqual(JSON.parse(JSON.stringify(DS.semanticColor.state)), {
+    success: {
+      default: 'success.100', strong: 'success.110', onStrong: 'neutralBase.white',
+      subtle: 'pastelGreen.80', onSubtle: 'success.110',
+    },
+    warning: {
+      default: 'warning.100', strong: 'warning.110', onStrong: 'neutralGrey.150',
+      subtle: 'pastelAmber.80', onSubtle: 'neutralGrey.150',
+    },
+    error: {
+      default: 'error.100', strong: 'error.110', onStrong: 'neutralBase.white',
+      subtle: 'pastelPeach.80', onSubtle: 'error.110',
+    },
+    info: {
+      default: 'info.100', strong: 'info.110', onStrong: 'neutralBase.white',
+      subtle: 'pastelBlue.80', onSubtle: 'info.110',
+    },
+  });
+});

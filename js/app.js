@@ -391,6 +391,12 @@ function renderColors(){
     <div class="colour-ramp-stack compact">${['success','warning','error','info'].map(rampCard).join('')}</div>
     ${guidanceHtml('When to reach for a semantic colour', `
       <p class="guidance-note">Semantic colour is reserved for state. A green, amber, red or blue surface must tell the user something operationally true.</p>
+      ${guidanceList([
+        { term:'Success fill', token:'success.110 + white', text:'Use the strong stop for filled confirmations; the mid stop remains useful for icons and indicators.' },
+        { term:'Warning fill', token:'warning.110 + neutralGrey.150', text:'Warning needs dark foreground content; white does not provide sufficient contrast.' },
+        { term:'Error fill', token:'error.110 + white', text:'Use the strong stop for destructive or failed-state fills.' },
+        { term:'Information fill', token:'info.110 + white', text:'Use the strong stop for filled information surfaces; reserve the mid stop for non-text indicators.' }
+      ])}
       ${rampNotes(['success','warning','error','info'])}
     `)}
   </section>`;
