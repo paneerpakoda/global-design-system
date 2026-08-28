@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const context = vm.createContext({ console });
 
-for (const relativePath of ['js/tokens.js', 'js/exports.js']) {
+for (const relativePath of ['js/rib-atoms.js', 'js/tokens.js', 'js/exports.js']) {
   const source = fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
   vm.runInContext(source, context, { filename: relativePath });
 }
@@ -62,6 +62,35 @@ test('projects every colour and typography token into each platform token file',
   }
 });
 
+test('projects RIB variables, responsive grids, and effects into every native token file', () => {
+  const tokenFiles = [
+    exportsApi.generate('global_ds_tokens.kt'),
+    exportsApi.generate('ds_tokens.dart'),
+    exportsApi.generate('GlobalDSTokens.swift'),
+  ];
+
+  for (const output of tokenFiles) {
+    assert.equal((output.match(/TOKEN_VARIABLE:/g) || []).length, 5);
+    assert.equal((output.match(/TOKEN_GRID:/g) || []).length, 3);
+    assert.equal((output.match(/TOKEN_EFFECT:/g) || []).length, 8);
+    assert.match(output, /grid\.desktop/);
+    assert.match(output, /grid\.tablet/);
+    assert.match(output, /grid\.mobile/);
+    for (const path of [
+      'effect.shadow.100',
+      'effect.shadow.200',
+      'effect.shadow.300',
+      'effect.shadow.400',
+      'effect.shadow.button-white',
+      'effect.shadow.bottom-sticky',
+      'effect.ring.orange-outline',
+      'effect.ring.focus',
+    ]) {
+      assert.match(output, new RegExp(path.replaceAll('.', '\\.')));
+    }
+  }
+});
+
 test('uses native, recognizable APIs in each target', () => {
   const kotlin = exportsApi.generate('global_ds_theme.kt');
   const flutter = exportsApi.generate('ds_theme.dart');
@@ -109,6 +138,16 @@ test('keeps the platform-neutral JSON export available', () => {
   assert.equal(parsed.meta.name, DS.meta.name);
   assert.equal(parsed.typography.length, DS.type.length);
   assert.equal(parsed.spacing.length, DS.space.length);
+  assert.deepEqual(parsed.foundationCoverage, {
+    paintStyles: 87, textStyles: 36, effectStyles: 8, gridStyles: 3, variables: 5, total: 139,
+  });
+  assert.equal(parsed.paintStyles.length, 87);
+  assert.equal(parsed.gradients.length, 14);
+  assert.equal(parsed.grids.length, 3);
+  assert.equal(parsed.variables.length, 5);
+  assert.equal(parsed.effects.length, 8);
+  assert.equal(parsed.elevation, undefined);
+  assert.equal(parsed.foundationIssues[0].id, 'duplicate-pastel-brown-120');
 });
 
 test('keeps checked-in platform snapshots identical to live generation', () => {

@@ -1,6 +1,6 @@
 import SwiftUI
 
-// GlobalDS OS v0.3.0
+// GlobalDS OS v0.4.1
 // Generated from js/tokens.js. Do not edit by hand.
 enum GlobalDSColors {
     // TOKEN_COLOR: color.brand.orange
@@ -8,25 +8,25 @@ enum GlobalDSColors {
     // TOKEN_COLOR: color.brand.maroon
     static let brandMaroon = Color(.sRGB, red: 0.7451, green: 0.1647, blue: 0.1647, opacity: 1)
     // TOKEN_COLOR: color.primaryOrange.80
-    static let primaryOrange80 = Color(.sRGB, red: 0.9569, green: 0.6902, blue: 0.5804, opacity: 1)
+    static let primaryOrange80 = Color(.sRGB, red: 0.9686, green: 0.7137, blue: 0.5529, opacity: 1)
     // TOKEN_COLOR: color.primaryOrange.90
-    static let primaryOrange90 = Color(.sRGB, red: 0.9098, green: 0.4118, blue: 0.1804, opacity: 1)
+    static let primaryOrange90 = Color(.sRGB, red: 0.9529, green: 0.5922, blue: 0.3647, opacity: 1)
     // TOKEN_COLOR: color.primaryOrange.100
-    static let primaryOrange100 = Color(.sRGB, red: 0.8314, green: 0.2706, blue: 0.0, opacity: 1)
+    static let primaryOrange100 = Color(.sRGB, red: 0.9412, green: 0.4745, blue: 0.1804, opacity: 1)
     // TOKEN_COLOR: color.primaryOrange.110
-    static let primaryOrange110 = Color(.sRGB, red: 0.6627, green: 0.2118, blue: 0.0, opacity: 1)
+    static let primaryOrange110 = Color(.sRGB, red: 0.8588, green: 0.3686, blue: 0.0627, opacity: 1)
     // TOKEN_COLOR: color.primaryOrange.120
-    static let primaryOrange120 = Color(.sRGB, red: 0.451, green: 0.1451, blue: 0.0, opacity: 1)
+    static let primaryOrange120 = Color(.sRGB, red: 0.6706, green: 0.2902, blue: 0.0471, opacity: 1)
     // TOKEN_COLOR: color.primaryMaroon.80
-    static let primaryMaroon80 = Color(.sRGB, red: 0.8549, green: 0.4824, blue: 0.502, opacity: 1)
+    static let primaryMaroon80 = Color(.sRGB, red: 0.8078, green: 0.3725, blue: 0.4, opacity: 1)
     // TOKEN_COLOR: color.primaryMaroon.90
-    static let primaryMaroon90 = Color(.sRGB, red: 0.7373, green: 0.2039, blue: 0.2275, opacity: 1)
+    static let primaryMaroon90 = Color(.sRGB, red: 0.749, green: 0.2314, blue: 0.2627, opacity: 1)
     // TOKEN_COLOR: color.primaryMaroon.100
-    static let primaryMaroon100 = Color(.sRGB, red: 0.5804, green: 0.1608, blue: 0.1804, opacity: 1)
+    static let primaryMaroon100 = Color(.sRGB, red: 0.5961, green: 0.1843, blue: 0.2078, opacity: 1)
     // TOKEN_COLOR: color.primaryMaroon.110
-    static let primaryMaroon110 = Color(.sRGB, red: 0.4235, green: 0.1176, blue: 0.1294, opacity: 1)
+    static let primaryMaroon110 = Color(.sRGB, red: 0.4431, green: 0.1373, blue: 0.1529, opacity: 1)
     // TOKEN_COLOR: color.primaryMaroon.120
-    static let primaryMaroon120 = Color(.sRGB, red: 0.2667, green: 0.0745, blue: 0.0824, opacity: 1)
+    static let primaryMaroon120 = Color(.sRGB, red: 0.2902, green: 0.0902, blue: 0.102, opacity: 1)
     // TOKEN_COLOR: color.neutralBase.black
     static let neutralBaseBlack = Color(.sRGB, red: 0.0, green: 0.0, blue: 0.0, opacity: 1)
     // TOKEN_COLOR: color.neutralBase.white
@@ -115,6 +115,8 @@ enum GlobalDSColors {
     static let success100 = Color(.sRGB, red: 0.0, green: 0.5608, blue: 0.3216, opacity: 1)
     // TOKEN_COLOR: color.success.110
     static let success110 = Color(.sRGB, red: 0.0, green: 0.3608, blue: 0.2078, opacity: 1)
+    // TOKEN_COLOR: color.warning.80
+    static let warning80 = Color(.sRGB, red: 0.9961, green: 0.9804, blue: 0.9294, opacity: 1)
     // TOKEN_COLOR: color.warning.90
     static let warning90 = Color(.sRGB, red: 1.0, green: 0.7765, blue: 0.2, opacity: 1)
     // TOKEN_COLOR: color.warning.100
@@ -133,6 +135,72 @@ enum GlobalDSColors {
     static let info100 = Color(.sRGB, red: 0.2157, green: 0.4471, blue: 1.0, opacity: 1)
     // TOKEN_COLOR: color.info.110
     static let info110 = Color(.sRGB, red: 0.0196, green: 0.3098, blue: 1.0, opacity: 1)
+
+    // Semantic variables resolved from the RIB Tokens collection.
+    // TOKEN_VARIABLE: bg/white-0 -> neutral/0
+    static let bgWhite0 = Color(.sRGB, red: 1.0, green: 1.0, blue: 1.0, opacity: 1)
+    // TOKEN_VARIABLE: icon/sub-500 -> neutral/500
+    static let iconSub500 = Color(.sRGB, red: 0.3216, green: 0.3451, blue: 0.4, opacity: 1)
+    // TOKEN_VARIABLE: icon/strong-900 -> neutral/900
+    static let iconStrong900 = Color(.sRGB, red: 0.0392, green: 0.051, blue: 0.0784, opacity: 1)
+    // TOKEN_VARIABLE: stroke/soft-200 -> neutral/200
+    static let strokeSoft200 = Color(.sRGB, red: 0.8863, green: 0.8941, blue: 0.9137, opacity: 1)
+    // TOKEN_VARIABLE: text/sub-500 -> neutral/500
+    static let textSub500 = Color(.sRGB, red: 0.3216, green: 0.3451, blue: 0.4, opacity: 1)
+}
+
+struct GlobalDSLayoutGrid {
+    let pattern: String
+    let alignment: String
+    let count: Int
+    let sectionSize: CGFloat?
+    let gutterSize: CGFloat
+    let offset: CGFloat
+    let visible: Bool
+}
+
+enum GlobalDSGrids {
+    // TOKEN_GRID: grid.desktop
+    static let desktopL: [GlobalDSLayoutGrid] = [
+        .init(pattern: "COLUMNS", alignment: "MAX", count: 12, sectionSize: 72, gutterSize: 8, offset: 8, visible: true),
+        .init(pattern: "ROWS", alignment: "CENTER", count: 100000, sectionSize: 1, gutterSize: 4, offset: 0, visible: false),
+    ]
+    // TOKEN_GRID: grid.tablet
+    static let tablet: [GlobalDSLayoutGrid] = [
+        .init(pattern: "COLUMNS", alignment: "STRETCH", count: 12, sectionSize: nil, gutterSize: 12, offset: 16, visible: true),
+    ]
+    // TOKEN_GRID: grid.mobile
+    static let mobile: [GlobalDSLayoutGrid] = [
+        .init(pattern: "COLUMNS", alignment: "STRETCH", count: 4, sectionSize: nil, gutterSize: 16, offset: 16, visible: true),
+        .init(pattern: "ROWS", alignment: "MIN", count: 10000, sectionSize: 4, gutterSize: 0, offset: 0, visible: true),
+    ]
+}
+
+struct GlobalDSEffectToken {
+    let color: Color
+    let x: CGFloat
+    let y: CGFloat
+    let radius: CGFloat
+    let spread: CGFloat
+}
+
+enum GlobalDSEffects {
+    // TOKEN_EFFECT: effect.shadow.100 · Drop Shadow/Shadow 100
+    static let shadow100 = GlobalDSEffectToken(color: Color(.sRGB, red: 0.4314, green: 0.4314, blue: 0.4314, opacity: 0.1216), x: 3, y: 4, radius: 5, spread: 0)
+    // TOKEN_EFFECT: effect.shadow.200 · Drop Shadow/Shadow 200
+    static let shadow200 = GlobalDSEffectToken(color: Color(.sRGB, red: 0.0, green: 0.0, blue: 0.0, opacity: 0.1216), x: 0, y: 4, radius: 4, spread: 0)
+    // TOKEN_EFFECT: effect.shadow.300 · Drop Shadow/Shadow 300
+    static let shadow300 = GlobalDSEffectToken(color: Color(.sRGB, red: 0.0, green: 0.0, blue: 0.0, opacity: 0.149), x: 0, y: 3, radius: 8, spread: 0)
+    // TOKEN_EFFECT: effect.shadow.400 · Drop Shadow/Shadow 400
+    static let shadow400 = GlobalDSEffectToken(color: Color(.sRGB, red: 0.0, green: 0.0, blue: 0.0, opacity: 0.149), x: 0, y: 4, radius: 10, spread: 0)
+    // TOKEN_EFFECT: effect.shadow.button-white · Drop Shadow/Button White
+    static let shadowButtonWhite = GlobalDSEffectToken(color: Color(.sRGB, red: 0.3216, green: 0.3451, blue: 0.4, opacity: 0.0588), x: 0, y: 1, radius: 2, spread: 0)
+    // TOKEN_EFFECT: effect.shadow.bottom-sticky · Drop Shadow/Bottom sticky
+    static let shadowBottomSticky = GlobalDSEffectToken(color: Color(.sRGB, red: 0.4314, green: 0.4314, blue: 0.4471, opacity: 0.051), x: 0, y: -2, radius: 4, spread: 0)
+    // TOKEN_EFFECT: effect.ring.orange-outline · Elevation/Orange outline
+    static let ringOrangeOutline = GlobalDSEffectToken(color: Color(.sRGB, red: 1.0, green: 0.6039, blue: 0.4235, opacity: 1.0), x: 0, y: 0, radius: 0, spread: 1)
+    // TOKEN_EFFECT: effect.ring.focus · Elevation/Focus
+    static let ringFocus = GlobalDSEffectToken(color: Color(.sRGB, red: 1.0, green: 0.9098, blue: 0.8667, opacity: 1.0), x: 0, y: 0, radius: 0, spread: 3)
 }
 
 enum GlobalDSSpacing {
@@ -162,6 +230,9 @@ struct GlobalDSTextStyle {
     let size: CGFloat
     let lineHeight: CGFloat
     let weight: Font.Weight
+    let tracking: CGFloat
+    let isUnderlined: Bool
+    let textCase: String
 
     var font: Font { .custom(GlobalDSTypography.fontFamily, size: size).weight(weight) }
     var lineSpacing: CGFloat { max(0, lineHeight - size) }
@@ -170,74 +241,107 @@ struct GlobalDSTextStyle {
 enum GlobalDSTypography {
     static let fontFamily = "Mulish"
 
-    // TOKEN_TYPE: typography.displayLarge
-    static let displayLarge = GlobalDSTextStyle(size: 32, lineHeight: 40, weight: .semibold)
-    // TOKEN_TYPE: typography.displayMedium
-    static let displayMedium = GlobalDSTextStyle(size: 28, lineHeight: 36, weight: .semibold)
-    // TOKEN_TYPE: typography.displaySmall
-    static let displaySmall = GlobalDSTextStyle(size: 24, lineHeight: 32, weight: .semibold)
-    // TOKEN_TYPE: typography.headingLargeBold
-    static let headingLargeBold = GlobalDSTextStyle(size: 20, lineHeight: 28, weight: .bold)
-    // TOKEN_TYPE: typography.headingLargeSemibold
-    static let headingLargeSemibold = GlobalDSTextStyle(size: 20, lineHeight: 28, weight: .semibold)
-    // TOKEN_TYPE: typography.headingMediumBold
-    static let headingMediumBold = GlobalDSTextStyle(size: 16, lineHeight: 24, weight: .bold)
-    // TOKEN_TYPE: typography.headingMediumSemibold
-    static let headingMediumSemibold = GlobalDSTextStyle(size: 16, lineHeight: 24, weight: .semibold)
-    // TOKEN_TYPE: typography.headingSmallBold
-    static let headingSmallBold = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .bold)
-    // TOKEN_TYPE: typography.headingSmallSemibold
-    static let headingSmallSemibold = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .semibold)
-    // TOKEN_TYPE: typography.headingSmallRegular
-    static let headingSmallRegular = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .regular)
-    // TOKEN_TYPE: typography.bodyLargeRegular
-    static let bodyLargeRegular = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .regular)
-    // TOKEN_TYPE: typography.bodyLargeSemibold
-    static let bodyLargeSemibold = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .semibold)
-    // TOKEN_TYPE: typography.bodyMediumRegular
-    static let bodyMediumRegular = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .regular)
-    // TOKEN_TYPE: typography.bodyMediumSemibold
-    static let bodyMediumSemibold = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .semibold)
-    // TOKEN_TYPE: typography.bodySmallRegular
-    static let bodySmallRegular = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .regular)
-    // TOKEN_TYPE: typography.bodySmallSemibold
-    static let bodySmallSemibold = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.captionRegular
-    static let captionRegular = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .regular)
-    // TOKEN_TYPE: typography.captionSemibold
-    static let captionSemibold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.microSemibold
-    static let microSemibold = GlobalDSTextStyle(size: 10, lineHeight: 14, weight: .semibold)
-    // TOKEN_TYPE: typography.labelLargeSemibold
-    static let labelLargeSemibold = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.microRegular
-    static let microRegular = GlobalDSTextStyle(size: 10, lineHeight: 16, weight: .regular)
-    // TOKEN_TYPE: typography.inputLargeRegular
-    static let inputLargeRegular = GlobalDSTextStyle(size: 16, lineHeight: 24, weight: .regular)
-    // TOKEN_TYPE: typography.inputLargeSemibold
-    static let inputLargeSemibold = GlobalDSTextStyle(size: 16, lineHeight: 24, weight: .semibold)
-    // TOKEN_TYPE: typography.inputMediumRegular
-    static let inputMediumRegular = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .regular)
-    // TOKEN_TYPE: typography.inputMediumSemibold
-    static let inputMediumSemibold = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .semibold)
+    // TOKEN_TYPE: typography.display1
+    static let display1 = GlobalDSTextStyle(size: 28, lineHeight: 36, weight: .semibold, tracking: 0, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.display2
+    static let display2 = GlobalDSTextStyle(size: 24, lineHeight: 32, weight: .semibold, tracking: 0, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h1Bold
+    static let h1Bold = GlobalDSTextStyle(size: 20, lineHeight: 24, weight: .bold, tracking: 0.15, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h1Semi
+    static let h1Semi = GlobalDSTextStyle(size: 20, lineHeight: 24, weight: .semibold, tracking: 0.15, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h2Bold
+    static let h2Bold = GlobalDSTextStyle(size: 16, lineHeight: 20, weight: .bold, tracking: 0.15, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h2Semi
+    static let h2Semi = GlobalDSTextStyle(size: 16, lineHeight: 20, weight: .semibold, tracking: 0.15, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h3Bold
+    static let h3Bold = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .bold, tracking: 0.5, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h3Semi
+    static let h3Semi = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .semibold, tracking: 0.5, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.h3Regular
+    static let h3Regular = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .regular, tracking: 0.5, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.s1Bold
+    static let s1Bold = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .bold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.s1Semi
+    static let s1Semi = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.s1Regular
+    static let s1Regular = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p1Bold
+    static let p1Bold = GlobalDSTextStyle(size: 12, lineHeight: 20, weight: .bold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p1Semi
+    static let p1Semi = GlobalDSTextStyle(size: 12, lineHeight: 20, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p1Reg
+    static let p1Reg = GlobalDSTextStyle(size: 12, lineHeight: 20, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p2Bold
+    static let p2Bold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .bold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p2Semi
+    static let p2Semi = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p2Reg
+    static let p2Reg = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p3Bold
+    static let p3Bold = GlobalDSTextStyle(size: 10, lineHeight: 16, weight: .bold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p3Semi
+    static let p3Semi = GlobalDSTextStyle(size: 10, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.p3Reg
+    static let p3Reg = GlobalDSTextStyle(size: 10, lineHeight: 16, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.inputLRegular
+    static let inputLRegular = GlobalDSTextStyle(size: 16, lineHeight: 20, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.inputLSemi
+    static let inputLSemi = GlobalDSTextStyle(size: 16, lineHeight: 20, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.inputRRegular
+    static let inputRRegular = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .regular, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.inputRSemi
+    static let inputRSemi = GlobalDSTextStyle(size: 13, lineHeight: 20, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
     // TOKEN_TYPE: typography.buttonLarge
-    static let buttonLarge = GlobalDSTextStyle(size: 14, lineHeight: 16, weight: .semibold)
+    static let buttonLarge = GlobalDSTextStyle(size: 14, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
     // TOKEN_TYPE: typography.buttonSmall
-    static let buttonSmall = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
+    static let buttonSmall = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
     // TOKEN_TYPE: typography.linkLarge
-    static let linkLarge = GlobalDSTextStyle(size: 14, lineHeight: 20, weight: .semibold)
+    static let linkLarge = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: true, textCase: "ORIGINAL")
     // TOKEN_TYPE: typography.linkSmall
-    static let linkSmall = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.labelBold
-    static let labelBold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .bold)
+    static let linkSmall = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: true, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.labelRegular
+    static let labelRegular = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .regular, tracking: 1.2, isUnderlined: false, textCase: "UPPER")
     // TOKEN_TYPE: typography.labelSemibold
-    static let labelSemibold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.navLevel1Default
-    static let navLevel1Default = GlobalDSTextStyle(size: 13, lineHeight: 16, weight: .regular)
-    // TOKEN_TYPE: typography.navLevel1Active
-    static let navLevel1Active = GlobalDSTextStyle(size: 13, lineHeight: 16, weight: .semibold)
-    // TOKEN_TYPE: typography.navLevel2Default
-    static let navLevel2Default = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .regular)
-    // TOKEN_TYPE: typography.navLevel2Active
-    static let navLevel2Active = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold)
+    static let labelSemibold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .semibold, tracking: 1.2, isUnderlined: false, textCase: "UPPER")
+    // TOKEN_TYPE: typography.labelBold
+    static let labelBold = GlobalDSTextStyle(size: 11, lineHeight: 16, weight: .bold, tracking: 1.2, isUnderlined: false, textCase: "UPPER")
+    // TOKEN_TYPE: typography.l1Default
+    static let l1Default = GlobalDSTextStyle(size: 13, lineHeight: 16, weight: .regular, tracking: 0.2, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.l1Active
+    static let l1Active = GlobalDSTextStyle(size: 13, lineHeight: 16, weight: .semibold, tracking: 0.25, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.l2Default
+    static let l2Default = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .regular, tracking: 0.2, isUnderlined: false, textCase: "ORIGINAL")
+    // TOKEN_TYPE: typography.l2Active
+    static let l2Active = GlobalDSTextStyle(size: 12, lineHeight: 16, weight: .semibold, tracking: 0.2, isUnderlined: false, textCase: "ORIGINAL")
+
+    // Backwards-compatible component aliases.
+    static let displayLarge = display1
+    static let displayMedium = display1
+    static let displaySmall = display2
+    static let headingLargeBold = h1Bold
+    static let headingLargeSemibold = h1Semi
+    static let headingMediumBold = h2Bold
+    static let headingMediumSemibold = h2Semi
+    static let headingSmallBold = h3Bold
+    static let headingSmallSemibold = h3Semi
+    static let headingSmallRegular = h3Regular
+    static let bodyLargeRegular = h3Regular
+    static let bodyLargeSemibold = h3Semi
+    static let bodyMediumRegular = inputRRegular
+    static let bodyMediumSemibold = inputRSemi
+    static let bodySmallRegular = p1Reg
+    static let bodySmallSemibold = p1Semi
+    static let captionRegular = p2Reg
+    static let captionSemibold = p2Semi
+    static let microRegular = p3Reg
+    static let microSemibold = p3Semi
+    static let labelLargeSemibold = s1Semi
+    static let inputLargeRegular = inputLRegular
+    static let inputLargeSemibold = inputLSemi
+    static let inputMediumRegular = inputRRegular
+    static let inputMediumSemibold = inputRSemi
+    static let navLevel1Default = l1Default
+    static let navLevel1Active = l1Active
+    static let navLevel2Default = l2Default
+    static let navLevel2Active = l2Active
 }

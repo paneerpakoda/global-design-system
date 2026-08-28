@@ -29,7 +29,9 @@ test('renders exactly three colour-system tabs with linked tab panels', () => {
   assert.match(app, /data-colour-tab="rib"[^>]*>RIB colours</);
   assert.equal((app.match(/role="tabpanel"/g) || []).length, 3);
   assert.match(app, /GlobalDSSourceColours\.imobile\.variants/);
-  assert.match(app, /GlobalDSSourceColours\.rib/);
+  assert.match(app, /DS\.paintStyles\.filter/);
+  assert.match(app, /DS\.variables\.map/);
+  assert.match(app, /DS\.gradients\.map/);
 });
 
 test('supports click and standard keyboard tab navigation', () => {

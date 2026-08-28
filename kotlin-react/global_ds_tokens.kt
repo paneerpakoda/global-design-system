@@ -1,4 +1,4 @@
-// GlobalDS OS v0.3.0
+// GlobalDS OS v0.4.1
 // Generated from js/tokens.js. Do not edit by hand.
 package com.icici.globalds
 
@@ -9,25 +9,25 @@ object GlobalDSColors {
     // TOKEN_COLOR: color.brand.maroon
     const val brandMaroon = "#BE2A2A"
     // TOKEN_COLOR: color.primaryOrange.80
-    const val primaryOrange80 = "#F4B094"
+    const val primaryOrange80 = "#F7B68D"
     // TOKEN_COLOR: color.primaryOrange.90
-    const val primaryOrange90 = "#E8692E"
+    const val primaryOrange90 = "#F3975D"
     // TOKEN_COLOR: color.primaryOrange.100
-    const val primaryOrange100 = "#D44500"
+    const val primaryOrange100 = "#F0792E"
     // TOKEN_COLOR: color.primaryOrange.110
-    const val primaryOrange110 = "#A93600"
+    const val primaryOrange110 = "#DB5E10"
     // TOKEN_COLOR: color.primaryOrange.120
-    const val primaryOrange120 = "#732500"
+    const val primaryOrange120 = "#AB4A0C"
     // TOKEN_COLOR: color.primaryMaroon.80
-    const val primaryMaroon80 = "#DA7B80"
+    const val primaryMaroon80 = "#CE5F66"
     // TOKEN_COLOR: color.primaryMaroon.90
-    const val primaryMaroon90 = "#BC343A"
+    const val primaryMaroon90 = "#BF3B43"
     // TOKEN_COLOR: color.primaryMaroon.100
-    const val primaryMaroon100 = "#94292E"
+    const val primaryMaroon100 = "#982F35"
     // TOKEN_COLOR: color.primaryMaroon.110
-    const val primaryMaroon110 = "#6C1E21"
+    const val primaryMaroon110 = "#712327"
     // TOKEN_COLOR: color.primaryMaroon.120
-    const val primaryMaroon120 = "#441315"
+    const val primaryMaroon120 = "#4A171A"
     // TOKEN_COLOR: color.neutralBase.black
     const val neutralBaseBlack = "#000000"
     // TOKEN_COLOR: color.neutralBase.white
@@ -116,6 +116,8 @@ object GlobalDSColors {
     const val success100 = "#008F52"
     // TOKEN_COLOR: color.success.110
     const val success110 = "#005C35"
+    // TOKEN_COLOR: color.warning.80
+    const val warning80 = "#FEFAED"
     // TOKEN_COLOR: color.warning.90
     const val warning90 = "#FFC633"
     // TOKEN_COLOR: color.warning.100
@@ -134,6 +136,61 @@ object GlobalDSColors {
     const val info100 = "#3772FF"
     // TOKEN_COLOR: color.info.110
     const val info110 = "#054FFF"
+
+    // Semantic variables resolved from the RIB Tokens collection.
+    // TOKEN_VARIABLE: bg/white-0 -> neutral/0
+    const val bgWhite0 = "#FFFFFF"
+    // TOKEN_VARIABLE: icon/sub-500 -> neutral/500
+    const val iconSub500 = "#525866"
+    // TOKEN_VARIABLE: icon/strong-900 -> neutral/900
+    const val iconStrong900 = "#0A0D14"
+    // TOKEN_VARIABLE: stroke/soft-200 -> neutral/200
+    const val strokeSoft200 = "#E2E4E9"
+    // TOKEN_VARIABLE: text/sub-500 -> neutral/500
+    const val textSub500 = "#525866"
+}
+
+data class GlobalDSLayoutGrid(
+    val pattern: String, val alignment: String, val count: Int,
+    val sectionSizePx: Double?, val gutterSizePx: Double, val offsetPx: Double, val visible: Boolean,
+)
+
+object GlobalDSGrids {
+    // TOKEN_GRID: grid.desktop
+    val desktopL = listOf(
+        GlobalDSLayoutGrid("COLUMNS", "MAX", 12, 72.0, 8.0, 8.0, true),
+        GlobalDSLayoutGrid("ROWS", "CENTER", 100000, 1.0, 4.0, 0.0, false),
+    )
+    // TOKEN_GRID: grid.tablet
+    val tablet = listOf(
+        GlobalDSLayoutGrid("COLUMNS", "STRETCH", 12, null, 12.0, 16.0, true),
+    )
+    // TOKEN_GRID: grid.mobile
+    val mobile = listOf(
+        GlobalDSLayoutGrid("COLUMNS", "STRETCH", 4, null, 16.0, 16.0, true),
+        GlobalDSLayoutGrid("ROWS", "MIN", 10000, 4.0, 0.0, 0.0, true),
+    )
+}
+
+data class GlobalDSEffect(val color: String, val x: Double, val y: Double, val radius: Double, val spread: Double)
+
+object GlobalDSEffects {
+    // TOKEN_EFFECT: effect.shadow.100 · Drop Shadow/Shadow 100
+    val shadow100 = GlobalDSEffect("#6E6E6E1F", 3.0, 4.0, 5.0, 0.0)
+    // TOKEN_EFFECT: effect.shadow.200 · Drop Shadow/Shadow 200
+    val shadow200 = GlobalDSEffect("#0000001F", 0.0, 4.0, 4.0, 0.0)
+    // TOKEN_EFFECT: effect.shadow.300 · Drop Shadow/Shadow 300
+    val shadow300 = GlobalDSEffect("#00000026", 0.0, 3.0, 8.0, 0.0)
+    // TOKEN_EFFECT: effect.shadow.400 · Drop Shadow/Shadow 400
+    val shadow400 = GlobalDSEffect("#00000026", 0.0, 4.0, 10.0, 0.0)
+    // TOKEN_EFFECT: effect.shadow.button-white · Drop Shadow/Button White
+    val shadowButtonWhite = GlobalDSEffect("#5258660F", 0.0, 1.0, 2.0, 0.0)
+    // TOKEN_EFFECT: effect.shadow.bottom-sticky · Drop Shadow/Bottom sticky
+    val shadowBottomSticky = GlobalDSEffect("#6E6E720D", 0.0, -2.0, 4.0, 0.0)
+    // TOKEN_EFFECT: effect.ring.orange-outline · Elevation/Orange outline
+    val ringOrangeOutline = GlobalDSEffect("#FF9A6C", 0.0, 0.0, 0.0, 1.0)
+    // TOKEN_EFFECT: effect.ring.focus · Elevation/Focus
+    val ringFocus = GlobalDSEffect("#FFE8DD", 0.0, 0.0, 0.0, 3.0)
 }
 
 object GlobalDSSpacing {
@@ -164,209 +221,287 @@ data class GlobalDSTextStyle(
     val fontSizePx: Double,
     val lineHeightPx: Double,
     val fontWeight: Int,
+    val letterSpacingEm: Double,
+    val textDecoration: String,
+    val textCase: String,
 )
 
 object GlobalDSTypography {
     const val fontFamily = "Mulish"
 
-    // TOKEN_TYPE: typography.displayLarge
-    val displayLarge = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 32.0,
-        lineHeightPx = 40.0,
-        fontWeight = 600,
-    )
-
-    // TOKEN_TYPE: typography.displayMedium
-    val displayMedium = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.display1
+    val display1 = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 28.0,
         lineHeightPx = 36.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0000,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.displaySmall
-    val displaySmall = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.display2
+    val display2 = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 24.0,
         lineHeightPx = 32.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0000,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.headingLargeBold
-    val headingLargeBold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.h1Bold
+    val h1Bold = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 20.0,
-        lineHeightPx = 28.0,
+        lineHeightPx = 24.0,
         fontWeight = 700,
+        letterSpacingEm = 0.0075,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.headingLargeSemibold
-    val headingLargeSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.h1Semi
+    val h1Semi = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 20.0,
-        lineHeightPx = 28.0,
-        fontWeight = 600,
-    )
-
-    // TOKEN_TYPE: typography.headingMediumBold
-    val headingMediumBold = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 16.0,
-        lineHeightPx = 24.0,
-        fontWeight = 700,
-    )
-
-    // TOKEN_TYPE: typography.headingMediumSemibold
-    val headingMediumSemibold = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 16.0,
         lineHeightPx = 24.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0075,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.headingSmallBold
-    val headingSmallBold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.h2Bold
+    val h2Bold = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 16.0,
+        lineHeightPx = 20.0,
+        fontWeight = 700,
+        letterSpacingEm = 0.0094,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.h2Semi
+    val h2Semi = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 16.0,
+        lineHeightPx = 20.0,
+        fontWeight = 600,
+        letterSpacingEm = 0.0094,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.h3Bold
+    val h3Bold = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 14.0,
         lineHeightPx = 20.0,
         fontWeight = 700,
+        letterSpacingEm = 0.0357,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.headingSmallSemibold
-    val headingSmallSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.h3Semi
+    val h3Semi = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 14.0,
         lineHeightPx = 20.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0357,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.headingSmallRegular
-    val headingSmallRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.h3Regular
+    val h3Regular = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 14.0,
         lineHeightPx = 20.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0357,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.bodyLargeRegular
-    val bodyLargeRegular = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 14.0,
-        lineHeightPx = 20.0,
-        fontWeight = 400,
-    )
-
-    // TOKEN_TYPE: typography.bodyLargeSemibold
-    val bodyLargeSemibold = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 14.0,
-        lineHeightPx = 20.0,
-        fontWeight = 600,
-    )
-
-    // TOKEN_TYPE: typography.bodyMediumRegular
-    val bodyMediumRegular = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 13.0,
-        lineHeightPx = 20.0,
-        fontWeight = 400,
-    )
-
-    // TOKEN_TYPE: typography.bodyMediumSemibold
-    val bodyMediumSemibold = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 13.0,
-        lineHeightPx = 20.0,
-        fontWeight = 600,
-    )
-
-    // TOKEN_TYPE: typography.bodySmallRegular
-    val bodySmallRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.s1Bold
+    val s1Bold = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 12.0,
         lineHeightPx = 16.0,
-        fontWeight = 400,
+        fontWeight = 700,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.bodySmallSemibold
-    val bodySmallSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.s1Semi
+    val s1Semi = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 12.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.captionRegular
-    val captionRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.s1Regular
+    val s1Regular = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 12.0,
+        lineHeightPx = 16.0,
+        fontWeight = 400,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p1Bold
+    val p1Bold = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 12.0,
+        lineHeightPx = 20.0,
+        fontWeight = 700,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p1Semi
+    val p1Semi = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 12.0,
+        lineHeightPx = 20.0,
+        fontWeight = 600,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p1Reg
+    val p1Reg = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 12.0,
+        lineHeightPx = 20.0,
+        fontWeight = 400,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p2Bold
+    val p2Bold = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 11.0,
+        lineHeightPx = 16.0,
+        fontWeight = 700,
+        letterSpacingEm = 0.0227,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p2Semi
+    val p2Semi = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 11.0,
+        lineHeightPx = 16.0,
+        fontWeight = 600,
+        letterSpacingEm = 0.0227,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
+    )
+
+    // TOKEN_TYPE: typography.p2Reg
+    val p2Reg = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 11.0,
         lineHeightPx = 16.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0227,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.captionSemibold
-    val captionSemibold = GlobalDSTextStyle(
-        fontFamily = fontFamily,
-        fontSizePx = 11.0,
-        lineHeightPx = 16.0,
-        fontWeight = 600,
-    )
-
-    // TOKEN_TYPE: typography.microSemibold
-    val microSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.p3Bold
+    val p3Bold = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 10.0,
-        lineHeightPx = 14.0,
-        fontWeight = 600,
+        lineHeightPx = 16.0,
+        fontWeight = 700,
+        letterSpacingEm = 0.0250,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.labelLargeSemibold
-    val labelLargeSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.p3Semi
+    val p3Semi = GlobalDSTextStyle(
         fontFamily = fontFamily,
-        fontSizePx = 12.0,
+        fontSizePx = 10.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0250,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.microRegular
-    val microRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.p3Reg
+    val p3Reg = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 10.0,
         lineHeightPx = 16.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0250,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.inputLargeRegular
-    val inputLargeRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.inputLRegular
+    val inputLRegular = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 16.0,
-        lineHeightPx = 24.0,
+        lineHeightPx = 20.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0156,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.inputLargeSemibold
-    val inputLargeSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.inputLSemi
+    val inputLSemi = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 16.0,
-        lineHeightPx = 24.0,
+        lineHeightPx = 20.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0156,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.inputMediumRegular
-    val inputMediumRegular = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.inputRRegular
+    val inputRRegular = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 13.0,
         lineHeightPx = 20.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0192,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.inputMediumSemibold
-    val inputMediumSemibold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.inputRSemi
+    val inputRSemi = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 13.0,
         lineHeightPx = 20.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0192,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
     // TOKEN_TYPE: typography.buttonLarge
@@ -375,6 +510,9 @@ object GlobalDSTypography {
         fontSizePx = 14.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0179,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
     // TOKEN_TYPE: typography.buttonSmall
@@ -383,30 +521,42 @@ object GlobalDSTypography {
         fontSizePx = 12.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0208,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
     // TOKEN_TYPE: typography.linkLarge
     val linkLarge = GlobalDSTextStyle(
         fontFamily = fontFamily,
-        fontSizePx = 14.0,
-        lineHeightPx = 20.0,
+        fontSizePx = 12.0,
+        lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0208,
+        textDecoration = "UNDERLINE",
+        textCase = "ORIGINAL",
     )
 
     // TOKEN_TYPE: typography.linkSmall
     val linkSmall = GlobalDSTextStyle(
         fontFamily = fontFamily,
-        fontSizePx = 12.0,
+        fontSizePx = 11.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0227,
+        textDecoration = "UNDERLINE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.labelBold
-    val labelBold = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.labelRegular
+    val labelRegular = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 11.0,
         lineHeightPx = 16.0,
-        fontWeight = 700,
+        fontWeight = 400,
+        letterSpacingEm = 0.1091,
+        textDecoration = "NONE",
+        textCase = "UPPER",
     )
 
     // TOKEN_TYPE: typography.labelSemibold
@@ -415,38 +565,94 @@ object GlobalDSTypography {
         fontSizePx = 11.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.1091,
+        textDecoration = "NONE",
+        textCase = "UPPER",
     )
 
-    // TOKEN_TYPE: typography.navLevel1Default
-    val navLevel1Default = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.labelBold
+    val labelBold = GlobalDSTextStyle(
+        fontFamily = fontFamily,
+        fontSizePx = 11.0,
+        lineHeightPx = 16.0,
+        fontWeight = 700,
+        letterSpacingEm = 0.1091,
+        textDecoration = "NONE",
+        textCase = "UPPER",
+    )
+
+    // TOKEN_TYPE: typography.l1Default
+    val l1Default = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 13.0,
         lineHeightPx = 16.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0154,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.navLevel1Active
-    val navLevel1Active = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.l1Active
+    val l1Active = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 13.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0192,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.navLevel2Default
-    val navLevel2Default = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.l2Default
+    val l2Default = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 12.0,
         lineHeightPx = 16.0,
         fontWeight = 400,
+        letterSpacingEm = 0.0167,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
-    // TOKEN_TYPE: typography.navLevel2Active
-    val navLevel2Active = GlobalDSTextStyle(
+    // TOKEN_TYPE: typography.l2Active
+    val l2Active = GlobalDSTextStyle(
         fontFamily = fontFamily,
         fontSizePx = 12.0,
         lineHeightPx = 16.0,
         fontWeight = 600,
+        letterSpacingEm = 0.0167,
+        textDecoration = "NONE",
+        textCase = "ORIGINAL",
     )
 
+    // Backwards-compatible component aliases.
+    val displayLarge = display1
+    val displayMedium = display1
+    val displaySmall = display2
+    val headingLargeBold = h1Bold
+    val headingLargeSemibold = h1Semi
+    val headingMediumBold = h2Bold
+    val headingMediumSemibold = h2Semi
+    val headingSmallBold = h3Bold
+    val headingSmallSemibold = h3Semi
+    val headingSmallRegular = h3Regular
+    val bodyLargeRegular = h3Regular
+    val bodyLargeSemibold = h3Semi
+    val bodyMediumRegular = inputRRegular
+    val bodyMediumSemibold = inputRSemi
+    val bodySmallRegular = p1Reg
+    val bodySmallSemibold = p1Semi
+    val captionRegular = p2Reg
+    val captionSemibold = p2Semi
+    val microRegular = p3Reg
+    val microSemibold = p3Semi
+    val labelLargeSemibold = s1Semi
+    val inputLargeRegular = inputLRegular
+    val inputLargeSemibold = inputLSemi
+    val inputMediumRegular = inputRRegular
+    val inputMediumSemibold = inputRSemi
+    val navLevel1Default = l1Default
+    val navLevel1Active = l1Active
+    val navLevel2Default = l2Default
+    val navLevel2Active = l2Active
 }

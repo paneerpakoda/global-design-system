@@ -29,6 +29,21 @@ function exportPascalCase(value){
     .replace(/[^a-zA-Z0-9]/g, '');
 }
 
+function exportVariableName(value){
+  const parts = String(value).split(/[^a-zA-Z0-9]+/).filter(Boolean);
+  return parts.map((part, index) => index === 0
+    ? part.charAt(0).toLowerCase() + part.slice(1)
+    : part.charAt(0).toUpperCase() + part.slice(1)
+  ).join('');
+}
+
+function exportTrackingEm(token){
+  if (!token.tracking) return 0;
+  return token.trackingUnit === 'PERCENT'
+    ? token.tracking / 100
+    : token.tracking / token.size;
+}
+
 function exportHeader(commentPrefix){
   return commentPrefix + ' GlobalDS OS v' + DS.meta.version + '\n' +
     commentPrefix + ' Generated from js/tokens.js. Do not edit by hand.\n';
@@ -43,6 +58,35 @@ function kotlinReactTokens(){
     output += '    // TOKEN_COLOR: ' + token.path + '\n';
     output += '    const val ' + token.name + ' = "' + token.value + '"\n';
   }
+  output += '\n    // Semantic variables resolved from the RIB Tokens collection.\n';
+  DS.variables.forEach(variable => {
+    output += '    // TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
+    output += '    const val ' + exportVariableName(variable.name) + ' = "' + variable.resolvedValue + '"\n';
+  });
+  output += '}\n\n';
+  output += 'data class GlobalDSLayoutGrid(\n';
+  output += '    val pattern: String, val alignment: String, val count: Int,\n';
+  output += '    val sectionSizePx: Double?, val gutterSizePx: Double, val offsetPx: Double, val visible: Boolean,\n';
+  output += ')\n\nobject GlobalDSGrids {\n';
+  DS.grid.forEach(style => {
+    output += '    // TOKEN_GRID: grid.' + style.viewport + '\n';
+    output += '    val ' + exportVariableName(style.name) + ' = listOf(\n';
+    style.layoutGrids.forEach(grid => {
+      output += '        GlobalDSLayoutGrid("' + grid.pattern + '", "' + grid.alignment + '", ' + grid.count + ', ' +
+        (grid.sectionSize === undefined ? 'null' : grid.sectionSize + '.0') + ', ' + grid.gutterSize + '.0, ' +
+        grid.offset + '.0, ' + grid.visible + '),\n';
+    });
+    output += '    )\n';
+  });
+  output += '}\n\n';
+  output += 'data class GlobalDSEffect(val color: String, val x: Double, val y: Double, val radius: Double, val spread: Double)\n\n';
+  output += 'object GlobalDSEffects {\n';
+  DS.effects.forEach(style => {
+    const effect = style.effects[0];
+    output += '    // TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
+    output += '    val ' + style.token + ' = GlobalDSEffect("' + effect.color + '", ' + effect.offset.x + '.0, ' +
+      effect.offset.y + '.0, ' + effect.radius + '.0, ' + effect.spread + '.0)\n';
+  });
   output += '}\n\n';
   output += 'object GlobalDSSpacing {\n';
   DS.space.forEach(token => {
@@ -59,6 +103,9 @@ function kotlinReactTokens(){
   output += '    val fontSizePx: Double,\n';
   output += '    val lineHeightPx: Double,\n';
   output += '    val fontWeight: Int,\n';
+  output += '    val letterSpacingEm: Double,\n';
+  output += '    val textDecoration: String,\n';
+  output += '    val textCase: String,\n';
   output += ')\n\n';
   output += 'object GlobalDSTypography {\n';
   output += '    const val fontFamily = "' + DS.typeface.family + '"\n\n';
@@ -69,7 +116,14 @@ function kotlinReactTokens(){
     output += '        fontSizePx = ' + token.size + '.0,\n';
     output += '        lineHeightPx = ' + token.height + '.0,\n';
     output += '        fontWeight = ' + token.weight + ',\n';
+    output += '        letterSpacingEm = ' + exportTrackingEm(token).toFixed(4) + ',\n';
+    output += '        textDecoration = "' + token.decoration + '",\n';
+    output += '        textCase = "' + token.textCase + '",\n';
     output += '    )\n\n';
+  });
+  output += '    // Backwards-compatible component aliases.\n';
+  Object.entries(DS.typeAliases).forEach(([alias, token]) => {
+    output += '    val ' + alias + ' = ' + token + '\n';
   });
   output += '}\n';
   return output;
@@ -102,7 +156,7 @@ data class GlobalDSTheme(
     companion object {
         val light = GlobalDSTheme(
             primary = GlobalDSColors.primaryOrange100,
-            onPrimary = GlobalDSColors.neutralBaseWhite,
+            onPrimary = GlobalDSColors.neutralGrey150,
             secondary = GlobalDSColors.primaryMaroon100,
             onSecondary = GlobalDSColors.neutralBaseWhite,
             surface = GlobalDSColors.neutralBaseWhite,
@@ -115,7 +169,10 @@ data class GlobalDSTheme(
 }
 
 function flutterHex(hex){
-  return '0xFF' + hex.replace('#', '').toUpperCase();
+  const value = hex.replace('#', '').toUpperCase();
+  return value.length === 8
+    ? '0x' + value.slice(6, 8) + value.slice(0, 6)
+    : '0xFF' + value;
 }
 
 function flutterTokens(){
@@ -127,6 +184,11 @@ function flutterTokens(){
     output += '  /// TOKEN_COLOR: ' + token.path + '\n';
     output += '  static const Color ' + token.name + ' = Color(' + flutterHex(token.value) + ');\n';
   }
+  output += '\n  // Semantic variables resolved from the RIB Tokens collection.\n';
+  DS.variables.forEach(variable => {
+    output += '  /// TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
+    output += '  static const Color ' + exportVariableName(variable.name) + ' = Color(' + flutterHex(variable.resolvedValue) + ');\n';
+  });
   output += '\n  static const Gradient hero = LinearGradient(\n';
   output += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
   output += '    colors: [Color(' + flutterHex(DS.gradient.hero.stops[0]) + '), Color(' + flutterHex(DS.gradient.hero.stops[1]) + ')],\n  );\n';
@@ -137,8 +199,31 @@ function flutterTokens(){
   output += '\n  static const double buttonStrokeWidth = 1;\n';
   output += '  static const Gradient buttonStroke = LinearGradient(\n';
   output += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
-  output += '    colors: [Color(0xFFF4B094), Color(0xFFE8692E), Color(0xFFD44500)],\n';
-  output += '    stops: [0, .45, 1],\n  );\n';
+  output += '    colors: [Color(0x80FFFFFF), Color(0x00FFFFFF)],\n  );\n';
+  output += '}\n\nclass DsLayoutGrid {\n';
+  output += '  const DsLayoutGrid({required this.pattern, required this.alignment, required this.count, this.sectionSize, required this.gutterSize, required this.offset, required this.visible});\n';
+  output += '  final String pattern;\n  final String alignment;\n  final int count;\n  final double? sectionSize;\n  final double gutterSize;\n  final double offset;\n  final bool visible;\n}\n\n';
+  output += 'class DsGrids {\n  DsGrids._();\n\n';
+  DS.grid.forEach(style => {
+    output += '  /// TOKEN_GRID: grid.' + style.viewport + '\n';
+    output += '  static const List<DsLayoutGrid> ' + exportVariableName(style.name) + ' = [\n';
+    style.layoutGrids.forEach(grid => {
+      output += "    DsLayoutGrid(pattern: '" + grid.pattern + "', alignment: '" + grid.alignment + "', count: " + grid.count +
+        ', sectionSize: ' + (grid.sectionSize === undefined ? 'null' : grid.sectionSize) + ', gutterSize: ' + grid.gutterSize +
+        ', offset: ' + grid.offset + ', visible: ' + grid.visible + '),\n';
+    });
+    output += '  ];\n';
+  });
+  output += '}\n\nclass DsEffectToken {\n';
+  output += '  const DsEffectToken(this.color, this.offsetX, this.offsetY, this.radius, this.spread);\n';
+  output += '  final Color color;\n  final double offsetX;\n  final double offsetY;\n  final double radius;\n  final double spread;\n}\n\n';
+  output += 'class DsEffects {\n  DsEffects._();\n\n';
+  DS.effects.forEach(style => {
+    const effect = style.effects[0];
+    output += '  /// TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
+    output += '  static const DsEffectToken ' + style.token + ' = DsEffectToken(Color(' + flutterHex(effect.color) + '), ' +
+      effect.offset.x + ', ' + effect.offset.y + ', ' + effect.radius + ', ' + effect.spread + ');\n';
+  });
   output += '}\n\nclass DsSpacing {\n  DsSpacing._();\n\n';
   DS.space.forEach(token => {
     output += '  static const double ' + token.dart + ' = ' + token.px + ';\n';
@@ -155,7 +240,13 @@ function flutterTokens(){
     output += '    fontFamily: fontFamily,\n    fontSize: ' + token.size + ',\n';
     output += '    height: ' + (token.height / token.size).toFixed(2) + ',\n';
     output += '    fontWeight: FontWeight.w' + token.weight + ',\n';
+    output += '    letterSpacing: ' + token.tracking + ',\n';
+    if (token.decoration === 'UNDERLINE') output += '    decoration: TextDecoration.underline,\n';
     output += '    fontFeatures: [FontFeature.tabularFigures()],\n  );\n\n';
+  });
+  output += '  // Backwards-compatible component aliases.\n';
+  Object.entries(DS.typeAliases).forEach(([alias, token]) => {
+    output += '  static const TextStyle ' + alias + ' = ' + token + ';\n';
   });
   output += '}\n';
   return output;
@@ -171,7 +262,7 @@ import 'ds_tokens.dart';
   static ThemeData get light {
     const scheme = ColorScheme.light(
       primary: DsColors.primaryOrange100,
-      onPrimary: DsColors.neutralBaseWhite,
+      onPrimary: DsColors.neutralGrey150,
       secondary: DsColors.primaryMaroon100,
       onSecondary: DsColors.neutralBaseWhite,
       error: DsColors.error100,
@@ -205,7 +296,7 @@ import 'ds_tokens.dart';
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: DsColors.buttonPrimaryFillBase,
-          foregroundColor: DsColors.neutralBaseWhite,
+          foregroundColor: DsColors.neutralGrey150,
           disabledBackgroundColor: DsColors.neutralGrey60,
           disabledForegroundColor: DsColors.neutralGrey90,
           minimumSize: const Size(120, 36),
@@ -333,6 +424,12 @@ function swiftRGB(hex){
   };
 }
 
+function swiftRGBA(hex){
+  const raw = hex.replace('#', '');
+  const rgb = swiftRGB('#' + raw.slice(0, 6));
+  return { ...rgb, alpha: raw.length === 8 ? parseInt(raw.slice(6, 8), 16) / 255 : 1 };
+}
+
 function swiftNumber(value){
   return Number(value).toFixed(4).replace(/0+$/, '').replace(/\.$/, '.0');
 }
@@ -350,6 +447,37 @@ function swiftUITokens(){
     output += '    static let ' + token.name + ' = Color(.sRGB, red: ' + swiftNumber(rgb.red) +
       ', green: ' + swiftNumber(rgb.green) + ', blue: ' + swiftNumber(rgb.blue) + ', opacity: 1)\n';
   }
+  output += '\n    // Semantic variables resolved from the RIB Tokens collection.\n';
+  DS.variables.forEach(variable => {
+    const rgb = swiftRGB(variable.resolvedValue);
+    output += '    // TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
+    output += '    static let ' + exportVariableName(variable.name) + ' = Color(.sRGB, red: ' + swiftNumber(rgb.red) +
+      ', green: ' + swiftNumber(rgb.green) + ', blue: ' + swiftNumber(rgb.blue) + ', opacity: 1)\n';
+  });
+  output += '}\n\nstruct GlobalDSLayoutGrid {\n';
+  output += '    let pattern: String\n    let alignment: String\n    let count: Int\n    let sectionSize: CGFloat?\n    let gutterSize: CGFloat\n    let offset: CGFloat\n    let visible: Bool\n}\n\n';
+  output += 'enum GlobalDSGrids {\n';
+  DS.grid.forEach(style => {
+    output += '    // TOKEN_GRID: grid.' + style.viewport + '\n';
+    output += '    static let ' + exportVariableName(style.name) + ': [GlobalDSLayoutGrid] = [\n';
+    style.layoutGrids.forEach(grid => {
+      output += '        .init(pattern: "' + grid.pattern + '", alignment: "' + grid.alignment + '", count: ' + grid.count +
+        ', sectionSize: ' + (grid.sectionSize === undefined ? 'nil' : grid.sectionSize) + ', gutterSize: ' + grid.gutterSize +
+        ', offset: ' + grid.offset + ', visible: ' + grid.visible + '),\n';
+    });
+    output += '    ]\n';
+  });
+  output += '}\n\nstruct GlobalDSEffectToken {\n';
+  output += '    let color: Color\n    let x: CGFloat\n    let y: CGFloat\n    let radius: CGFloat\n    let spread: CGFloat\n}\n\n';
+  output += 'enum GlobalDSEffects {\n';
+  DS.effects.forEach(style => {
+    const effect = style.effects[0];
+    const rgba = swiftRGBA(effect.color);
+    output += '    // TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
+    output += '    static let ' + style.token + ' = GlobalDSEffectToken(color: Color(.sRGB, red: ' + swiftNumber(rgba.red) +
+      ', green: ' + swiftNumber(rgba.green) + ', blue: ' + swiftNumber(rgba.blue) + ', opacity: ' + swiftNumber(rgba.alpha) +
+      '), x: ' + effect.offset.x + ', y: ' + effect.offset.y + ', radius: ' + effect.radius + ', spread: ' + effect.spread + ')\n';
+  });
   output += '}\n\nenum GlobalDSSpacing {\n';
   DS.space.forEach(token => {
     output += '    static let ' + exportTokenName('space', token.dart) + ': CGFloat = ' + token.px + '\n';
@@ -359,7 +487,8 @@ function swiftUITokens(){
     output += '    static let ' + exportTokenName('radius', token.dart) + ': CGFloat = ' + token.px + '\n';
   });
   output += '}\n\nstruct GlobalDSTextStyle {\n';
-  output += '    let size: CGFloat\n    let lineHeight: CGFloat\n    let weight: Font.Weight\n\n';
+  output += '    let size: CGFloat\n    let lineHeight: CGFloat\n    let weight: Font.Weight\n';
+  output += '    let tracking: CGFloat\n    let isUnderlined: Bool\n    let textCase: String\n\n';
   output += '    var font: Font { .custom(GlobalDSTypography.fontFamily, size: size).weight(weight) }\n';
   output += '    var lineSpacing: CGFloat { max(0, lineHeight - size) }\n';
   output += '}\n\nenum GlobalDSTypography {\n';
@@ -367,7 +496,13 @@ function swiftUITokens(){
   DS.type.forEach(token => {
     output += '    // TOKEN_TYPE: typography.' + token.token + '\n';
     output += '    static let ' + token.token + ' = GlobalDSTextStyle(size: ' + token.size +
-      ', lineHeight: ' + token.height + ', weight: .' + swiftWeight(token.weight) + ')\n';
+      ', lineHeight: ' + token.height + ', weight: .' + swiftWeight(token.weight) +
+      ', tracking: ' + token.tracking + ', isUnderlined: ' + (token.decoration === 'UNDERLINE') +
+      ', textCase: "' + token.textCase + '")\n';
+  });
+  output += '\n    // Backwards-compatible component aliases.\n';
+  Object.entries(DS.typeAliases).forEach(([alias, token]) => {
+    output += '    static let ' + alias + ' = ' + token + '\n';
   });
   output += '}\n';
   return output;
@@ -387,7 +522,7 @@ function swiftUITheme(){
 
     static let light = GlobalDSTheme(
         primary: GlobalDSColors.primaryOrange100,
-        onPrimary: GlobalDSColors.neutralBaseWhite,
+        onPrimary: GlobalDSColors.neutralGrey150,
         secondary: GlobalDSColors.primaryMaroon100,
         onSecondary: GlobalDSColors.neutralBaseWhite,
         surface: GlobalDSColors.neutralBaseWhite,
@@ -420,6 +555,9 @@ function platformNeutralTokensJson(){
   for (const [ramp, definition] of Object.entries(DS.color)) colors[ramp] = definition.stops;
   return JSON.stringify({
     meta: DS.meta,
+    source: DS.ribAtoms.meta,
+    foundationCoverage: DS.foundationCoverage,
+    foundationIssues: DS.foundationIssues,
     platforms: DS.platforms,
     sourceSystems: DS.sourceSystems,
     deferredSystems: DS.deferredSystems,
@@ -430,9 +568,14 @@ function platformNeutralTokensJson(){
     alpha: DS.alpha,
     typeface: DS.typeface,
     typography: DS.type,
+    typographyAliases: DS.typeAliases,
     spacing: DS.space.map(token => ({ token: token.token, px: token.px })),
     radius: DS.radius.map(token => ({ token: token.token, px: token.px })),
-    elevation: DS.elevation
+    effects: DS.effects,
+    paintStyles: DS.paintStyles,
+    gradients: DS.gradients,
+    grids: DS.grid,
+    variables: DS.variables
   }, null, 2);
 }
 

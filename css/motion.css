@@ -84,7 +84,7 @@ body{font-family:var(--app-font)}
    spotlight. These are hub tiles, not DS components.
    ------------------------------------------------------------ */
 .link-card{transition:border-color var(--dur-2) ease,box-shadow var(--dur-2) ease}
-.link-card:hover{box-shadow:var(--e2)}
+.link-card:hover{box-shadow:var(--effect-shadow-200)}
 [data-tilt]{transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateY(var(--ty,0));
   transition:transform var(--dur-2) var(--ease-out),box-shadow var(--dur-2) ease;transform-style:preserve-3d}
 [data-tilt].tilting{transition:transform .1s linear,box-shadow var(--dur-2) ease}

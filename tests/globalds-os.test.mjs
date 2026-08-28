@@ -9,6 +9,7 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const read = relativePath => fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 
 const context = vm.createContext({ console });
+vm.runInContext(read('js/rib-atoms.js'), context, { filename: 'js/rib-atoms.js' });
 vm.runInContext(read('js/tokens.js'), context, { filename: 'js/tokens.js' });
 const DS = vm.runInContext('DS', context);
 
@@ -53,10 +54,10 @@ test('publishes the agreed canonical colour families', () => {
   );
 
   assert.deepEqual({ ...DS.color.primaryOrange.stops }, {
-    80: '#F4B094', 90: '#E8692E', 100: '#D44500', 110: '#A93600', 120: '#732500',
+    80: '#F7B68D', 90: '#F3975D', 100: '#F0792E', 110: '#DB5E10', 120: '#AB4A0C',
   });
   assert.deepEqual({ ...DS.color.primaryMaroon.stops }, {
-    80: '#DA7B80', 90: '#BC343A', 100: '#94292E', 110: '#6C1E21', 120: '#441315',
+    80: '#CE5F66', 90: '#BF3B43', 100: '#982F35', 110: '#712327', 120: '#4A171A',
   });
   assert.deepEqual({ ...DS.color.pastelBrown.stops }, {
     80: '#FDFDFC', 90: '#F9F9F5', 100: '#F6F5F0', 110: '#E9E6D9', 120: '#CFCAAF',
@@ -65,7 +66,7 @@ test('publishes the agreed canonical colour families', () => {
     90: '#00C26F', 100: '#008F52', 110: '#005C35',
   });
   assert.deepEqual({ ...DS.color.warning.stops }, {
-    90: '#FFC633', 100: '#FFB800', 110: '#CC9300',
+    80: '#FEFAED', 90: '#FFC633', 100: '#FFB800', 110: '#CC9300',
   });
   assert.deepEqual({ ...DS.color.error.stops }, {
     90: '#E05257', 100: '#D8272D', 110: '#AD1F24',
@@ -102,7 +103,7 @@ test('publishes accessible foreground pairings for filled operational states', (
     },
     warning: {
       default: 'warning.100', strong: 'warning.110', onStrong: 'neutralGrey.150',
-      subtle: 'pastelAmber.80', onSubtle: 'neutralGrey.150',
+      subtle: 'warning.80', onSubtle: 'neutralGrey.150',
     },
     error: {
       default: 'error.100', strong: 'error.110', onStrong: 'neutralBase.white',
@@ -115,21 +116,53 @@ test('publishes accessible foreground pairings for filled operational states', (
   });
 });
 
-test('publishes all 35 GlobalDS typography entries from the comparison audit', () => {
-  assert.equal(DS.type.length, 35);
+test('makes all 139 RIB atoms canonical GlobalDS foundations', () => {
+  assert.equal(DS.ribAtoms.meta.fileKey, 'KlcvhcZPwn1c9BXBY2k6rl');
+  assert.deepEqual(JSON.parse(JSON.stringify(DS.foundationCoverage)), {
+    paintStyles: 87,
+    textStyles: 36,
+    effectStyles: 8,
+    gridStyles: 3,
+    variables: 5,
+    total: 139,
+  });
+  assert.equal(DS.paintStyles.length, 87);
+  assert.equal(DS.type.length, 36);
+  assert.equal(DS.effects.length, 8);
+  assert.equal(DS.grid.length, 3);
+  assert.equal(DS.variables.length, 5);
+
+  const label = DS.type.find(token => token.token === 'labelSemibold');
+  assert.equal(label.name, 'Labels/Label Semibold');
+  assert.equal(label.tracking, 1.2);
+  assert.equal(label.textCase, 'UPPER');
+  assert.equal(DS.typeAliases.displayLarge, 'display1');
+});
+
+test('publishes the approved primitive-only RIB effect paths and groups', () => {
   assert.deepEqual(
-    JSON.parse(JSON.stringify(
-      DS.type.filter(token => ['labelLargeSemibold', 'microRegular'].includes(token.token)),
-    )),
+    Array.from(DS.effects, effect => ({
+      path: effect.path,
+      token: effect.token,
+      group: effect.group,
+    })),
     [
-      {
-        group: 'Labels & micro', token: 'labelLargeSemibold', size: 12,
-        height: 16, weight: 600, use: 'Large compact labels',
-      },
-      {
-        group: 'Labels & micro', token: 'microRegular', size: 10,
-        height: 16, weight: 400, use: 'Legal copy and quiet micro text',
-      },
+      { path: 'effect.shadow.100', token: 'shadow100', group: 'Depth' },
+      { path: 'effect.shadow.200', token: 'shadow200', group: 'Depth' },
+      { path: 'effect.shadow.300', token: 'shadow300', group: 'Depth' },
+      { path: 'effect.shadow.400', token: 'shadow400', group: 'Depth' },
+      { path: 'effect.shadow.button-white', token: 'shadowButtonWhite', group: 'Special shadows' },
+      { path: 'effect.shadow.bottom-sticky', token: 'shadowBottomSticky', group: 'Special shadows' },
+      { path: 'effect.ring.orange-outline', token: 'ringOrangeOutline', group: 'Interaction rings' },
+      { path: 'effect.ring.focus', token: 'ringFocus', group: 'Interaction rings' },
     ],
   );
+  assert.equal(DS.semanticEffect, undefined);
+  assert.equal(DS.componentEffect, undefined);
+});
+
+test('preserves every RIB gradient and source conflict in the canonical contract', () => {
+  assert.equal(DS.gradients.length, 14);
+  assert.equal(DS.gradients.find(style => style.name === 'NEWGradient/Button Fill').paints.length, 2);
+  assert.ok(DS.foundationIssues.some(issue => issue.id === 'duplicate-pastel-brown-120'));
 });

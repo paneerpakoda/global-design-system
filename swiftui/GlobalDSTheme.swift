@@ -1,6 +1,6 @@
 import SwiftUI
 
-// GlobalDS OS v0.3.0
+// GlobalDS OS v0.4.1
 // Generated from js/tokens.js. Do not edit by hand.
 struct GlobalDSTheme {
     let primary: Color
@@ -13,7 +13,7 @@ struct GlobalDSTheme {
 
     static let light = GlobalDSTheme(
         primary: GlobalDSColors.primaryOrange100,
-        onPrimary: GlobalDSColors.neutralBaseWhite,
+        onPrimary: GlobalDSColors.neutralGrey150,
         secondary: GlobalDSColors.primaryMaroon100,
         onSecondary: GlobalDSColors.neutralBaseWhite,
         surface: GlobalDSColors.neutralBaseWhite,

@@ -46,9 +46,11 @@ function renderTypography(){
     </section>`;
   };
   const groups = [...new Set(DS.type.map(t => t.group || 'Type scale'))];
-  let html = pageHeader({ crumbs:['Foundations','Typography'], title:'Typography', status:'stable', version:'1.0',
+  let html = pageHeader({ crumbs:['Foundations','Typography'], title:'Typography', status:'stable', version:'1.1',
     updated:DS.meta.updated,
-    desc:'Compare the canonical GlobalDS type contract with the live iMobile iOS and RIB source systems.' });
+    desc:'The canonical GlobalDS type contract now preserves all 36 RIB text styles, including exact tracking, case transforms and link decoration.' });
+
+  html += ribCoverageHtml();
 
   html += `<div class="colour-system-tabs typography-system-tabs" role="tablist" aria-label="Typography systems">
     <button class="colour-system-tab typography-system-tab" id="typography-tab-global" type="button" role="tab" aria-controls="typography-panel-global" aria-selected="true" tabindex="0" data-typography-tab="global">GlobalDS typography</button>
@@ -69,8 +71,8 @@ function renderTypography(){
     ${guidanceHtml('Typeface & numeric guidance', `
       <p class="guidance-note">${esc(DS.typeface.note)}</p>
       ${guidanceList([
-        { term:'Core text styles', token:'DsText.*', text:'Use the named scale directly for foundational text styles and app theming.' },
-        { term:'Usage aliases', token:'input* / button* / nav*', text:'Use aliases when a component needs a stable contract even if the underlying size changes later.' },
+        { term:'Canonical styles', token:'DsText.display1 … l2Active', text:'Use the 36 exact RIB styles as the component foundation contract.' },
+        { term:'Compatibility aliases', token:'DS.typeAliases', text:'Existing theme names resolve to RIB styles without duplicating or altering the source metrics.' },
         { term:'Amounts and balances', token:'tabular figures', text:'Tabular figures keep balances, OTPs and animated numbers aligned without visual jitter.' }
       ])}
     `)}
@@ -79,11 +81,11 @@ function renderTypography(){
       return `<section class="section type-section">
         <h2 class="section-title">${esc(group)}</h2>
         <div class="type-table">
-          <div class="type-table-head"><span>Preview</span><span>Token</span><span>Weight</span><span>Size</span><span>Use</span><span></span></div>
+          <div class="type-table-head"><span>Preview</span><span>Token</span><span>Weight</span><span>Size</span><span>RIB details</span><span></span></div>
           ${rows.map(t => `<button class="type-row" type="button" data-copy-text="DsText.${esc(t.token)}" title="Copy DsText.${esc(t.token)}" aria-label="Copy DsText.${esc(t.token)}">
-            <div class="type-sample" style="font-size:${t.size}px;line-height:${t.height}px;font-weight:${t.weight}">Global money, made simple</div>
+            <div class="type-sample" style="font-size:${t.size}px;line-height:${t.height}px;font-weight:${t.weight};letter-spacing:${t.trackingUnit === 'PERCENT' ? t.tracking / 100 + 'em' : t.tracking + 'px'};text-decoration:${t.decoration === 'UNDERLINE' ? 'underline' : 'none'};text-transform:${t.textCase === 'UPPER' ? 'uppercase' : 'none'}">Global money, made simple</div>
             <b class="type-token">${esc(t.token)}</b><span class="type-cell">w${t.weight}</span><span class="type-cell">${t.size}/${t.height}</span>
-            <span class="type-use">${esc(t.use)}</span><span class="type-copy"><i class="ti ti-copy"></i></span>
+            <span class="type-use"><strong>${esc(t.name)}</strong><small>${t.tracking}${t.trackingUnit === 'PERCENT' ? '%' : 'px'} · ${esc(t.decoration.toLowerCase())} · ${esc(t.textCase.toLowerCase())}</small></span><span class="type-copy"><i class="ti ti-copy"></i></span>
           </button>`).join('')}
         </div>
       </section>`;

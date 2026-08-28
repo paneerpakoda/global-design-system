@@ -9,9 +9,20 @@ const DS = {
     name: 'GlobalDS OS',
     fullName: 'ICICI Bank Global Design System OS',
     org: 'ICICI Bank · Multi-platform design system',
-    version: '0.3.0',
+    version: '0.4.1',
     updated: '28 Aug 2026'
   },
+
+  /* RIB is the canonical foundation source for this release. */
+  ribAtoms: GlobalDSRIBAtoms,
+  foundationCoverage: GlobalDSRIBAtoms.counts,
+  foundationIssues: GlobalDSRIBAtoms.issues,
+  paintStyles: GlobalDSRIBAtoms.paintStyles,
+  gradients: GlobalDSRIBAtoms.paintStyles.filter(style =>
+    style.paints.some(paint => paint.type.startsWith('GRADIENT_'))
+  ),
+  variables: GlobalDSRIBAtoms.variables,
+  grid: GlobalDSRIBAtoms.gridStyles,
 
   platforms: [
     { id:'rib', name:'RIB', fullName:'Retail Internet Banking', channel:'Retail · Web', adoption:'now' },
@@ -43,13 +54,13 @@ const DS = {
     },
     primaryOrange: {
       label: 'Primary orange',
-      note: 'Action orange for CTAs, focus, selected states and interaction emphasis. 100 is the default action colour.',
-      stops: { 80:'#F4B094',90:'#E8692E',100:'#D44500',110:'#A93600',120:'#732500' }
+      note: 'RIB action orange for CTAs, focus, selected states and interaction emphasis. 100 is the default action colour.',
+      stops: { 80:'#F7B68D',90:'#F3975D',100:'#F0792E',110:'#DB5E10',120:'#AB4A0C' }
     },
     primaryMaroon: {
       label: 'Primary maroon',
-      note: 'Deep brand action colour for secondary emphasis and strong moments where orange would feel too loud.',
-      stops: { 80:'#DA7B80',90:'#BC343A',100:'#94292E',110:'#6C1E21',120:'#441315' }
+      note: 'RIB maroon ramp for secondary emphasis and strong moments where orange would feel too loud.',
+      stops: { 80:'#CE5F66',90:'#BF3B43',100:'#982F35',110:'#712327',120:'#4A171A' }
     },
     neutralBase: {
       label: 'Absolute neutrals',
@@ -78,7 +89,7 @@ const DS = {
     },
     pastelBrown: {
       label: 'Pastel brown',
-      note: 'Warm neutral surfaces. Uses the majority-agreed values where the source systems diverge.',
+      note: 'Warm neutral surfaces. RIB publishes two conflicting values for stop 120; #CFCAAF remains the canonical alias until that source conflict is resolved.',
       stops: { 80:'#FDFDFC',90:'#F9F9F5',100:'#F6F5F0',110:'#E9E6D9',120:'#CFCAAF' }
     },
     pastelGreen: {
@@ -103,8 +114,8 @@ const DS = {
     },
     warning: {
       label: 'Indicative warning',
-      note: 'Pending states, maintenance notices and actions needing attention. Shared exactly by iMobile iOS and RIB.',
-      stops: { 90:'#FFC633',100:'#FFB800',110:'#CC9300' }
+      note: 'Pending states, maintenance notices and actions needing attention. RIB includes an 80 background stop in addition to its action ramp.',
+      stops: { 80:'#FEFAED',90:'#FFC633',100:'#FFB800',110:'#CC9300' }
     },
     error: {
       label: 'Indicative error',
@@ -119,29 +130,32 @@ const DS = {
   },
 
   semanticColor: {
-    primary: { default:'primaryOrange.100', hover:'primaryOrange.110', pressed:'primaryOrange.120', subtle:'primaryOrange.80' },
+    primary: { default:'primaryOrange.100', onDefault:'neutralGrey.150', hover:'primaryOrange.110', pressed:'primaryOrange.120', onPressed:'neutralBase.white', subtle:'primaryOrange.80' },
     secondary: { default:'primaryMaroon.100', hover:'primaryMaroon.110', pressed:'primaryMaroon.120', subtle:'primaryMaroon.80' },
     surface: { canvas:'surfaceCoolGrey.110', default:'neutralBase.white', subtle:'surfaceCoolGrey.100', alternate:'backgroundGrey.100' },
     content: { primary:'neutralGrey.150', secondary:'neutralGrey.130', muted:'neutralGrey.110', inverse:'neutralBase.white' },
     border: { quiet:'neutralGrey.70', default:'neutralGrey.80', strong:'neutralGrey.100' },
     state: {
       success: { default:'success.100', strong:'success.110', onStrong:'neutralBase.white', subtle:'pastelGreen.80', onSubtle:'success.110' },
-      warning: { default:'warning.100', strong:'warning.110', onStrong:'neutralGrey.150', subtle:'pastelAmber.80', onSubtle:'neutralGrey.150' },
+      warning: { default:'warning.100', strong:'warning.110', onStrong:'neutralGrey.150', subtle:'warning.80', onSubtle:'neutralGrey.150' },
       error: { default:'error.100', strong:'error.110', onStrong:'neutralBase.white', subtle:'pastelPeach.80', onSubtle:'error.110' },
       info: { default:'info.100', strong:'info.110', onStrong:'neutralBase.white', subtle:'pastelBlue.80', onSubtle:'info.110' }
     }
   },
 
   gradient: {
-    hero: { stops: ['#E3530F', '#BE2A2A'], angle: 180,
-      note: 'Reserved for hero surfaces: login hero, account card, section covers. Never behind body text smaller than 13px.' },
-    buttonPrimaryFill: { base:'#D44500', stops: [
+    hero: { stops: ['#EF8C24', '#F06837'], angle: 180,
+      sourceStyle:'NEWGradient/General/Orange',
+      note: 'RIB general-orange gradient for selected hero and feature surfaces. Never place small body text directly over it.' },
+    buttonPrimaryFill: { base:'#F0792E', stops: [
         { color:'#FFFFFF', opacity:.12 },
         { color:'#FFFFFF', opacity:0 }
       ], angle: 180,
-      note: 'Primary button fill style: Primary Orange 100 base with a white-to-transparent linear gradient overlay at 12%.' },
-    buttonStroke: { width:1, stops: ['#F4B094', '#E8692E', '#D44500'], angle: 180,
-      note: 'Primary button inside stroke shell: a 1px peach-to-orange gradient rim. This is the composited result of a white alpha stroke over Primary Orange 100.' }
+      sourceStyle:'NEWGradient/Button Fill',
+      note: 'Exact RIB button fill: Primary Orange 100 plus a white-to-transparent overlay at 12% opacity.' },
+    buttonStroke: { width:1, opacity:.5, stops: ['#FFFFFF', '#FFFFFF00'], angle: 180,
+      sourceStyle:'NEWGradient/Stroke',
+      note: 'Exact RIB gradient stroke: white to transparent at 50% paint opacity.' }
   },
 
   alpha: {
@@ -154,48 +168,38 @@ const DS = {
     note: 'Rounded, calm and highly legible across ICICI Bank interfaces. Use tabular figures for balances, amounts and OTP-like numeric UI.'
   },
 
-  /* Typography — core styles first, usage aliases second */
-  type: [
-    { group:'Display', token:'displayLarge', size:32, height:40, weight:600, use:'Rare hero and web moments' },
-    { group:'Display', token:'displayMedium', size:28, height:36, weight:600, use:'Large balances and major page titles' },
-    { group:'Display', token:'displaySmall', size:24, height:32, weight:600, use:'Screen titles and dialogs' },
+  /* Exact RIB text-style contract, including tracking, case and decoration. */
+  type: GlobalDSRIBAtoms.textStyles.map(style => ({
+    group:style.group,
+    token:style.id,
+    name:style.name,
+    size:style.size,
+    height:style.height,
+    weight:style.weight,
+    fontStyle:style.fontStyle,
+    tracking:style.tracking,
+    trackingUnit:style.trackingUnit,
+    decoration:style.decoration,
+    textCase:style.textCase,
+    use:style.description || `RIB ${style.name}`,
+  })),
 
-    { group:'Headings', token:'headingLargeBold', size:20, height:28, weight:700, use:'Important section headers' },
-    { group:'Headings', token:'headingLargeSemibold', size:20, height:28, weight:600, use:'Dialog titles and softer H1s' },
-    { group:'Headings', token:'headingMediumBold', size:16, height:24, weight:700, use:'Card titles and form groups' },
-    { group:'Headings', token:'headingMediumSemibold', size:16, height:24, weight:600, use:'List headers and emphasized rows' },
-    { group:'Headings', token:'headingSmallBold', size:14, height:20, weight:700, use:'Dense table headings' },
-    { group:'Headings', token:'headingSmallSemibold', size:14, height:20, weight:600, use:'Compact section labels' },
-    { group:'Headings', token:'headingSmallRegular', size:14, height:20, weight:400, use:'Quiet supporting headings' },
-
-    { group:'Body', token:'bodyLargeRegular', size:14, height:20, weight:400, use:'Default reading text' },
-    { group:'Body', token:'bodyLargeSemibold', size:14, height:20, weight:600, use:'Emphasized body copy' },
-    { group:'Body', token:'bodyMediumRegular', size:13, height:20, weight:400, use:'Dense descriptions and helper text' },
-    { group:'Body', token:'bodyMediumSemibold', size:13, height:20, weight:600, use:'Dense emphasized text' },
-    { group:'Body', token:'bodySmallRegular', size:12, height:16, weight:400, use:'Metadata and compact descriptions' },
-    { group:'Body', token:'bodySmallSemibold', size:12, height:16, weight:600, use:'Compact emphasized text' },
-
-    { group:'Labels & micro', token:'captionRegular', size:11, height:16, weight:400, use:'Timestamps and small support text' },
-    { group:'Labels & micro', token:'captionSemibold', size:11, height:16, weight:600, use:'Small labels and captions' },
-    { group:'Labels & micro', token:'microSemibold', size:10, height:14, weight:600, use:'Rare badges, legal and tiny UI' },
-    { group:'Labels & micro', token:'labelLargeSemibold', size:12, height:16, weight:600, use:'Large compact labels' },
-    { group:'Labels & micro', token:'microRegular', size:10, height:16, weight:400, use:'Legal copy and quiet micro text' },
-
-    { group:'Usage aliases', token:'inputLargeRegular', size:16, height:24, weight:400, use:'Large input value text' },
-    { group:'Usage aliases', token:'inputLargeSemibold', size:16, height:24, weight:600, use:'Large emphasized input text' },
-    { group:'Usage aliases', token:'inputMediumRegular', size:13, height:20, weight:400, use:'Medium input value text' },
-    { group:'Usage aliases', token:'inputMediumSemibold', size:13, height:20, weight:600, use:'Medium emphasized input text' },
-    { group:'Usage aliases', token:'buttonLarge', size:14, height:16, weight:600, use:'Large buttons' },
-    { group:'Usage aliases', token:'buttonSmall', size:12, height:16, weight:600, use:'Compact buttons' },
-    { group:'Usage aliases', token:'linkLarge', size:14, height:20, weight:600, use:'Inline and standalone links' },
-    { group:'Usage aliases', token:'linkSmall', size:12, height:16, weight:600, use:'Compact links' },
-    { group:'Usage aliases', token:'labelBold', size:11, height:16, weight:700, use:'High-emphasis labels' },
-    { group:'Usage aliases', token:'labelSemibold', size:11, height:16, weight:600, use:'Default labels' },
-    { group:'Usage aliases', token:'navLevel1Default', size:13, height:16, weight:400, use:'Primary navigation default' },
-    { group:'Usage aliases', token:'navLevel1Active', size:13, height:16, weight:600, use:'Primary navigation active' },
-    { group:'Usage aliases', token:'navLevel2Default', size:12, height:16, weight:400, use:'Secondary navigation default' },
-    { group:'Usage aliases', token:'navLevel2Active', size:12, height:16, weight:600, use:'Secondary navigation active' }
-  ],
+  /* Stable aliases keep existing component themes source-compatible. */
+  typeAliases: {
+    displayLarge:'display1', displayMedium:'display1', displaySmall:'display2',
+    headingLargeBold:'h1Bold', headingLargeSemibold:'h1Semi',
+    headingMediumBold:'h2Bold', headingMediumSemibold:'h2Semi',
+    headingSmallBold:'h3Bold', headingSmallSemibold:'h3Semi', headingSmallRegular:'h3Regular',
+    bodyLargeRegular:'h3Regular', bodyLargeSemibold:'h3Semi',
+    bodyMediumRegular:'inputRRegular', bodyMediumSemibold:'inputRSemi',
+    bodySmallRegular:'p1Reg', bodySmallSemibold:'p1Semi',
+    captionRegular:'p2Reg', captionSemibold:'p2Semi',
+    microRegular:'p3Reg', microSemibold:'p3Semi', labelLargeSemibold:'s1Semi',
+    inputLargeRegular:'inputLRegular', inputLargeSemibold:'inputLSemi',
+    inputMediumRegular:'inputRRegular', inputMediumSemibold:'inputRSemi',
+    navLevel1Default:'l1Default', navLevel1Active:'l1Active',
+    navLevel2Default:'l2Default', navLevel2Active:'l2Active',
+  },
 
   /* 4pt spatial grid — dart: valid Dart identifier for codegen */
   space: [
@@ -221,12 +225,38 @@ const DS = {
     { token:'full', dart:'full', px:999, use:'Pills, badges, avatars' }
   ],
 
-  elevation: [
-    { token:'e1', css:'0 1px 2px rgba(16,24,40,.06)', use:'Cards at rest' },
-    { token:'e2', css:'0 4px 8px -2px rgba(16,24,40,.10), 0 2px 4px -2px rgba(16,24,40,.06)', use:'Raised cards, dropdowns' },
-    { token:'e3', css:'0 12px 16px -4px rgba(16,24,40,.12), 0 4px 6px -2px rgba(16,24,40,.05)', use:'Bottom sheets, popovers' },
-    { token:'e4', css:'0 24px 48px -12px rgba(16,24,40,.18)', use:'Dialogs, modals' }
-  ],
+  effects: GlobalDSRIBAtoms.effectStyles.map(style => {
+    const effect = style.effects[0];
+    const definition = ({
+      'Drop Shadow/Shadow 100':{ token:'shadow100', path:'effect.shadow.100', group:'Depth' },
+      'Drop Shadow/Shadow 200':{ token:'shadow200', path:'effect.shadow.200', group:'Depth' },
+      'Drop Shadow/Shadow 300':{ token:'shadow300', path:'effect.shadow.300', group:'Depth' },
+      'Drop Shadow/Shadow 400':{ token:'shadow400', path:'effect.shadow.400', group:'Depth' },
+      'Drop Shadow/Button White':{ token:'shadowButtonWhite', path:'effect.shadow.button-white', group:'Special shadows' },
+      'Drop Shadow/Bottom sticky':{ token:'shadowBottomSticky', path:'effect.shadow.bottom-sticky', group:'Special shadows' },
+      'Elevation/Orange outline':{ token:'ringOrangeOutline', path:'effect.ring.orange-outline', group:'Interaction rings' },
+      'Elevation/Focus':{ token:'ringFocus', path:'effect.ring.focus', group:'Interaction rings' },
+    })[style.name];
+    const uses = {
+      shadow100:'RIB depth primitive 100; component role intentionally unassigned.',
+      shadow200:'RIB depth primitive 200; component role intentionally unassigned.',
+      shadow300:'RIB depth primitive 300; component role intentionally unassigned.',
+      shadow400:'RIB depth primitive 400; component role intentionally unassigned.',
+      shadowButtonWhite:'Source-defined white-button shadow; component alias deferred.',
+      shadowBottomSticky:'Source-defined upward shadow for bottom-sticky surfaces; component alias deferred.',
+      ringOrangeOutline:'Source-defined one-pixel orange interaction ring.',
+      ringFocus:'Source-defined three-pixel focus halo.',
+    };
+    return {
+      token:definition.token,
+      path:definition.path,
+      group:definition.group,
+      name:style.name,
+      css:`${effect.offset.x}px ${effect.offset.y}px ${effect.radius}px ${effect.spread}px ${effect.color}`,
+      use:uses[definition.token],
+      effects:style.effects,
+    };
+  }),
 
   icons: {
     note: 'The system uses the Tabler outline icon set: 24px frame, 2px stroke, round caps. In Flutter use the flutter_tabler_icons package; on web the @tabler/icons-webfont.',

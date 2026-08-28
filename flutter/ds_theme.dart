@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ds_tokens.dart';
 
-/// GlobalDS OS v0.3.0
+/// GlobalDS OS v0.4.1
 /// Generated from js/tokens.js. Do not edit by hand.
 class DsTheme {
   DsTheme._();
@@ -9,7 +9,7 @@ class DsTheme {
   static ThemeData get light {
     const scheme = ColorScheme.light(
       primary: DsColors.primaryOrange100,
-      onPrimary: DsColors.neutralBaseWhite,
+      onPrimary: DsColors.neutralGrey150,
       secondary: DsColors.primaryMaroon100,
       onSecondary: DsColors.neutralBaseWhite,
       error: DsColors.error100,
@@ -43,7 +43,7 @@ class DsTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: DsColors.buttonPrimaryFillBase,
-          foregroundColor: DsColors.neutralBaseWhite,
+          foregroundColor: DsColors.neutralGrey150,
           disabledBackgroundColor: DsColors.neutralGrey60,
           disabledForegroundColor: DsColors.neutralGrey90,
           minimumSize: const Size(120, 36),

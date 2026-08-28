@@ -1,6 +1,8 @@
 # GlobalDS OS
 
-The living design-system hub for **ICICI Bank GlobalDS OS**. It begins with the converged iMobile Android, iMobile iOS and RIB foundations, keeps the wider ICICI platform estate visible, and generates platform-native token and theme exports from one source.
+The living design-system hub for **ICICI Bank GlobalDS OS**. Version 0.4 uses the complete audited RIB Atoms file as its canonical foundation, supports RIB desktop, tablet and mobile grids, and generates platform-native token and theme exports from one contract.
+
+The RIB contract contains 139 audited assets: 87 paint styles, 36 text styles, 8 effect styles, 3 responsive grid styles and 5 variables. The exact Figma inventory lives in `js/rib-atoms.js`; governed aliases and component-facing decisions live in `js/tokens.js`.
 
 ## Run it
 
@@ -16,7 +18,7 @@ Internet access is used only for the Google Fonts and Tabler Icons webfonts load
 | Area | What it does |
 |---|---|
 | **Overview** | System summary, metrics and principles |
-| **Foundations** | Colours, typography, 4pt spacing, radius, elevation and iconography |
+| **Foundations** | Complete RIB colours/gradients/variables, typography, responsive grids, 4pt spacing, radius, effects and iconography |
 | **Components** | Component variants, states, props and implementation guidance |
 | **Pattern lab** | Login, OTP verification, transfer review and accounts-home flows |
 | **Playground** | Live component property/state controls with Flutter call generation |
@@ -26,9 +28,9 @@ Internet access is used only for the Google Fonts and Tabler Icons webfonts load
 
 | Target | Generated files | Integration shape |
 |---|---|---|
-| Kotlin/React | `global_ds_tokens.kt`, `global_ds_theme.kt` | Kotlin/JS-safe primitives, typography values, semantic theme and CSS-variable map |
-| Flutter | `ds_tokens.dart`, `ds_theme.dart` | Flutter `Color`/`TextStyle` primitives and Material 3 `ThemeData` |
-| SwiftUI | `GlobalDSTokens.swift`, `GlobalDSTheme.swift` | SwiftUI `Color`/`Font` primitives and an `EnvironmentValues` theme |
+| Kotlin/React | `global_ds_tokens.kt`, `global_ds_theme.kt` | Kotlin/JS-safe colours, variables, typography, grids, effects, semantic theme and CSS-variable map |
+| Flutter | `ds_tokens.dart`, `ds_theme.dart` | Flutter colours, variables, `TextStyle`, grids, effects and Material 3 `ThemeData` |
+| SwiftUI | `GlobalDSTokens.swift`, `GlobalDSTheme.swift` | SwiftUI colours, variables, typography, grids, effects and an `EnvironmentValues` theme |
 | Shared | `ds_tokens.json` | Platform-neutral pipeline and design-tool interchange |
 
 The Kotlin export deliberately keeps its token file independent of a specific React styling library. The Developers page shows how to consume it with the JetBrains Kotlin React and Emotion wrappers. Flutter component snippets in the existing component catalogue and playground remain Flutter-specific; this change adds cross-platform foundation exports rather than claiming cross-platform component implementations.
@@ -42,7 +44,8 @@ icici-global-ds/
 │   ├── app.css
 │   └── motion.css
 ├── js/
-│   ├── tokens.js       # Single canonical token object
+│   ├── rib-atoms.js    # Lossless audited RIB Figma contract
+│   ├── tokens.js       # Governed component-facing token object
 │   ├── exports.js      # Deterministic three-platform export contract
 │   ├── components.js
 │   ├── patterns.js
@@ -59,7 +62,7 @@ icici-global-ds/
     └── app-integration.test.mjs
 ```
 
-The rule that keeps the system honest: every UI foundation and platform export resolves from `js/tokens.js`. Generated Kotlin, Dart and Swift files are projections and must not be edited independently.
+The rule that keeps the system honest: exact RIB assets are recorded in `js/rib-atoms.js`, every governed UI foundation resolves through `js/tokens.js`, and all generated Kotlin, Dart and Swift files are projections that must not be edited independently.
 
 ## Generate and verify exports
 
@@ -70,7 +73,7 @@ node scripts/generate-exports.mjs
 node --test tests/*.test.mjs
 ```
 
-The tests verify target identity, filenames, deterministic generation, complete colour and typography coverage, native theme APIs, JSON continuity, backwards-compatible routing, and byte-for-byte agreement between live generation and checked-in snapshots.
+The tests verify all 139 RIB assets, exact representative Figma values, the duplicate Brown 120 source conflict, responsive grids, native variables/effects/type metadata, deterministic generation, JSON continuity, backwards-compatible routing, and byte-for-byte agreement between live generation and checked-in snapshots.
 
 ## Adding a component
 

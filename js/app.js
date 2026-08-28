@@ -10,7 +10,7 @@ const NAV = [
     { route: '#/f/colors',     label: 'Colours',            icon: 'ti-palette' },
     { route: '#/f/typography', label: 'Typography',         icon: 'ti-typography' },
     { route: '#/f/spacing',    label: 'Spacing & layout',   icon: 'ti-ruler' },
-    { route: '#/f/shape',      label: 'Radius & elevation', icon: 'ti-square-rounded' },
+    { route: '#/f/shape',      label: 'Radius & effects', icon: 'ti-square-rounded' },
     { route: '#/f/icons',      label: 'Iconography',        icon: 'ti-star' }
   ]},
   { section: 'Components', items: Object.keys(COMPONENTS).map(id => ({
@@ -78,6 +78,24 @@ function guidanceList(items){
     </div>`).join('')}</dl>`;
 }
 
+function ribCoverageHtml(){
+  const coverage = DS.foundationCoverage;
+  return `<section class="rib-coverage" aria-label="RIB foundation coverage">
+    <div class="rib-coverage-copy">
+      <span>Canonical source · Atoms - RIB</span>
+      <h2>${coverage.total} audited RIB assets</h2>
+      <p>GlobalDS now preserves the complete local RIB foundation contract and uses it as the basis for new components.</p>
+    </div>
+    <dl class="rib-coverage-grid">
+      <div><dt>${coverage.paintStyles}</dt><dd>87 paint styles</dd></div>
+      <div><dt>${coverage.textStyles}</dt><dd>36 text styles</dd></div>
+      <div><dt>${coverage.effectStyles}</dt><dd>8 effect styles</dd></div>
+      <div><dt>${coverage.gridStyles}</dt><dd>3 responsive grids</dd></div>
+      <div><dt>${coverage.variables}</dt><dd>5 variables</dd></div>
+    </dl>
+  </section>`;
+}
+
 function productMockup(){
   return `<article class="product-mockup-card" aria-label="GlobalDS OS product preview">
     <div class="mockup-toolbar">
@@ -135,8 +153,7 @@ function appFooter(){
 
 function renderHome(){
   const compCount = Object.keys(COMPONENTS).length;
-  const tokenCount = Object.values(DS.color).reduce((n, r) => n + Object.keys(r.stops).length, 0)
-    + DS.type.length + DS.space.length + DS.radius.length + DS.elevation.length;
+  const tokenCount = DS.foundationCoverage.total;
   return `
   <div class="hero cal-hero">
     <div class="hero-copy">
@@ -147,7 +164,7 @@ function renderHome(){
       <div class="dh-title-row">
         <h1 class="hero-title" data-reveal-words>One system for every ICICI experience.</h1>
       </div>
-      <p class="hero-desc">GlobalDS OS converges today’s iMobile Android, iMobile iOS and RIB systems into one governed foundation—with the wider platform estate in view.</p>
+      <p class="hero-desc">GlobalDS OS now uses the complete RIB Atoms contract as its canonical foundation across desktop, tablet and mobile.</p>
       <div class="hero-foot">
         <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/f/colors">Explore the system <i class="ti ti-arrow-right"></i></button>
       </div>
@@ -156,10 +173,11 @@ function renderHome(){
   </div>
   <div class="metric-grid">
     <div class="metric"><small>Components</small><strong data-countup>${compCount}</strong></div>
-    <div class="metric"><small>Design tokens</small><strong data-countup>${tokenCount}+</strong></div>
+    <div class="metric"><small>RIB foundation assets</small><strong data-countup>${tokenCount}</strong></div>
     <div class="metric"><small>Patterns</small><strong data-countup>${Object.keys(PATTERNS).length}</strong></div>
     <div class="metric"><small>Platform estate</small><strong>8 platforms</strong></div>
   </div>
+  ${ribCoverageHtml()}
   ${renderPlatformScope()}
   <section class="section">
     <h2 class="section-title">Start here</h2>
@@ -314,18 +332,43 @@ function renderColors(){
       <span style="background:${esc(row[2])}"></span>
       <div><strong>${esc(row[0])}</strong><code>${esc(row[1])}</code><p>${esc(row[3])}</p></div>
     </article>`).join('')}</div>`;
+  const colorWithPaintOpacity = (color, opacity = 1) => {
+    const value = color.replace('#', '');
+    const sourceAlpha = value.length === 8 ? parseInt(value.slice(6, 8), 16) / 255 : 1;
+    const resolvedAlpha = Math.round(sourceAlpha * opacity * 255);
+    return `#${value.slice(0, 6)}${resolvedAlpha < 255 ? resolvedAlpha.toString(16).padStart(2, '0').toUpperCase() : ''}`;
+  };
+  const gradientCss = style => {
+    const layers = style.paints.slice().reverse().map(paint => {
+      if (paint.type === 'SOLID') return colorWithPaintOpacity(paint.color, paint.opacity);
+      const stops = paint.stops.map(stop => `${colorWithPaintOpacity(stop.color, paint.opacity)} ${(stop.position * 100).toFixed(2)}%`).join(', ');
+      return paint.type === 'GRADIENT_RADIAL'
+        ? `radial-gradient(circle, ${stops})`
+        : `linear-gradient(180deg, ${stops})`;
+    });
+    return layers.join(', ');
+  };
+  const gradientSummary = style => style.paints.map(paint => {
+    if (paint.type === 'SOLID') return paint.color;
+    return `${paint.type.replace('GRADIENT_', '').toLowerCase()} · ${paint.stops.map(stop => stop.color).join(' → ')}${paint.opacity !== 1 ? ` · ${Math.round(paint.opacity * 100)}% paint` : ''}`;
+  }).join(' + ');
+  const renderGradientCard = style => `<button class="colour-gradient-card rib-gradient-card" type="button" data-copy-text="${esc(JSON.stringify(style))}" title="Copy exact style JSON">
+    <span class="rib-gradient-preview" style="background:${esc(gradientCss(style))}"></span>
+    <div><strong>${esc(style.name)}</strong><code>${esc(gradientSummary(style))}</code><small>${style.paints.length} paint layer${style.paints.length === 1 ? '' : 's'} · exact Figma transform retained in export</small></div>
+    <span class="foundation-copy"><i class="ti ti-copy"></i></span>
+  </button>`;
   const roleCards = [
     { icon:'ti-sparkles', title:'Brand identity', token:'brand.orange / brand.maroon', text:'Fixed ICICI colours for identity, top rails, logo moments and signature brand expression.', swatch:'#E3530F' },
-    { icon:'ti-click', title:'Primary action', token:'primaryOrange.100', text:'The default action colour for CTAs, active controls, focus and selected states.', swatch:'#D44500' },
-    { icon:'ti-click', title:'Pressed action', token:'primaryOrange.110 / 120', text:'Use darker orange for hover, pressed, and places where white-label contrast needs more confidence.', swatch:'#A93600' },
-    { icon:'ti-diamond', title:'Maroon emphasis', token:'primaryMaroon.100', text:'A deeper action/emphasis colour for moments where orange would feel too energetic.', swatch:'#94292E' }
+    { icon:'ti-click', title:'Primary action', token:'primaryOrange.100', text:'The exact RIB default action colour. Pair it with dark content for accessible text contrast.', swatch:'#F0792E' },
+    { icon:'ti-click', title:'Pressed action', token:'primaryOrange.110 / 120', text:'Use the darker RIB stops for interaction states; stop 120 supports white text at AA.', swatch:'#DB5E10' },
+    { icon:'ti-diamond', title:'Maroon emphasis', token:'primaryMaroon.100', text:'The exact RIB maroon action and emphasis colour.', swatch:'#982F35' }
   ];
   const usageRows = [
     ['Brand orange', 'brand.orange', 'Fixed identity orange for brand expression and top strips.', 'Do not use as the default CTA fill.'],
     ['Brand maroon', 'brand.maroon', 'Fixed identity red-maroon for the brand gradient and signature marks.', 'Do not use as error colour.'],
-    ['Primary CTA fill', 'primaryOrange.100', 'Default high-emphasis action colour.', 'Use with white text; it clears AA at 4.52:1.'],
-    ['CTA hover / pressed', 'primaryOrange.110', 'Interaction state for primary buttons and active controls.', 'Prefer this where the action needs stronger visual weight.'],
-    ['Deep emphasis', 'primaryOrange.120', 'Rare deep orange state, text on pale orange, and high-contrast accents.', 'Avoid large filled areas.'],
+    ['Primary CTA fill', 'primaryOrange.100', 'Exact RIB high-emphasis action colour.', 'Use dark text: white is only 2.81:1 and fails AA.'],
+    ['CTA hover', 'primaryOrange.110', 'RIB interaction state for primary controls.', 'Use dark text; white is 3.74:1.'],
+    ['CTA pressed', 'primaryOrange.120', 'Deep RIB orange for pressed and high-contrast states.', 'White text passes AA at 5.65:1.'],
     ['Maroon emphasis', 'primaryMaroon.100', 'Secondary brand action, serious emphasis, and strong anchor moments.', 'Keep it deliberate; orange remains the default action colour.']
   ];
   const surfaceRows = [
@@ -363,9 +406,18 @@ function renderColors(){
       })).join('')}</div>
     </section>`).join('')}
   </section>`;
-  let html = pageHeader({ crumbs:['Foundations','Colours'], title:'Colours', status:'stable', version:'1.0',
+  const ribSolidStyles = DS.paintStyles.filter(style => style.paints.every(paint => paint.type === 'SOLID'));
+  const solidStyleValue = style => {
+    const paint = style.paints[0];
+    if (paint.opacity === 1) return paint.color;
+    const alpha = Math.round(paint.opacity * 255).toString(16).padStart(2, '0').toUpperCase();
+    return `${paint.color}${alpha}`;
+  };
+  let html = pageHeader({ crumbs:['Foundations','Colours'], title:'Colours', status:'stable', version:'1.1',
     updated:DS.meta.updated,
-    desc:'Compare the canonical GlobalDS palette with the live iMobile Android, iMobile iOS and RIB source systems.' });
+    desc:'The canonical palette now covers every local colour style and variable in RIB Atoms, including multi-paint gradients and source conflicts.' });
+
+  html += ribCoverageHtml();
 
   html += `<div class="colour-system-tabs" role="tablist" aria-label="Colour systems">
     <button class="colour-system-tab" id="colour-tab-global" type="button" role="tab" aria-controls="colour-panel-global" aria-selected="true" tabindex="0" data-colour-tab="global">GlobalDS colours</button>
@@ -376,14 +428,14 @@ function renderColors(){
 
   html += `<section class="section colour-section">
     <h2 class="section-title">Convergence decision</h2>
-    <p class="section-note">The final palette keeps source-system history visible while publishing one unambiguous token contract.</p>
-    ${guidanceHtml('How the final values were selected', `
+    <p class="section-note">RIB is the canonical foundation source for this release. Source values stay exact; semantic aliases make them safe to use in components.</p>
+    ${guidanceHtml('How RIB values become component foundations', `
       ${guidanceList([
         { term:'Brand pair', token:'#E3530F / #BE2A2A', text:'Preserve the fixed ICICI identity colours; they are not repurposed as semantic state colours.' },
-        { term:'Action ramps', token:'primaryOrange / primaryMaroon', text:'Use the stable foundation ramps. Orange 100 supports white CTA text at AA contrast, unlike the lighter WIP and RIB defaults.' },
-        { term:'Neutrals', token:'neutralGrey / surfaceCoolGrey', text:'Adopt the complete values shared by the stable foundation and RIB system.' },
-        { term:'Pastels', token:'pastel*', text:'Use values shared by at least two source systems when individual stops diverge.' },
-        { term:'Operational states', token:'success / warning / error / info', text:'Use the exact 90–110 indicative ramps shared by iMobile iOS and RIB.' }
+        { term:'Action ramps', token:'primaryOrange / primaryMaroon', text:'Preserve the exact NEWOrange and NEWMaroon RIB ramps, then map accessible foregrounds semantically.' },
+        { term:'Neutrals', token:'neutralGrey / surfaceCoolGrey', text:'Preserve the mixed RIB style paths while publishing one stable code-facing alias.' },
+        { term:'Source conflict', token:'NEWPastel/Brown/120', text:'Keep both published values in the audit contract; use #CFCAAF as the temporary canonical alias.' },
+        { term:'Operational states', token:'success / warning / error / info', text:'Use every exact RIB indicative stop, including Warning 80 for background surfaces.' }
       ])}
     `)}
   </section>`;
@@ -392,7 +444,7 @@ function renderColors(){
     <h2 class="section-title">Brand and primary colours</h2>
     <div class="colour-ramp-stack">${['brand','primaryOrange','primaryMaroon'].map(rampCard).join('')}</div>
     ${guidanceHtml('Roles & usage guidance', `
-      <p class="guidance-note">Brand colours create recognition; primary colours drive interaction. Keeping those jobs separate stops the product becoming loud or ambiguous. Primary Orange 100 is <code>#D44500</code>.</p>
+      <p class="guidance-note">Brand colours create recognition; primary colours drive interaction. Primary Orange 100 is the exact RIB value <code>#F0792E</code>; use a dark content token on it for accessible labels.</p>
       ${roleGridHtml()}
       ${usageTableHtml()}
       ${rampNotes(['brand','primaryOrange','primaryMaroon'])}
@@ -440,21 +492,8 @@ function renderColors(){
 
   html += `<section class="section colour-section">
     <h2 class="section-title">Gradients</h2>
-    <p class="section-note">Gradient tokens are reserved for explicit surface or component anatomy. They should be named by job, not by decoration.</p>
-    <div class="colour-gradient-stack">
-      <div class="colour-gradient-card">
-        <div><strong>Hero gradient</strong><code>DsColors.hero</code><small>${esc(DS.gradient.hero.note)}</small></div>
-        <span>linear-gradient(180deg, #E3530F, #BE2A2A)</span>
-      </div>
-      <div class="colour-gradient-card button-fill-card">
-        <div><strong>Primary button fill</strong><code>DsColors.buttonPrimaryFill</code><small>${esc(DS.gradient.buttonPrimaryFill.note)}</small></div>
-        <span>#D44500 + linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0))</span>
-      </div>
-      <div class="colour-gradient-card button-stroke-card">
-        <div><strong>Button stroke gradient</strong><code>DsColors.buttonStroke</code><small>${esc(DS.gradient.buttonStroke.note)}</small></div>
-        <span>1px inside · linear-gradient(180deg, #F4B094, #E8692E, #D44500)</span>
-      </div>
-    </div>
+    <p class="section-note">All 14 RIB gradient paint styles are retained, including exact stops, paint opacity, multiple layers and Figma transforms.</p>
+    <div class="colour-gradient-stack">${DS.gradients.map(renderGradientCard).join('')}</div>
   </section>
   </div>
   <div class="colour-system-panel" id="colour-panel-imobile" role="tabpanel" aria-labelledby="colour-tab-imobile" hidden>
@@ -467,19 +506,41 @@ function renderColors(){
   </div>
   <div class="colour-system-panel" id="colour-panel-rib" role="tabpanel" aria-labelledby="colour-tab-rib" hidden>
     <header class="colour-panel-intro">
-      <span>Source audit · 77 scalar references</span>
-      <h2>RIB colours</h2>
-      <p>The RIB palette is retained as a source view, including duplicate legacy aliases and nominal opacity values. It is not part of the current GlobalDS implementation scope.</p>
+      <span>Source audit · 87 paint styles + 5 variables</span>
+      <h2>Complete RIB colour inventory</h2>
+      <p>This is the exact audited RIB source contract used by GlobalDS: 73 solid paint styles, 14 gradient styles and all five local variables.</p>
     </header>
-    ${renderSourceVariant(GlobalDSSourceColours.rib)}
+    <section class="section colour-section">
+      <h2 class="section-title">73 solid paint styles</h2>
+      <div class="rib-source-style-grid">${surfaceGridHtml(ribSolidStyles.map(style => [
+        style.name,
+        'RIB paint style',
+        solidStyleValue(style),
+        style.description || `${Math.round(style.paints[0].opacity * 100)}% paint opacity`,
+      ]))}</div>
+      <div class="callout warning"><i class="ti ti-alert-triangle"></i><div><strong>Source conflict retained.</strong> <code>NEWPastel/Brown/120</code> exists twice with <code>#CFCAAF</code> and <code>#D9D5BF</code>. GlobalDS does not silently discard either value.</div></div>
+    </section>
+    <section class="section colour-section">
+      <h2 class="section-title">14 gradient paint styles</h2>
+      <div class="colour-gradient-stack">${DS.gradients.map(renderGradientCard).join('')}</div>
+    </section>
+    <section class="section colour-section">
+      <h2 class="section-title">5 semantic variables</h2>
+      <div class="rib-variable-grid">${DS.variables.map(variable => `<button type="button" class="rib-variable-card" data-copy-text="${esc(variable.name)}" title="Copy ${esc(variable.name)}">
+        <span style="background:${esc(variable.resolvedValue)}"></span>
+        <div><strong>${esc(variable.name)}</strong><code>${esc(variable.resolvedValue)}</code><small>${esc(variable.sourceAlias)} · ${esc(variable.mode)}</small></div>
+        <i class="ti ti-copy"></i>
+      </button>`).join('')}</div>
+      <p class="section-note">The RIB source scopes all five variables to <code>ALL_SCOPES</code> and hides them from publishing. GlobalDS preserves that source metadata while exporting their resolved values.</p>
+    </section>
   </div>`;
   return html;
 }
 
 function renderSpacing(){
-  let html = pageHeader({ crumbs:['Foundations','Spacing & layout'], title:'Spacing & layout', status:'stable', version:'1.0',
-    updated:'20 May 2026',
-    desc:'Everything sits on a 4pt grid. Mobile screen margins are 16–20px; cards pad 16–20px; sections separate by 24–32px. If a gap is not on the grid, it is a bug.' });
+  let html = pageHeader({ crumbs:['Foundations','Spacing & layout'], title:'Spacing & layout', status:'stable', version:'1.1',
+    updated:DS.meta.updated,
+    desc:'The RIB layout foundation covers Desktop L, Tablet and Mobile explicitly, with a shared 4px rhythm underneath every viewport.' });
   const maxPx = Math.max.apply(null, DS.space.map(s => s.px));
   html += `<section class="section">
     <article class="foundation-card space-scale-card">
@@ -507,6 +568,35 @@ function renderSpacing(){
       ])}
     `)}
   </section>`;
+  html += `<section class="section layout-grid-section">
+    <h2 class="section-title">Responsive RIB grids</h2>
+    <p class="section-note">Components adapt by layout behavior, but every platform reads the same named grid contract.</p>
+    <div class="responsive-grid-cards">${DS.grid.map(style => {
+      const columns = style.layoutGrids.find(grid => grid.pattern === 'COLUMNS');
+      const row = style.layoutGrids.find(grid => grid.pattern === 'ROWS');
+      return `<article class="responsive-grid-card">
+        <header><div><span>${esc(style.viewport)}</span><h3>${esc(style.name)}</h3></div><code>grid.${esc(style.viewport)}</code></header>
+        <div class="responsive-grid-preview" style="--grid-columns:${columns.count};--grid-gap:${columns.gutterSize}px;--grid-offset:${columns.offset}px">
+          ${Array.from({ length:columns.count }, () => '<i></i>').join('')}
+        </div>
+        <dl>
+          <div><dt>Columns</dt><dd>${columns.count}</dd></div>
+          <div><dt>Gutter</dt><dd>${columns.gutterSize}px</dd></div>
+          <div><dt>Offset</dt><dd>${columns.offset}px</dd></div>
+          <div><dt>Mode</dt><dd>${esc(columns.alignment.toLowerCase())}</dd></div>
+          ${columns.sectionSize ? `<div><dt>Column</dt><dd>${columns.sectionSize}px</dd></div>` : ''}
+          ${row ? `<div><dt>Rows</dt><dd>${row.sectionSize}px / ${row.gutterSize}px gap${row.visible ? '' : ' · hidden'}</dd></div>` : ''}
+        </dl>
+      </article>`;
+    }).join('')}</div>
+    ${guidanceHtml('Responsive component rules', `
+      ${guidanceList([
+        { term:'Desktop L', token:'12 × 72px', text:'Use the fixed 12-column RIB grid with 8px gutters for large desktop compositions.' },
+        { term:'Tablet', token:'12 stretch columns', text:'Keep the 12-column structure, with 16px page offsets and 12px gutters.' },
+        { term:'Mobile', token:'4 stretch columns', text:'Collapse to four columns with 16px offsets and gutters; align vertical rhythm to the visible 4px row grid.' }
+      ])}
+    `)}
+  </section>`;
   return html;
 }
 
@@ -514,11 +604,16 @@ function renderShape(){
   const radiusGuidance = [
     { icon:'ti-square-rounded', title:'Controls stay functional', token:'radius.md', text:'Buttons, inputs and OTP boxes use a clear 12px shape without feeling bubbly.' },
     { icon:'ti-layout-card', title:'Cards stay quiet', token:'border + subtle radius', text:'Documentation and dense content cards rely on thin borders, white surfaces and restrained corners.' },
-    { icon:'ti-layers-subtract', title:'Elevation is reserved', token:'e2+', text:'Use shadows when a surface floats above the page: menus, popovers, sheets and dialogs.' }
+    { icon:'ti-layers-subtract', title:'Effects remain primitive', token:'effect.*', text:'Component aliases are created only while defining that component.' }
   ];
-  let html = pageHeader({ crumbs:['Foundations','Radius & elevation'], title:'Radius & elevation', status:'stable', version:'1.0',
-    updated:'20 May 2026',
-    desc:'A restrained shape and shadow system for ICICI Bank experiences. Corners should feel precise and approachable; shadows are used only when a surface is genuinely floating above the interface.' });
+  const effectGroups = [
+    { id:'depth', title:'Depth', note:'Four generic RIB depth primitives. They have no component meaning until a component maps one.' },
+    { id:'special', title:'Special shadows', note:'Two source-named shadows retained exactly; component aliases remain deferred.' },
+    { id:'rings', title:'Interaction rings', note:'Zero-blur spread effects for outline and focus treatment.' }
+  ];
+  let html = pageHeader({ crumbs:['Foundations','Radius & effects'], title:'Radius & effects', status:'stable', version:'1.2',
+    updated:DS.meta.updated,
+    desc:'GlobalDS retains all eight RIB effect primitives. Component and semantic effect aliases remain deferred until their components are defined.' });
   html += `<section class="section shape-section">
     <article class="foundation-card shape-scale-card">
       <div class="foundation-card-head">
@@ -548,26 +643,38 @@ function renderShape(){
     `)}
   </section>`;
   html += `<section class="section shape-section">
-    <article class="foundation-card elevation-scale-card">
+    <article class="foundation-card effects-scale-card">
       <div class="foundation-card-head">
-        <div><span class="foundation-kicker">Depth ramp</span><h2>Elevation</h2></div>
-        <code>DsElevation.*</code>
+        <div><span class="foundation-kicker">8 exact RIB primitives</span><h2>Effects</h2></div>
+        <code>DsEffects.*</code>
       </div>
-      <div class="elev-grid">${DS.elevation.map((e, i) => `
-        <button class="elev-card" data-copy-text="DsElevation.${esc(e.token)}" title="Copy DsElevation.${esc(e.token)}">
-          <span class="elev-preview" style="box-shadow:${e.css}"><span>${String(i + 1).padStart(2, '0')}</span></span>
-          <b>${esc(e.token)}</b>
-          <code>${esc(e.css)}</code>
-          <p>${esc(e.use)}</p>
-          <span class="foundation-copy"><i class="ti ti-copy"></i></span>
-        </button>`).join('')}</div>
+      <div class="effect-groups">${effectGroups.map(group => {
+        const effects = DS.effects.filter(effect => effect.group === group.title);
+        return `<section class="effect-group" aria-labelledby="effect-group-${group.id}">
+          <header class="effect-group-head">
+            <div><span>RIB effect group</span><h3 id="effect-group-${group.id}">${esc(group.title)}</h3></div>
+            <p>${esc(group.note)}</p>
+          </header>
+          <div class="effect-grid">${effects.map(e => {
+            const index = DS.effects.indexOf(e);
+            return `<button class="effect-card" data-copy-text="DsEffects.${esc(e.token)}" title="Copy DsEffects.${esc(e.token)}">
+              <span class="effect-preview" style="box-shadow:${e.css}"><span>${String(index + 1).padStart(2, '0')}</span></span>
+              <b>${esc(e.path)}</b>
+              <small>${esc(e.name)}</small>
+              <code>${esc(e.css)}</code>
+              <p>${esc(e.use)}</p>
+              <span class="foundation-copy"><i class="ti ti-copy"></i></span>
+            </button>`;
+          }).join('')}</div>
+        </section>`;
+      }).join('')}</div>
     </article>
-    ${guidanceHtml('Elevation usage guidance', `
-      <p class="guidance-note">Resting cards use borders first. Elevation starts light and gains spread only as the surface moves closer to the user.</p>
+    ${guidanceHtml('Effect usage guidance', `
+      <p class="guidance-note">These are foundation primitives, not component decisions. Component aliases are added only when that component is defined.</p>
       ${guidanceList([
-        { term:'Resting content', token:'border + e1', text:'Use borders and very quiet shadows for cards that sit on the page plane.' },
-        { term:'Floating surfaces', token:'e2 / e3', text:'Use elevation for dropdowns, popovers and sheets that visually leave the page.' },
-        { term:'Modal moments', token:'e4', text:'Reserve the strongest shadow for dialogs and blocking confirmation surfaces.' }
+        { term:'Foundation', token:'effect.shadow.*', text:'Choose a depth primitive only while defining a component, then expose that choice through the component token.' },
+        { term:'Source-specific', token:'effect.shadow.button-white / bottom-sticky', text:'Preserve the RIB source intent; do not generalise these special shadows into the depth scale.' },
+        { term:'Interaction', token:'effect.ring.*', text:'Keep the one-pixel orange outline and three-pixel focus halo as separate, composable primitives.' }
       ])}
     `)}
   </section>`;
@@ -683,12 +790,11 @@ function dartTokens(){
   s += '  static const Gradient buttonPrimaryFill = LinearGradient(\n';
   s += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
   s += '    colors: [Color(0x1FFFFFFF), Color(0x00FFFFFF)],\n  );\n\n';
-  s += '  // Button stroke gradient — visible peach-to-orange shell\n';
+  s += '  // Button stroke gradient — exact RIB white-to-transparent paint at 50% opacity\n';
   s += '  static const double buttonStrokeWidth = 1;\n';
   s += '  static const Gradient buttonStroke = LinearGradient(\n';
   s += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
-  s += '    colors: [Color(0xFFF4B094), Color(0xFFE8692E), Color(0xFFD44500)],\n';
-  s += '    stops: [0, .45, 1],\n  );\n}\n\n';
+  s += '    colors: [Color(0x80FFFFFF), Color(0x00FFFFFF)],\n  );\n}\n\n';
   s += 'class DsSpacing {\n  DsSpacing._();\n\n';
   DS.space.forEach(t => { s += '  static const double ' + t.dart + ' = ' + t.px + '; // ' + t.use + '\n'; });
   s += '}\n\nclass DsRadius {\n  DsRadius._();\n\n';
@@ -718,7 +824,7 @@ class DsTheme {
   static ThemeData get light {
     const scheme = ColorScheme.light(
       primary: DsColors.primaryOrange100,
-      onPrimary: Colors.white,
+      onPrimary: DsColors.neutralGrey150,
       secondary: DsColors.primaryMaroon100,
       onSecondary: Colors.white,
       error: DsColors.error100,
@@ -752,7 +858,7 @@ class DsTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: DsColors.buttonPrimaryFillBase,
-          foregroundColor: Colors.white,
+          foregroundColor: DsColors.neutralGrey150,
           disabledBackgroundColor: DsColors.neutralGrey60,
           disabledForegroundColor: DsColors.neutralGrey90,
           minimumSize: const Size(120, 36),
@@ -884,7 +990,7 @@ function tokensJson(){
     typography: DS.type,
     spacing: DS.space.map(s => ({ token: s.token, px: s.px })),
     radius: DS.radius.map(r => ({ token: r.token, px: r.px })),
-    elevation: DS.elevation
+    effects: DS.effects
   }, null, 2);
 }
 
@@ -1087,7 +1193,7 @@ function renderDevelopers(){
     html:codeblock(GlobalDSExports.generate('ds_tokens.json'), 'json', { file:'ds_tokens.json' }),
     guidance:{
       label:'Source-of-truth rule',
-      html:'<p class="guidance-note">Edit tokens in <code>js/tokens.js</code>, validate the generated outputs, then download the platform files. Generated Kotlin, Dart and Swift files should not be edited independently.</p>'
+      html:'<p class="guidance-note">Audit exact RIB values in <code>js/rib-atoms.js</code>, map them through <code>js/tokens.js</code>, validate the generated outputs, then download the platform files. Generated Kotlin, Dart and Swift files should not be edited independently.</p>'
     }
   });
 

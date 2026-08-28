@@ -185,12 +185,12 @@ const COMPONENTS = {
             <div class="shape-token-head"><span>Property</span><span>Value</span><span>Code reference</span></div>
             <div class="shape-token-row"><b>Width</b><code>356px · min 120px</code><span>Container(width: 356) inside BoxConstraints(minWidth: 120).</span></div>
             <div class="shape-token-row"><b>Fill</b><code>DsColors.buttonPrimaryFill</code><span>Primary Orange 100 base with a white-to-transparent linear overlay at 12%.</span></div>
-            <div class="shape-token-row"><b>Stroke</b><code>DsColors.buttonStroke · 1px inside</code><span>Peach-to-orange gradient rim, strongest at the top and resolving into the fill at the bottom.</span></div>
+            <div class="shape-token-row"><b>Stroke</b><code>DsColors.buttonStroke · 1px inside</code><span>Exact RIB stroke: white-to-transparent with the gradient paint set to 50% opacity.</span></div>
             <div class="shape-token-row"><b>Min width</b><code>120px</code><span>BoxConstraints(minWidth: 120)</span></div>
             <div class="shape-token-row"><b>Height</b><code>36px</code><span>Container(height: 36)</span></div>
             <div class="shape-token-row"><b>Padding</b><code>12px / 10px</code><span>EdgeInsets.symmetric(horizontal: 12, vertical: 10)</span></div>
             <div class="shape-token-row"><b>Radius</b><code>12px</code><span>BorderRadius.circular(12)</span></div>
-            <div class="shape-token-row"><b>Text</b><code>12 / 16 · w600 · 0.25</code><span>Mulish semibold with 0.25 letter spacing.</span></div>
+            <div class="shape-token-row"><b>Text</b><code>12 / 16 · w600 · 0.25</code><span>Mulish semibold in neutralGrey.150; white on Orange 100 does not meet AA contrast.</span></div>
           </div>
         </div>` },
       { title: 'Mobile buttons',
@@ -275,7 +275,7 @@ const COMPONENTS = {
                           Text(
                             'Continue',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: DsColors.neutralGrey150,
                               fontSize: 12,
                               fontFamily: 'Mulish',
                               fontWeight: FontWeight.w600,
