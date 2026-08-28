@@ -2,9 +2,9 @@
 
 The visual documentation and developer hub for the **ICICI Bank Global Design System**. GlobalDS Portal makes shared foundations, components, banking patterns and platform guidance accessible to designers, product teams, content teams and engineers.
 
-Version 0.5 uses the complete audited RIB Atoms file as its canonical foundation, supports desktop, tablet and mobile grids, and generates platform-native token and theme exports from one governed contract. RIB remains an audited source system and current adopter; the portal represents the shared design system rather than a single product.
+Version 0.5 uses the complete audited RIB Atoms file as its canonical foundation, supports desktop, tablet and mobile grids, and generates platform-native token and theme exports from one governed contract. It also preserves the complete 283-icon RIB Figma library as a searchable, source-audited iconography contract. RIB remains an audited source system and current adopter; the portal represents the shared design system rather than a single product.
 
-The RIB contract contains 139 audited assets: 87 paint styles, 36 text styles, 8 effect styles, 3 responsive grid styles and 5 variables. The exact Figma inventory lives in `js/rib-atoms.js`; governed aliases and component-facing decisions live in `js/tokens.js`.
+The RIB foundation contract contains 139 audited assets: 87 paint styles, 36 text styles, 8 effect styles, 3 responsive grid styles and 5 variables. The iconography contract adds 283 exact Figma components across general, product-specific, special and side-navigation categories. The exact inventories live in `js/rib-atoms.js` and `js/iconography.js`; governed aliases and component-facing decisions live in `js/tokens.js`.
 
 ## Run it
 
@@ -13,7 +13,7 @@ No build step or package installation is required.
 - Double-click `Launch ICICI Global DS.command`, or
 - Run `python3 -m http.server 8790` in this directory and open `http://localhost:8790`.
 
-Internet access is used only for the Google Fonts and Tabler Icons webfonts loaded by the documentation UI.
+Internet access is used only for the Google Fonts and Tabler Icons webfonts loaded by the documentation shell. Product iconography is served from committed local Figma exports.
 
 ## View it online
 
@@ -52,9 +52,12 @@ icici-global-ds/
 ├── index.html
 ├── css/
 │   ├── app.css
+│   ├── iconography.css # Icon library page styles
 │   └── motion.css
 ├── js/
 │   ├── rib-atoms.js    # Lossless audited RIB Figma contract
+│   ├── iconography.js  # 283-node icon manifest with exact local assets
+│   ├── iconography-page.js # Searchable icon library page
 │   ├── tokens.js       # Governed component-facing token object
 │   ├── exports.js      # Deterministic three-platform export contract
 │   ├── components.js
@@ -65,6 +68,7 @@ icici-global-ds/
 ├── kotlin-react/       # Checked-in generated snapshots
 ├── flutter/            # Checked-in generated snapshots
 ├── swiftui/            # Checked-in generated snapshots
+├── assets/icons/       # Exact Figma SVG and whole-node image exports
 ├── scripts/
 │   └── generate-exports.mjs
 └── tests/

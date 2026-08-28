@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const context = vm.createContext({ console });
 
-for (const relativePath of ['js/rib-atoms.js', 'js/tokens.js', 'js/exports.js']) {
+for (const relativePath of ['js/rib-atoms.js', 'js/iconography.js', 'js/tokens.js', 'js/exports.js']) {
   const source = fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
   vm.runInContext(source, context, { filename: relativePath });
 }

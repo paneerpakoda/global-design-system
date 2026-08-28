@@ -691,26 +691,6 @@ function renderShape(){
   return html;
 }
 
-function renderIcons(){
-  let html = pageHeader({ crumbs:['Foundations','Iconography'], title:'Iconography', status:'stable', version:'1.0',
-    updated:'20 May 2026',
-    desc:'The system uses Tabler outline icons for web and Flutter. Click any icon to copy its name.' });
-  html += '<section class="section"><h2 class="section-title">Icon set</h2><div class="icon-grid">';
-  DS.icons.showcase.forEach(n => {
-    html += `<div class="icon-cell" data-copy-text="${n}"><i class="ti ti-${n}"></i><span>${n}</span></div>`;
-  });
-  html += `</div>
-    ${guidanceHtml('Implementation guidance', `
-      <p class="guidance-note">${esc(DS.icons.note)}</p>
-      ${codeblock(`// pubspec.yaml
-//   flutter_tabler_icons: ^1.10.0
-
-Icon(TablerIcons.building_bank, size: 24, color: DsColors.neutralGrey130)`, 'dart')}
-    `)}
-  </section>`;
-  return html;
-}
-
 function renderComponent(id){
   const c = COMPONENTS[id];
   if (!c) return '<div class="empty">Component not found.</div>';

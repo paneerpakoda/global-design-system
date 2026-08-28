@@ -258,15 +258,7 @@ const DS = {
     };
   }),
 
-  icons: {
-    note: 'The system uses the Tabler outline icon set: 24px frame, 2px stroke, round caps. In Flutter use the flutter_tabler_icons package; on web the @tabler/icons-webfont.',
-    showcase: [
-      'home','credit-card','send','qrcode','building-bank','wallet','receipt','chart-pie',
-      'arrow-up-right','arrow-down-left','transfer','currency-dollar','lock','shield-check',
-      'face-id','fingerprint','bell','user','settings','help-circle','search','calendar',
-      'clock','check','x','alert-triangle','info-circle','eye','eye-off','chevron-right','plus','dots'
-    ]
-  }
+  icons: GlobalDSIconography
 };
 
 /* ============================================================
@@ -283,7 +275,7 @@ function copyText(text, btn){
     if (btn.hasAttribute && btn.hasAttribute('data-copy-text')) {
       const action = btn.matches && btn.matches('.type-copy')
         ? btn
-        : btn.querySelector && btn.querySelector('.colour-copy, .foundation-copy, .type-copy');
+        : btn.querySelector && btn.querySelector('.colour-copy, .foundation-copy, .type-copy, .icon-copy-state');
       if (!action) return;
       btn.classList.remove('copied', 'copy-label-phase', 'copy-check-phase');
       if (action.getBoundingClientRect) action.getBoundingClientRect();
@@ -313,7 +305,8 @@ function copyText(text, btn){
     setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = old; }, 1400);
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(done).catch(done);
+    navigator.clipboard.writeText(text).catch(() => {});
+    done();
   } else {
     const ta = document.createElement('textarea');
     ta.value = text; document.body.appendChild(ta); ta.select();

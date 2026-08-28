@@ -10,6 +10,7 @@ const read = relativePath => fs.readFileSync(path.join(projectRoot, relativePath
 
 const context = vm.createContext({ console });
 vm.runInContext(read('js/rib-atoms.js'), context, { filename: 'js/rib-atoms.js' });
+vm.runInContext(read('js/iconography.js'), context, { filename: 'js/iconography.js' });
 vm.runInContext(read('js/tokens.js'), context, { filename: 'js/tokens.js' });
 const DS = vm.runInContext('DS', context);
 
