@@ -241,42 +241,55 @@ function renderHome(){
 
 function renderColors(){
   const tokenStop = (ramp, stop) => ramp + (String(stop).match(/^\d/) ? String(stop) : String(stop).charAt(0).toUpperCase() + String(stop).slice(1));
-  const isLightHex = (hex) => {
-    const h = hex.replace('#','').slice(0, 6);
-    const [r,g,b] = [0,2,4].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+  const isLightColour = (value) => {
+    let channels;
+    if (value.startsWith('#')) {
+      const h = value.replace('#','').slice(0, 6);
+      channels = [0,2,4].map(i => parseInt(h.slice(i, i + 2), 16));
+    } else {
+      const rgba = value.match(/[\d.]+/g)?.map(Number) || [];
+      const alpha = rgba.length > 3 ? rgba[3] : 1;
+      channels = rgba.slice(0, 3).map(channel => channel * alpha + 255 * (1 - alpha));
+    }
+    const [r,g,b] = channels.map(channel => channel / 255);
     const lum = .2126 * r + .7152 * g + .0722 * b;
     return lum > .68;
   };
-  const swatch = (ramp, stop, hex) => {
-    const light = isLightHex(hex);
+  const swatch = (stop, value, token, status = '') => {
+    const light = isLightColour(value);
     const ink = light ? 'var(--gray-900)' : '#fff';
-    const token = 'DsColors.' + tokenStop(ramp, stop);
-    return `<button class="colour-swatch ${light ? 'is-light' : 'is-dark'}" data-copy-text="${hex}" style="--swatch:${hex};--swatch-ink:${ink}" title="Copy ${hex}" aria-label="Copy ${hex}, ${esc(token)}">
+    const statusLabel = status === 'visual-only' ? 'Visual only' : status === 'nominal' ? 'Nominal value' : '';
+    return `<button class="colour-swatch ${light ? 'is-light' : 'is-dark'}" data-copy-text="${esc(value)}" style="--swatch:${esc(value)};--swatch-ink:${ink}" title="Copy ${esc(value)}" aria-label="Copy ${esc(value)}, ${esc(token)}${statusLabel ? ', ' + statusLabel : ''}">
       <span class="colour-chip">
         <em>${esc(stop)}</em>
         <span class="colour-copy"><i class="ti ti-copy"></i></span>
       </span>
       <span class="colour-swatch-footer">
         <span class="colour-swatch-body">
-          <b>${esc(hex)}</b>
+          <b>${esc(value)}</b>
           <small>${esc(token)}</small>
+          ${statusLabel ? `<span class="colour-source-status">${esc(statusLabel)}</span>` : ''}
         </span>
       </span>
     </button>`;
   };
-  const rampCard = (ramp) => {
-    const def = DS.color[ramp];
+  const rampCard = (ramp, options = {}) => {
+    const def = options.palette ? options.palette[ramp] : DS.color[ramp];
     const label = def.label;
     const stops = Object.entries(def.stops);
-    const swatches = stops.map(([stop, hex]) => swatch(ramp, stop, hex)).join('');
-    const strip = stops.map(([stop, hex]) => `<span style="background:${esc(hex)}" title="${esc(stop)} · ${esc(hex)}"></span>`).join('');
+    const tokenFor = stop => def.tokens?.[stop] || 'DsColors.' + tokenStop(ramp, stop);
+    const swatches = stops.map(([stop, value]) => swatch(stop, value, tokenFor(stop), def.status?.[stop])).join('');
+    const strip = stops.map(([stop, value]) => `<span style="background:${esc(value)}" title="${esc(stop)} · ${esc(value)}"></span>`).join('');
+    const headingTag = options.headingTag || 'h3';
+    const contract = options.source ? `${stops.length} source token${stops.length === 1 ? '' : 's'}` : `DsColors.${ramp}*`;
     return `<article class="colour-ramp-card">
       <div class="colour-ramp-head">
         <div>
-          <span class="colour-ramp-kicker">Palette ramp</span>
-          <h3>${esc(label)}</h3>
+          <span class="colour-ramp-kicker">${options.source ? 'Source ramp' : 'Palette ramp'}</span>
+          <${headingTag}>${esc(label)}</${headingTag}>
+          ${def.note ? `<p>${esc(def.note)}</p>` : ''}
         </div>
-        <code>DsColors.${esc(ramp)}*</code>
+        <code>${esc(contract)}</code>
       </div>
       <div class="colour-ramp-strip">${strip}</div>
       <div class="colour-swatch-grid">${swatches}</div>
@@ -333,9 +346,33 @@ function renderColors(){
         : `${stop}% ${colour} overlay for scrims, media and layered surfaces.`
     ])
   );
+  const renderSourceVariant = variant => `<section class="colour-source-variant" aria-labelledby="source-${esc(variant.id)}-title">
+    <header class="colour-source-variant-head">
+      <div>
+        <span>${esc(variant.sourceLabel)}</span>
+        <h3 id="source-${esc(variant.id)}-title">${esc(variant.label)}</h3>
+      </div>
+      <p>${esc(variant.description)}</p>
+    </header>
+    ${variant.sections.map(section => `<section class="colour-source-section">
+      <h4>${esc(section.title)}</h4>
+      <div class="colour-ramp-stack compact">${section.ramps.map(ramp => rampCard(ramp, {
+        palette:variant.palette,
+        source:true,
+        headingTag:'h5',
+      })).join('')}</div>
+    </section>`).join('')}
+  </section>`;
   let html = pageHeader({ crumbs:['Foundations','Colours'], title:'Colours', status:'stable', version:'1.0',
     updated:DS.meta.updated,
-    desc:'The canonical colour foundation for iMobile Android, iMobile iOS and RIB—ready to become the shared base for every ICICI Bank platform.' });
+    desc:'Compare the canonical GlobalDS palette with the live iMobile Android, iMobile iOS and RIB source systems.' });
+
+  html += `<div class="colour-system-tabs" role="tablist" aria-label="Colour systems">
+    <button class="colour-system-tab" id="colour-tab-global" type="button" role="tab" aria-controls="colour-panel-global" aria-selected="true" tabindex="0" data-colour-tab="global">GlobalDS colours</button>
+    <button class="colour-system-tab" id="colour-tab-imobile" type="button" role="tab" aria-controls="colour-panel-imobile" aria-selected="false" tabindex="-1" data-colour-tab="imobile">iMobile colours</button>
+    <button class="colour-system-tab" id="colour-tab-rib" type="button" role="tab" aria-controls="colour-panel-rib" aria-selected="false" tabindex="-1" data-colour-tab="rib">RIB colours</button>
+  </div>
+  <div class="colour-system-panel" id="colour-panel-global" role="tabpanel" aria-labelledby="colour-tab-global">`;
 
   html += `<section class="section colour-section">
     <h2 class="section-title">Convergence decision</h2>
@@ -418,7 +455,24 @@ function renderColors(){
         <span>1px inside · linear-gradient(180deg, #F4B094, #E8692E, #D44500)</span>
       </div>
     </div>
-  </section>`;
+  </section>
+  </div>
+  <div class="colour-system-panel" id="colour-panel-imobile" role="tabpanel" aria-labelledby="colour-tab-imobile" hidden>
+    <header class="colour-panel-intro">
+      <span>Source audit · 128 scalar occurrences</span>
+      <h2>iMobile colours</h2>
+      <p>Android and iOS remain separate source variants here. These values are available for comparison and migration, but they are not part of the GlobalDS export contract.</p>
+    </header>
+    ${GlobalDSSourceColours.imobile.variants.map(renderSourceVariant).join('')}
+  </div>
+  <div class="colour-system-panel" id="colour-panel-rib" role="tabpanel" aria-labelledby="colour-tab-rib" hidden>
+    <header class="colour-panel-intro">
+      <span>Source audit · 77 scalar references</span>
+      <h2>RIB colours</h2>
+      <p>The RIB palette is retained as a source view, including duplicate legacy aliases and nominal opacity values. It is not part of the current GlobalDS implementation scope.</p>
+    </header>
+    ${renderSourceVariant(GlobalDSSourceColours.rib)}
+  </div>`;
   return html;
 }
 
@@ -1175,6 +1229,7 @@ document.addEventListener('click', e => {
 
 document.getElementById('navSearch').addEventListener('input', e => buildNav(e.target.value));
 
+GlobalDSColourTabs.bind(document);
 bindSandbox(document);
 
 window.addEventListener('hashchange', route);
