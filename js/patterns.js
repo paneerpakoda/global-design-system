@@ -25,7 +25,7 @@ const PATTERNS = {
       <div class="login-hero">
         ${statusRow(true)}
         <div class="lh-top" style="margin-top:8px">
-          <span class="lh-eyebrow">RIB CANADA</span>
+          <span class="lh-eyebrow">GLOBALDS DEMO</span>
           <span class="lh-logo">ICICI Bank</span>
         </div>
         <h2>Welcome back</h2>

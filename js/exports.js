@@ -1,5 +1,5 @@
 /* ============================================================
-   GlobalDS OS — deterministic platform exports
+   GlobalDS — deterministic platform exports
    Every generated file projects the shared DS object from tokens.js.
    ============================================================ */
 
@@ -45,7 +45,7 @@ function exportTrackingEm(token){
 }
 
 function exportHeader(commentPrefix){
-  return commentPrefix + ' GlobalDS OS v' + DS.meta.version + '\n' +
+  return commentPrefix + ' GlobalDS v' + DS.meta.version + '\n' +
     commentPrefix + ' Generated from js/tokens.js. Do not edit by hand.\n';
 }
 

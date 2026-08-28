@@ -1,6 +1,8 @@
-# GlobalDS OS
+# GlobalDS Portal
 
-The living design-system hub for **ICICI Bank GlobalDS OS**. Version 0.4 uses the complete audited RIB Atoms file as its canonical foundation, supports RIB desktop, tablet and mobile grids, and generates platform-native token and theme exports from one contract.
+The visual documentation and developer hub for the **ICICI Bank Global Design System**. GlobalDS Portal makes shared foundations, components, banking patterns and platform guidance accessible to designers, product teams, content teams and engineers.
+
+Version 0.5 uses the complete audited RIB Atoms file as its canonical foundation, supports desktop, tablet and mobile grids, and generates platform-native token and theme exports from one governed contract. RIB remains an audited source system and current adopter; the portal represents the shared design system rather than a single product.
 
 The RIB contract contains 139 audited assets: 87 paint styles, 36 text styles, 8 effect styles, 3 responsive grid styles and 5 variables. The exact Figma inventory lives in `js/rib-atoms.js`; governed aliases and component-facing decisions live in `js/tokens.js`.
 
@@ -12,6 +14,14 @@ No build step or package installation is required.
 - Run `python3 -m http.server 8790` in this directory and open `http://localhost:8790`.
 
 Internet access is used only for the Google Fonts and Tabler Icons webfonts loaded by the documentation UI.
+
+## View it online
+
+The portal is published from `main` with GitHub Pages:
+
+`https://paneerpakoda.github.io/global-design-system/`
+
+Pull requests run the same contract and snapshot checks. A successful push to `main` then packages the static portal and deploys it to the protected `github-pages` environment.
 
 ## What's inside
 

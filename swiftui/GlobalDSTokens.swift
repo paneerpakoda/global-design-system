@@ -1,6 +1,6 @@
 import SwiftUI
 
-// GlobalDS OS v0.4.1
+// GlobalDS v0.5.0
 // Generated from js/tokens.js. Do not edit by hand.
 enum GlobalDSColors {
     // TOKEN_COLOR: color.brand.orange

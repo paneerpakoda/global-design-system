@@ -1,7 +1,7 @@
 import 'dart:ui' show FontFeature;
 import 'package:flutter/material.dart';
 
-/// GlobalDS OS v0.4.1
+/// GlobalDS v0.5.0
 /// Generated from js/tokens.js. Do not edit by hand.
 class DsColors {
   DsColors._();

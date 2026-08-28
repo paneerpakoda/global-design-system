@@ -1,5 +1,5 @@
 /* ============================================================
-   GlobalDS OS — app chrome + DS component styles
+   GlobalDS Portal — app chrome + DS component styles
    Token source of truth: js/tokens.js (this file mirrors it)
    ============================================================ */
 
@@ -63,6 +63,10 @@ body{font-family:var(--font);color:var(--gray-900);background:var(--surface-app)
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 ::selection{background:var(--brand-100)}
+
+.skip-link{position:fixed;z-index:1000;top:12px;left:12px;transform:translateY(-160%);border-radius:var(--r-sm);
+  background:var(--gray-900);color:#fff;padding:10px 14px;font-weight:700;box-shadow:var(--effect-shadow-300)}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--brand-100);outline-offset:3px}
 
 /* ---------- shell ---------- */
 .shell{display:flex;min-height:100vh;background:linear-gradient(180deg,#F4F6F9 0%,var(--surface-app) 100%)}
@@ -1118,7 +1122,7 @@ nav{flex:1;overflow-y:auto;padding:0 12px 12px}
 }
 
 /* ============================================================
-   GlobalDS OS app skin — applied from DESIGN-cal.md
+   GlobalDS Portal app skin — applied from DESIGN-cal.md
    White canvas, near-black app CTAs, side navigation, generous
    SaaS spacing, product UI fragments and a dark closing footer.
    Scoped to the hub chrome/home so GlobalDS demos stay faithful.

@@ -1,15 +1,15 @@
 /* ============================================================
-   GlobalDS OS — design tokens (single source of truth)
+   GlobalDS — design tokens (single source of truth)
    The app renders foundations from this object AND generates
    Kotlin/React, Flutter, SwiftUI and JSON exports from it.
    ============================================================ */
 
 const DS = {
   meta: {
-    name: 'GlobalDS OS',
-    fullName: 'ICICI Bank Global Design System OS',
+    name: 'GlobalDS',
+    fullName: 'ICICI Bank Global Design System',
     org: 'ICICI Bank · Multi-platform design system',
-    version: '0.4.1',
+    version: '0.5.0',
     updated: '28 Aug 2026'
   },
 

@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GlobalDS OS · ICICI Bank</title>
+<title>GlobalDS Portal · ICICI Bank</title>
+<meta name="description" content="Explore ICICI Bank's shared foundations, components, patterns and platform guidance in the GlobalDS Portal.">
+<meta name="theme-color" content="#F8F9FB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800&family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,25 +14,26 @@
 <link rel="stylesheet" href="css/motion.css?v=0.5.3">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to main content</a>
 <div class="shell">
-  <aside class="sidebar">
+  <aside class="sidebar" aria-label="GlobalDS Portal navigation">
     <a class="brand" href="#/home">
       <span class="brand-mark"><span></span></span>
       <span class="brand-text">
-        <strong>GlobalDS OS</strong>
-        <small>One ICICI Bank system · Every platform</small>
+        <strong>GlobalDS Portal</strong>
+        <small>Visual guidance · Shared foundations</small>
       </span>
     </a>
     <div class="nav-search">
       <i class="ti ti-search"></i>
-      <input id="navSearch" type="text" placeholder="Search…" autocomplete="off">
+      <input id="navSearch" type="search" placeholder="Search…" autocomplete="off" aria-label="Search the design system">
     </div>
-    <nav id="nav"></nav>
+    <nav id="nav" aria-label="Design system sections"></nav>
     <div class="sidebar-foot">
-      <span class="dot"></span> v0.4.1 · RIB foundation
+      <span class="dot"></span> v0.5.0 · Shared foundation
     </div>
   </aside>
-  <main class="main" id="main"></main>
+  <main class="main" id="main" tabindex="-1"></main>
 </div>
 <script src="js/rib-atoms.js?v=0.4.1"></script>
 <script src="js/tokens.js?v=0.8.1"></script>

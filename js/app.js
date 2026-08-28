@@ -1,5 +1,5 @@
 /* ============================================================
-   GlobalDS OS — app shell: navigation, pages and exports UI
+   GlobalDS Portal — app shell: navigation, pages and exports UI
    ============================================================ */
 
 const NAV = [
@@ -97,10 +97,10 @@ function ribCoverageHtml(){
 }
 
 function productMockup(){
-  return `<article class="product-mockup-card" aria-label="GlobalDS OS product preview">
+  return `<article class="product-mockup-card" aria-label="GlobalDS Portal preview">
     <div class="mockup-toolbar">
       <span></span><span></span><span></span>
-      <b>GlobalDS OS</b>
+      <b>GlobalDS Portal</b>
     </div>
     <div class="mockup-peek">
       <section class="peek-card peek-primary">
@@ -136,8 +136,8 @@ function appFooter(){
   return `<footer class="app-footer">
     <div class="app-footer-inner">
       <div>
-        <strong>GlobalDS OS</strong>
-        <p>One governed design-system foundation for ICICI Bank products and journeys.</p>
+        <strong>GlobalDS Portal</strong>
+        <p>One visual home for ICICI Bank foundations, components, patterns and platform guidance.</p>
       </div>
       <nav aria-label="Footer">
         <a href="#/f/colors">Foundations</a>
@@ -158,33 +158,43 @@ function renderHome(){
   <div class="hero cal-hero">
     <div class="hero-copy">
       <div class="hero-top">
-        <div class="dh-crumbs"><span class="dh-mark">i</span><span>ICICI Bank</span><i class="ti ti-arrow-right"></i><span class="cur">GlobalDS OS</span></div>
-        <span class="dh-site">Multi-platform foundation</span>
+        <div class="dh-crumbs"><span class="dh-mark">i</span><span>ICICI Bank</span><i class="ti ti-arrow-right"></i><span class="cur">GlobalDS Portal</span></div>
+        <span class="dh-site">Shared visual language</span>
       </div>
       <div class="dh-title-row">
         <h1 class="hero-title" data-reveal-words>One system for every ICICI experience.</h1>
       </div>
-      <p class="hero-desc">GlobalDS OS now uses the complete RIB Atoms contract as its canonical foundation across desktop, tablet and mobile.</p>
+      <p class="hero-desc">Explore the shared visual language for ICICI products. The portal turns the audited RIB foundation into practical guidance for designers, product teams and engineers across desktop and mobile.</p>
       <div class="hero-foot">
         <button class="ds-btn primary md" data-magnetic="0.12" data-go="#/f/colors">Explore the system <i class="ti ti-arrow-right"></i></button>
+        <button class="ds-btn secondary md" data-go="#/c/button">Browse components</button>
       </div>
     </div>
     ${productMockup()}
   </div>
   <div class="metric-grid">
     <div class="metric"><small>Components</small><strong data-countup>${compCount}</strong></div>
-    <div class="metric"><small>RIB foundation assets</small><strong data-countup>${tokenCount}</strong></div>
+    <div class="metric"><small>Audited foundation assets</small><strong data-countup>${tokenCount}</strong></div>
     <div class="metric"><small>Patterns</small><strong data-countup>${Object.keys(PATTERNS).length}</strong></div>
     <div class="metric"><small>Platform estate</small><strong>8 platforms</strong></div>
   </div>
   ${ribCoverageHtml()}
   ${renderPlatformScope()}
   <section class="section">
+    <h2 class="section-title">Made for the whole product team</h2>
+    <p class="section-note">Use the same source to discuss design decisions, validate journeys and implement platform-native experiences.</p>
+    <div class="cards-grid">
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-pencil"></i><h3>Designers</h3><p>Inspect foundations, component states and responsive patterns without reading implementation code.</p></div>
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-route"></i><h3>Product and content</h3><p>Review real banking journeys, interaction states and guidance using a shared product vocabulary.</p></div>
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-code"></i><h3>Engineering</h3><p>Trace visual decisions to governed tokens and generate platform-native implementation files.</p></div>
+    </div>
+  </section>
+  <section class="section">
     <h2 class="section-title">Start here</h2>
     <div class="cards-grid">
       <div class="link-card" data-go="#/f/colors" data-tilt="3" data-spotlight><i class="ti ti-palette"></i><h3>Foundations</h3><p>Colours, type, spacing, radius — the raw material of every screen.</p></div>
-      <div class="link-card" data-go="#/c/button" data-tilt="3" data-spotlight><i class="ti ti-components"></i><h3>Components</h3><p>Specs, states and Flutter APIs for the building blocks.</p></div>
-      <div class="link-card" data-go="#/sandbox" data-tilt="3" data-spotlight><i class="ti ti-flask"></i><h3>Sandbox</h3><p>Toggle props and states live, copy the generated Flutter call.</p></div>
+      <div class="link-card" data-go="#/c/button" data-tilt="3" data-spotlight><i class="ti ti-components"></i><h3>Components</h3><p>Visual specifications, behavior, states and implementation guidance for reusable building blocks.</p></div>
+      <div class="link-card" data-go="#/sandbox" data-tilt="3" data-spotlight><i class="ti ti-flask"></i><h3>Playground</h3><p>Explore component properties and states live before moving into platform implementation.</p></div>
       <div class="link-card" data-go="#/patterns" data-tilt="3" data-spotlight><i class="ti ti-layout-grid"></i><h3>Pattern lab</h3><p>Login, OTP, transfers — full flows with switchable states.</p></div>
     </div>
   </section>
@@ -243,16 +253,16 @@ function renderHome(){
     </div>
   </section>
   <section class="section cta-band-light">
-    <h2>Ready for the next revamp pass?</h2>
-    <p>Use the sandbox to test a component state, then copy the generated Flutter call.</p>
-    <button class="ds-btn primary md" data-go="#/sandbox">Open playground</button>
+    <h2>See the system in a real journey.</h2>
+    <p>Move from individual foundations and components into complete login, OTP and transfer experiences.</p>
+    <button class="ds-btn primary md" data-go="#/patterns">Explore patterns</button>
   </section>
   <section class="section">
     <h2 class="section-title">Principles</h2>
     <div class="cards-grid">
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-accessible"></i><h3>Accessible by default</h3><p>AA contrast everywhere, 44px touch targets, labels that survive translation.</p></div>
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-world"></i><h3>One system, many platforms</h3><p>Channel and journey differences live in configuration, not in forked foundations.</p></div>
-      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-code"></i><h3>One source, three targets</h3><p>Kotlin/React, Flutter and SwiftUI receive native APIs generated from the same token identity.</p></div>
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-code"></i><h3>One source, platform-native output</h3><p>Every supported framework receives a native API generated from the same governed token identity.</p></div>
     </div>
   </section>`;
 }
@@ -770,9 +780,9 @@ function dartColorTokenName(ramp, stop){
 function dartTokens(){
   let s = "import 'dart:ui' show FontFeature;\n";
   s += "import 'package:flutter/material.dart';\n\n";
-  s += '/// GlobalDS OS tokens — generated by GlobalDS OS v' + DS.meta.version + '\n';
+  s += '/// GlobalDS tokens — generated by GlobalDS v' + DS.meta.version + '\n';
   s += '/// Source of truth: icici-global-ds/js/tokens.js\n';
-  s += '/// Regenerate from the GlobalDS OS Developers page; do not edit by hand.\n\n';
+  s += '/// Regenerate from the GlobalDS Portal Developers page; do not edit by hand.\n\n';
   s += 'class DsColors {\n  DsColors._();\n\n';
   for (const [ramp, def] of Object.entries(DS.color)) {
     s += '  // ' + def.label + '\n';
@@ -816,7 +826,7 @@ function dartTheme(){
   return `import 'package:flutter/material.dart';
 import 'ds_tokens.dart';
 
-/// GlobalDS OS ThemeData — generated by GlobalDS OS v` + DS.meta.version + `
+/// GlobalDS ThemeData — generated by GlobalDS v` + DS.meta.version + `
 /// Wire it up once: MaterialApp(theme: DsTheme.light)
 class DsTheme {
   DsTheme._();
@@ -1033,7 +1043,7 @@ class RibApp extends StatelessWidget {
       <button class="ds-btn secondary md" data-dl="ds_tokens.dart"><i class="ti ti-download"></i> ds_tokens.dart</button>
       <button class="ds-btn secondary md" data-dl="ds_theme.dart"><i class="ti ti-download"></i> ds_theme.dart</button></div>`,
     guidance:{ label:'Export guidance', html:'<p class="guidance-note">Importing into FlutterFlow or syncing a token plugin? Use the raw JSON. For app builds, use the generated Dart files.</p>' } });
-  html += guidanceHtml('End-to-end pipeline', '<p class="guidance-note">tokens.js in GlobalDS OS generates each native token package and keeps product widgets aligned to one shared source of truth.</p>');
+  html += guidanceHtml('End-to-end pipeline', '<p class="guidance-note"><code>tokens.js</code> in GlobalDS generates each native token package and keeps product widgets aligned to one shared source of truth.</p>');
   return html;
 }
 

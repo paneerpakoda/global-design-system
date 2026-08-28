@@ -1,5 +1,5 @@
 /* ============================================================
-   GlobalDS OS — platform landscape and convergence scope
+   GlobalDS Portal — platform landscape and convergence scope
    ============================================================ */
 
 function renderPlatformScope(){
@@ -14,7 +14,7 @@ function renderPlatformScope(){
         <span class="platform-kicker">Operating context</span>
         <h2 id="platform-scope-title" class="section-title">Three live systems. One global foundation.</h2>
       </div>
-      <p>GlobalDS OS begins by converging the design systems that development can implement consistently today, while keeping the full ICICI Bank platform estate visible.</p>
+      <p>GlobalDS begins by converging the design systems that development can implement consistently today, while the portal keeps the full ICICI Bank platform estate visible.</p>
     </div>
 
     <div class="platform-scope-grid">
