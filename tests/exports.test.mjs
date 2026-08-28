@@ -76,11 +76,58 @@ test('uses native, recognizable APIs in each target', () => {
   assert.match(swift, /EnvironmentKey/);
 });
 
+test('preserves the established Flutter token and component-theme surface', () => {
+  const tokens = exportsApi.generate('ds_tokens.dart');
+  const theme = exportsApi.generate('ds_theme.dart');
+
+  for (const symbol of [
+    'buttonPrimaryFillBase',
+    'buttonPrimaryFill',
+    'buttonStrokeWidth',
+    'buttonStroke',
+  ]) {
+    assert.match(tokens, new RegExp(symbol));
+  }
+
+  for (const symbol of [
+    'elevatedButtonTheme',
+    'outlinedButtonTheme',
+    'inputDecorationTheme',
+    'appBarTheme',
+    'bottomNavigationBarTheme',
+    'chipTheme',
+    'dividerTheme',
+    'snackBarTheme',
+    'DsButtonDecorations',
+  ]) {
+    assert.match(theme, new RegExp(symbol));
+  }
+});
+
 test('keeps the platform-neutral JSON export available', () => {
   const parsed = JSON.parse(exportsApi.generate('ds_tokens.json'));
   assert.equal(parsed.meta.name, DS.meta.name);
   assert.equal(parsed.typography.length, DS.type.length);
   assert.equal(parsed.spacing.length, DS.space.length);
+});
+
+test('keeps checked-in platform snapshots identical to live generation', () => {
+  const directories = {
+    'kotlin-react': 'kotlin-react',
+    flutter: 'flutter',
+    swiftui: 'swiftui',
+  };
+
+  for (const target of exportsApi.targets) {
+    for (const filename of target.files) {
+      const snapshotPath = path.join(projectRoot, directories[target.id], filename);
+      assert.equal(
+        fs.readFileSync(snapshotPath, 'utf8'),
+        exportsApi.generate(filename),
+        `${filename} snapshot should match live generation`,
+      );
+    }
+  }
 });
 
 test('rejects unknown export filenames', () => {

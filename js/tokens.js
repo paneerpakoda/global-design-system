@@ -1,7 +1,7 @@
 /* ============================================================
    ICICI Global DS — design tokens (single source of truth)
    The app renders foundations from this object AND generates
-   ds_tokens.dart / tokens JSON from it (see Flutter page).
+   Kotlin/React, Flutter, SwiftUI and JSON exports from it.
    ============================================================ */
 
 const DS = {
@@ -9,8 +9,8 @@ const DS = {
     name: 'ICICI Global DS',
     fullName: 'ICICI Global Design System',
     org: 'ICICI Bank · International retail net banking',
-    version: '0.1.0',
-    updated: '11 Jun 2026'
+    version: '0.2.0',
+    updated: '28 Aug 2026'
   },
 
   color: {

@@ -1,56 +1,88 @@
 # ICICI Global DS
 
-The living design-system hub for **ICICI Global Design System** (ICICI Bank, international retail net banking). One app that holds the foundations, components, patterns, a live sandbox, and the Flutter handoff for every geography revamp (pilot: RIB Canada).
+The living design-system hub for **ICICI Global Design System** and the international retail net-banking revamps. The app documents foundations, components and patterns, provides a live playground, and generates platform-native token and theme exports from one source.
 
 ## Run it
 
-No build step. Either:
+No build step or package installation is required.
 
-- Open `index.html` directly in a browser, or
-- Serve the folder: `npx serve .` (or any static server)
+- Double-click `Launch ICICI Global DS.command`, or
+- Run `python3 -m http.server 8790` in this directory and open `http://localhost:8790`.
 
-Internet is needed for the Inter font and Tabler icon webfont (CDN).
+Internet access is used only for the Google Fonts and Tabler Icons webfonts loaded by the documentation UI.
 
 ## What's inside
 
 | Area | What it does |
 |---|---|
-| **Overview** | System hero, metrics, principles |
-| **Foundations** | Colors (click-to-copy), typography scale, 4pt spacing, radius & elevation, iconography |
-| **Components** | 9 components with variants, states, props API and a Flutter snippet each |
-| **Pattern lab** | Login, OTP verification, transfer review, accounts home — in a phone frame with switchable states (error, loading, success…) |
-| **Playground** | Toggle any component's props/states live; the matching Flutter call is generated underneath, ready to copy |
-| **Developers** | `ds_tokens.dart`, `ds_theme.dart` and `ds_tokens.json` — generated live from the token source, downloadable |
+| **Overview** | System summary, metrics and principles |
+| **Foundations** | Colours, typography, 4pt spacing, radius, elevation and iconography |
+| **Components** | Component variants, states, props and implementation guidance |
+| **Pattern lab** | Login, OTP verification, transfer review and accounts-home flows |
+| **Playground** | Live component property/state controls with Flutter call generation |
+| **Platform exports** | Kotlin/React, Flutter and SwiftUI tokens and theme files, plus shared JSON |
+
+## Export contract
+
+| Target | Generated files | Integration shape |
+|---|---|---|
+| Kotlin/React | `global_ds_tokens.kt`, `global_ds_theme.kt` | Kotlin/JS-safe primitives, typography values, semantic theme and CSS-variable map |
+| Flutter | `ds_tokens.dart`, `ds_theme.dart` | Flutter `Color`/`TextStyle` primitives and Material 3 `ThemeData` |
+| SwiftUI | `GlobalDSTokens.swift`, `GlobalDSTheme.swift` | SwiftUI `Color`/`Font` primitives and an `EnvironmentValues` theme |
+| Shared | `ds_tokens.json` | Platform-neutral pipeline and design-tool interchange |
+
+The Kotlin export deliberately keeps its token file independent of a specific React styling library. The Developers page shows how to consume it with the JetBrains Kotlin React and Emotion wrappers. Flutter component snippets in the existing component catalogue and playground remain Flutter-specific; this change adds cross-platform foundation exports rather than claiming cross-platform component implementations.
 
 ## Architecture
 
-```
+```text
 icici-global-ds/
-├── index.html          # shell: sidebar + router outlet
-├── css/app.css         # docs chrome + ds-* component styles
+├── index.html
+├── css/
+│   ├── app.css
+│   └── motion.css
 ├── js/
-│   ├── tokens.js       # ★ SINGLE SOURCE OF TRUTH for all design tokens
-│   ├── components.js   # component registry (docs, props, Flutter snippets)
-│   ├── patterns.js     # pattern lab screens & states
-│   ├── sandbox.js      # playground defs + live Dart codegen
-│   └── app.js          # nav, router, pages, dart/json generators
-└── flutter/
-    ├── ds_tokens.dart  # snapshot of the generated tokens file
-    └── ds_theme.dart   # snapshot of the generated ThemeData
+│   ├── tokens.js       # Single canonical token object
+│   ├── exports.js      # Deterministic three-platform export contract
+│   ├── components.js
+│   ├── patterns.js
+│   ├── sandbox.js
+│   ├── motion.js
+│   └── app.js          # Navigation, pages and download UI
+├── kotlin-react/       # Checked-in generated snapshots
+├── flutter/            # Checked-in generated snapshots
+├── swiftui/            # Checked-in generated snapshots
+├── scripts/
+│   └── generate-exports.mjs
+└── tests/
+    ├── exports.test.mjs
+    └── app-integration.test.mjs
 ```
 
-**The rule that keeps this honest:** every visual in the app renders from `js/tokens.js`, and the Dart/JSON files are generated from the same object. Change a token once; the docs, the sandbox and the Flutter export all move together. The files in `flutter/` are convenience snapshots — regenerate from the Developers page after token changes.
+The rule that keeps the system honest: every UI foundation and platform export resolves from `js/tokens.js`. Generated Kotlin, Dart and Swift files are projections and must not be edited independently.
+
+## Generate and verify exports
+
+Use the bundled or system Node.js runtime:
+
+```bash
+node scripts/generate-exports.mjs
+node --test tests/*.test.mjs
+```
+
+The tests verify target identity, filenames, deterministic generation, complete colour and typography coverage, native theme APIs, JSON continuity, backwards-compatible routing, and byte-for-byte agreement between live generation and checked-in snapshots.
 
 ## Adding a component
 
-1. Add an entry to `js/components.js` (docs page appears automatically in the sidebar).
-2. Add matching `ds-*` styles in `css/app.css`.
-3. Optional: add a playground def in `js/sandbox.js` and use it in a pattern in `js/patterns.js`.
+1. Add the component entry to `js/components.js`.
+2. Add matching `ds-*` styles to `css/app.css`.
+3. Optionally add a playground definition in `js/sandbox.js` and use it in `js/patterns.js`.
 
 ## Roadmap
 
-- [ ] Dark theme tokens + `DsTheme.dark`
-- [ ] Geography theming layer (Canada/UK/Germany content & currency config)
-- [ ] More patterns: bill pay, payee management, onboarding/KYC
-- [ ] Figma link-outs per component (Resources rail)
-- [ ] Hindi/French string-length stress toggle in the sandbox
+- [ ] Dark theme tokens for every platform
+- [ ] Geography theming for Canada and later international markets
+- [ ] Semantic component tokens beyond the current light-theme bridge
+- [ ] Native component implementation examples for Kotlin/React and SwiftUI
+- [ ] More banking patterns, including bill pay, payee management and onboarding/KYC
+- [ ] Hindi and French string-length stress testing

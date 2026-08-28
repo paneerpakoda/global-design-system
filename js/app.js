@@ -1,5 +1,5 @@
 /* ============================================================
-   ICICI Global DS — app shell: nav, router, pages, codegen
+   ICICI Global DS — app shell: navigation, pages and exports UI
    ============================================================ */
 
 const NAV = [
@@ -23,7 +23,7 @@ const NAV = [
     { route: '#/sandbox', label: 'Playground', icon: 'ti-flask' }
   ]},
   { section: 'Developers', items: [
-    { route: '#/flutter', label: 'Flutter theme & tokens', icon: 'ti-brand-flutter' }
+    { route: '#/developers', label: 'Platform exports', icon: 'ti-code' }
   ]}
 ];
 
@@ -125,7 +125,7 @@ function appFooter(){
         <a href="#/f/colors">Foundations</a>
         <a href="#/c/button">Components</a>
         <a href="#/patterns">Patterns</a>
-        <a href="#/flutter">Flutter</a>
+        <a href="#/developers">Exports</a>
       </nav>
     </div>
   </footer>`;
@@ -158,7 +158,7 @@ function renderHome(){
     <div class="metric"><small>Components</small><strong data-countup>${compCount}</strong></div>
     <div class="metric"><small>Design tokens</small><strong data-countup>${tokenCount}+</strong></div>
     <div class="metric"><small>Patterns</small><strong data-countup>${Object.keys(PATTERNS).length}</strong></div>
-    <div class="metric"><small>Target</small><strong>Flutter</strong></div>
+    <div class="metric"><small>Targets</small><strong>3 platforms</strong></div>
   </div>
   <section class="section">
     <h2 class="section-title">Start here</h2>
@@ -184,7 +184,7 @@ function renderHome(){
           </div>
         </div>
         <h3>Generated from one source</h3>
-        <p>Colour, type, spacing, radius and Flutter exports stay tied to the same token object.</p>
+        <p>Colour, type, spacing and radius exports for Kotlin/React, Flutter and SwiftUI stay tied to the same token object.</p>
       </div>
       <div class="link-card product-fragment" style="cursor:default" data-tilt="3" data-spotlight>
         <div class="fragment-stage">
@@ -219,7 +219,7 @@ function renderHome(){
           </div>
         </div>
         <h3>Buildable by default</h3>
-        <p>The Flutter page gives production-ready theme and token files from the app itself.</p>
+        <p>The Developers page generates native token and theme files for all three delivery stacks.</p>
       </div>
     </div>
   </section>
@@ -233,7 +233,7 @@ function renderHome(){
     <div class="cards-grid">
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-accessible"></i><h3>Accessible by default</h3><p>AA contrast everywhere, 44px touch targets, labels that survive translation.</p></div>
       <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-world"></i><h3>One system, many markets</h3><p>Canada, UK, Germany — geography lives in content and config, not in forked components.</p></div>
-      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-brand-flutter"></i><h3>Built for Flutter</h3><p>Every token maps 1:1 to ThemeData. If it's not buildable, it's not in the system.</p></div>
+      <div class="link-card" style="cursor:default" data-tilt="3" data-spotlight><i class="ti ti-code"></i><h3>One source, three targets</h3><p>Kotlin/React, Flutter and SwiftUI receive native APIs generated from the same token identity.</p></div>
     </div>
   </section>`;
 }
@@ -883,6 +883,169 @@ class RibApp extends StatelessWidget {
   return html;
 }
 
+const EXPORT_TARGET_CONTENT = {
+  'kotlin-react': {
+    title: 'Kotlin · ReactJS',
+    icon: 'ti-brand-kotlin',
+    description: 'Framework-neutral Kotlin tokens plus a semantic theme bridge for Kotlin/JS React applications.',
+    installLabel: 'Gradle setup',
+    installLanguage: 'build.gradle.kts',
+    install: `dependencies {
+    jsMainImplementation(kotlinWrappers.react)
+    jsMainImplementation(kotlinWrappers.reactDom)
+    jsMainImplementation(kotlinWrappers.emotion.react)
+}`,
+    usageLanguage: 'GlobalDSButton.kt',
+    usage: `import emotion.react.css
+import react.FC
+import react.Props
+import react.dom.html.ReactHTML.button
+import web.cssom.Color
+
+val GlobalDSButton = FC<Props> {
+    button {
+        css {
+            color = Color(GlobalDSTheme.light.onPrimary)
+            backgroundColor = Color(GlobalDSTheme.light.primary)
+        }
+        +"Continue"
+    }
+}`
+  },
+  flutter: {
+    title: 'Flutter',
+    icon: 'ti-brand-flutter',
+    description: 'Compile-time Dart tokens and a Material 3 ThemeData projection for Flutter applications.',
+    installLabel: 'Package setup',
+    installLanguage: 'pubspec.yaml',
+    install: `dependencies:
+  flutter:
+    sdk: flutter`,
+    usageLanguage: 'main.dart',
+    usage: `import 'theme/ds_theme.dart';
+
+MaterialApp(
+  theme: DsTheme.light,
+  home: const LoginScreen(),
+)`
+  },
+  swiftui: {
+    title: 'SwiftUI',
+    icon: 'ti-brand-swift',
+    description: 'Native SwiftUI colours, metrics, typography and an EnvironmentValues theme projection.',
+    installLabel: 'Project setup',
+    installLanguage: 'Xcode',
+    install: `Add GlobalDSTokens.swift and GlobalDSTheme.swift
+to the application target. Package the Mulish font faces
+and register them in the target's Info.plist.`,
+    usageLanguage: 'GlobalDSButton.swift',
+    usage: `import SwiftUI
+
+struct GlobalDSButton: View {
+    @Environment(\\.globalDSTheme) private var theme
+
+    var body: some View {
+        Text("Continue")
+            .font(GlobalDSTypography.buttonLarge.font)
+            .foregroundStyle(theme.onPrimary)
+            .padding(GlobalDSSpacing.spaceLg)
+            .background(theme.primary)
+            .clipShape(
+                RoundedRectangle(cornerRadius: GlobalDSRadius.radiusMd)
+            )
+    }
+}`
+  }
+};
+
+function renderExportFile(filename, language){
+  const output = GlobalDSExports.generate(filename);
+  return `<details class="export-file">
+    <summary>
+      <span class="export-file-name"><i class="ti ti-file-code"></i>${esc(filename)}</span>
+      <span class="export-file-action">Preview <i class="ti ti-chevron-down"></i></span>
+    </summary>
+    ${codeblock(output, language, { file: filename })}
+  </details>`;
+}
+
+function renderDevelopers(){
+  let html = pageHeader({
+    crumbs:['Developers','Platform exports'],
+    title:'Platform exports',
+    status:'stable',
+    version:DS.meta.version,
+    updated:DS.meta.updated,
+    noResources:true,
+    desc:'Generate Kotlin/React, Flutter and SwiftUI token APIs from the same GlobalDS source. Token identity stays stable while each output follows its platform conventions.'
+  });
+
+  html += `<section class="section export-overview" aria-labelledby="export-targets-title">
+    <div class="section-heading-row">
+      <div>
+        <h2 class="section-title" id="export-targets-title">Three native targets</h2>
+        <p class="section-note">Choose the delivery stack. Every file below is produced live from <code>js/tokens.js</code>.</p>
+      </div>
+      <button class="ds-btn secondary md" data-dl="ds_tokens.json"><i class="ti ti-download"></i> Shared JSON</button>
+    </div>
+    <div class="export-target-grid">
+      ${GlobalDSExports.targets.map(target => {
+        const content = EXPORT_TARGET_CONTENT[target.id];
+        return `<article class="export-target-card">
+          <div class="export-target-icon"><i class="ti ${esc(content.icon)}"></i></div>
+          <div>
+            <span class="export-target-language">${esc(target.language)}</span>
+            <h3>${esc(content.title)}</h3>
+            <p>${esc(content.description)}</p>
+          </div>
+          <ul aria-label="${esc(content.title)} export files">
+            ${target.files.map(filename => '<li>' + esc(filename) + '</li>').join('')}
+          </ul>
+        </article>`;
+      }).join('')}
+    </div>
+  </section>`;
+
+  for (const target of GlobalDSExports.targets) {
+    const content = EXPORT_TARGET_CONTENT[target.id];
+    html += `<section class="section export-target-section" id="export-${esc(target.id)}">
+      <div class="export-target-heading">
+        <div class="export-target-icon"><i class="ti ${esc(content.icon)}"></i></div>
+        <div>
+          <span class="export-target-language">${esc(target.language)} export</span>
+          <h2 class="section-title">${esc(content.title)}</h2>
+          <p class="section-note">${esc(content.description)}</p>
+        </div>
+      </div>
+      <div class="export-setup-grid">
+        <div>
+          <h3>${esc(content.installLabel)}</h3>
+          ${codeblock(content.install, content.installLanguage)}
+        </div>
+        <div>
+          <h3>Use the generated theme</h3>
+          ${codeblock(content.usage, content.usageLanguage)}
+        </div>
+      </div>
+      <div class="export-file-list">
+        ${target.files.map(filename => renderExportFile(filename, target.language.toLowerCase())).join('')}
+      </div>
+    </section>`;
+  }
+
+  html += sectionHtml({
+    title:'Platform-neutral source',
+    note:'Use JSON for token pipelines, design-tool plugins and validation across platforms.',
+    html:codeblock(GlobalDSExports.generate('ds_tokens.json'), 'json', { file:'ds_tokens.json' }),
+    guidance:{
+      label:'Source-of-truth rule',
+      html:'<p class="guidance-note">Edit tokens in <code>js/tokens.js</code>, validate the generated outputs, then download the platform files. Generated Kotlin, Dart and Swift files should not be edited independently.</p>'
+    }
+  });
+
+  return html;
+}
+
 /* ---------- router & shell ---------- */
 
 const mainEl = document.getElementById('main');
@@ -903,7 +1066,8 @@ function buildNav(filter){
 }
 
 function markActive(){
-  const h = location.hash || '#/home';
+  const currentHash = location.hash || '#/home';
+  const h = currentHash === '#/flutter' ? '#/developers' : currentHash;
   navEl.querySelectorAll('.nav-item').forEach(a => {
     a.classList.toggle('active', a.getAttribute('data-route') === h);
   });
@@ -922,7 +1086,7 @@ function route(){
   else if (parts[0] === 'c') html = renderComponent(parts[1]);
   else if (parts[0] === 'patterns') html = renderPatternsPage();
   else if (parts[0] === 'sandbox') html = renderSandboxRoute();
-  else if (parts[0] === 'flutter') html = renderFlutter();
+  else if (parts[0] === 'developers' || parts[0] === 'flutter') html = renderDevelopers();
   else html = renderHome();
   mainEl.innerHTML = '<div class="page">' + html + appFooter() + '</div>';
   mainEl.scrollTop = 0;
@@ -945,10 +1109,9 @@ document.addEventListener('click', e => {
   if (copyEl) { copyText(copyEl.getAttribute('data-copy-text'), copyEl); return; }
   const dl = e.target.closest('[data-dl]');
   if (dl) {
-    const f = dl.getAttribute('data-dl');
-    if (f === 'ds_tokens.dart') downloadFile(f, dartTokens());
-    else if (f === 'ds_theme.dart') downloadFile(f, dartTheme());
-    else if (f === 'ds_tokens.json') downloadFile(f, tokensJson(), 'application/json');
+    const filename = dl.getAttribute('data-dl');
+    const mime = filename.endsWith('.json') ? 'application/json' : 'text/plain';
+    downloadFile(filename, GlobalDSExports.generate(filename), mime);
     return;
   }
   const go = e.target.closest('[data-go]');
