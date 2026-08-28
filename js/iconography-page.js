@@ -6,11 +6,13 @@ const ICON_CATEGORIES = [
   { id:'general', label:'General', count:GlobalDSIconography.counts.general.total },
   { id:'product', label:'Product specific', count:GlobalDSIconography.counts.product.total },
   { id:'special', label:'Special', count:GlobalDSIconography.counts.special.total },
-  { id:'sideNav', label:'Side nav', count:GlobalDSIconography.counts.sideNav.total }
+  { id:'sideNav', label:'Side navigation', count:GlobalDSIconography.counts.sideNav.total }
 ];
 
+const ICON_CATEGORY_ORDER = ['general', 'product', 'special', 'sideNav'];
+
 function iconCategoryLabel(category){
-  return ({ general:'General', product:'Product specific', special:'Special', sideNav:'Side nav' })[category] || category;
+  return ({ general:'General', product:'Product specific', special:'Special', sideNav:'Side navigation' })[category] || category;
 }
 
 function filteredIcons(){
@@ -24,35 +26,39 @@ function filteredIcons(){
 }
 
 function iconCardHtml(icon){
-  return `<article class="icon-card">
+  return `<article class="icon-card" aria-label="${esc(icon.name)}, ${esc(icon.variant)} icon">
+    <button class="icon-copy" type="button" data-copy-text="${esc(icon.asset)}" aria-label="Copy ${esc(icon.name)} ${esc(icon.variant)} asset path" title="Copy asset path">
+      <span class="icon-copy-state" role="status" aria-live="polite"><i class="ti ti-copy" aria-hidden="true"></i></span>
+    </button>
     <div class="icon-preview" aria-hidden="true">
       <img src="${esc(icon.asset)}" alt="" loading="lazy">
     </div>
-    <div class="icon-card-body">
-      <div class="icon-tags">
-        <span>${esc(iconCategoryLabel(icon.category))}</span>
-        <span>${esc(icon.variant)}</span>
-        <span>${icon.width}px</span>
-      </div>
-      <h3>${esc(icon.name)}</h3>
-      <code>${esc(icon.id)}</code>
-    </div>
-    <div class="icon-card-actions">
-      <button class="icon-copy" type="button" data-copy-text="${esc(icon.asset)}" aria-label="Copy ${esc(icon.name)} asset path">
-        <span>Copy path</span><span class="icon-copy-state" role="status" aria-live="polite"><i class="ti ti-copy" aria-hidden="true"></i></span>
-      </button>
-      <a href="${esc(icon.asset)}" download aria-label="Download ${esc(icon.name)} ${esc(icon.format.toUpperCase())}">
-        ${esc(icon.format.toUpperCase())}<i class="ti ti-download" aria-hidden="true"></i>
-      </a>
-    </div>
+    <span class="icon-card-name">${esc(icon.name)}</span>
   </article>`;
+}
+
+function iconGroupHtml(category, icons){
+  const headingId = `icon-group-${category}`;
+  return `<section class="icon-group" data-icon-group="${category}" aria-labelledby="${headingId}">
+    <header class="icon-group-head">
+      <h3 id="${headingId}">${esc(iconCategoryLabel(category))}</h3>
+      <span>${icons.length} ${icons.length === 1 ? 'icon' : 'icons'}</span>
+    </header>
+    <div class="icon-catalog-grid">${icons.map(iconCardHtml).join('')}</div>
+  </section>`;
 }
 
 function iconCatalogHtml(icons = filteredIcons()){
   if (!icons.length) {
     return '<div class="icon-empty" role="status"><i class="ti ti-search-off" aria-hidden="true"></i><h3>No icons found</h3><p>Try a different name or category.</p></div>';
   }
-  return icons.map(iconCardHtml).join('');
+  if (iconCategory !== 'all') {
+    return `<div class="icon-catalog-grid">${icons.map(iconCardHtml).join('')}</div>`;
+  }
+  return ICON_CATEGORY_ORDER.map(category => {
+    const groupIcons = icons.filter(icon => icon.category === category);
+    return groupIcons.length ? iconGroupHtml(category, groupIcons) : '';
+  }).join('');
 }
 
 function updateIconCatalog(){
@@ -86,12 +92,12 @@ function renderIcons(){
       <div><dt>144</dt><dd>General</dd></div>
       <div><dt>70</dt><dd>Product</dd></div>
       <div><dt>51</dt><dd>Special</dd></div>
-      <div><dt>18</dt><dd>Side nav</dd></div>
+      <div><dt>18</dt><dd>Side navigation</dd></div>
     </dl>
   </section>`;
   html += `<section class="section icon-library-section">
     <div class="icon-library-head">
-      <div><h2 class="section-title">Library</h2><p class="section-note">Search by source name or Figma ID. Copy a repository path or download the exact committed asset.</p></div>
+      <div><h2 class="section-title">Library</h2><p class="section-note">Search by source name or Figma ID, then copy the exact repository asset path.</p></div>
       <span id="iconResultCount" aria-live="polite">${count} ${count === 1 ? 'icon' : 'icons'}</span>
     </div>
     <div class="icon-toolbar">
@@ -100,11 +106,12 @@ function renderIcons(){
         ${ICON_CATEGORIES.map(category => `<button type="button" data-icon-category="${category.id}" aria-pressed="${category.id === iconCategory}" class="${category.id === iconCategory ? 'active' : ''}">${esc(category.label)} <span>${category.count}</span></button>`).join('')}
       </div>
     </div>
-    <div class="icon-catalog-grid" id="iconCatalog">${iconCatalogHtml()}</div>
+    <div class="icon-catalog" id="iconCatalog">${iconCatalogHtml()}</div>
     ${guidanceHtml('Usage and implementation guidance', `
       ${guidanceList([
         { term:'Use the source size', token:'16 / 20 / 22 / 24px', text:'Keep each icon on its audited frame. Do not stretch a 16px side-navigation glyph into a 24px general icon.' },
         { term:'Match the variant', token:'line / filled / special', text:'Use line for lower emphasis, filled for active or stronger emphasis, and special only in the product moments it was designed for.' },
+        { term:'Preserve the source format', token:'251 SVG / 32 PNG', text:'SVG covers clean vector nodes. PNG preserves composite or raster-backed Figma nodes without inventing a traced vector.' },
         { term:'Name the action', token:'accessible name', text:'Decorative icons use empty alt text. Icon-only controls require an explicit accessible label that describes the action.' },
         { term:'Keep chrome separate', token:'portal UI only', text:'Tabler remains a documentation-shell dependency; it is not the GlobalDS product iconography source.' }
       ])}

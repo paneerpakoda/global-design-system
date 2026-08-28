@@ -14,6 +14,21 @@ function loadIconography(){
   return vm.runInContext('GlobalDSIconography', context);
 }
 
+function loadIconographyPage(){
+  const context = vm.createContext({
+    console,
+    document: { addEventListener() {} },
+    esc: value => String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;'),
+  });
+  vm.runInContext(read('js/iconography.js'), context, { filename: 'js/iconography.js' });
+  vm.runInContext(read('js/iconography-page.js'), context, { filename: 'js/iconography-page.js' });
+  return context;
+}
+
 test('publishes the complete Figma iconography inventory as a governed contract', () => {
   const iconography = loadIconography();
 
@@ -80,4 +95,36 @@ test('presents the Figma library as a searchable, filterable iconography foundat
   assert.match(page, /data-icon-category/);
   assert.match(page, /283 exact Figma icons/);
   assert.doesNotMatch(page, /system uses Tabler outline icons/);
+});
+
+test('groups the All view under ordered category headers while keeping filtered views flat', () => {
+  const context = loadIconographyPage();
+  const allHtml = vm.runInContext('iconCatalogHtml(filteredIcons())', context);
+  const groupIds = ['general', 'product', 'special', 'sideNav'];
+  const positions = groupIds.map(id => allHtml.indexOf(`data-icon-group="${id}"`));
+
+  positions.forEach(position => assert.ok(position >= 0));
+  assert.deepEqual([...positions].sort((a, b) => a - b), positions);
+  assert.match(allHtml, /<h3[^>]*>General<\/h3>/);
+  assert.match(allHtml, /<h3[^>]*>Product specific<\/h3>/);
+  assert.match(allHtml, /<h3[^>]*>Special<\/h3>/);
+  assert.match(allHtml, /<h3[^>]*>Side navigation<\/h3>/);
+
+  const generalHtml = vm.runInContext("iconCategory = 'general'; iconCatalogHtml(filteredIcons())", context);
+  assert.doesNotMatch(generalHtml, /data-icon-group=/);
+  assert.equal((generalHtml.match(/class="icon-card"/g) || []).length, 144);
+});
+
+test('keeps icon cards minimal with one copy action anchored to the preview corner', () => {
+  const context = loadIconographyPage();
+  const cardHtml = vm.runInContext('iconCardHtml(GlobalDSIconography.icons[0])', context);
+  const css = read('css/iconography.css');
+
+  assert.match(cardHtml, /class="icon-copy"/);
+  assert.match(cardHtml, /aria-label="Copy Curated filled asset path"/);
+  assert.match(cardHtml, /class="icon-preview"/);
+  assert.match(cardHtml, /class="icon-card-name"/);
+  assert.doesNotMatch(cardHtml, /icon-tags|icon-card-actions|<code|download/);
+  assert.match(css, /\.icon-card\{[^}]*position:relative/);
+  assert.match(css, /\.icon-copy\{[^}]*position:absolute;[^}]*top:[^;]+;right:/);
 });
