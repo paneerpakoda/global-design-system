@@ -883,7 +883,7 @@ function renderRibList(options = {}){
     ${items.map((item, index) => `<li class="rib-list__item${variant.key === 'container' ? ' is-container' : ''}">
       ${variant.key === 'numbered' ? `<span class="rib-list__number">${index + 1}</span>` : ''}
       ${['icon-circle','line-icon','icon-square','no-headline-large','no-headline-small'].includes(variant.key) ? `<span class="rib-list__icon ${variant.key === 'icon-square' ? 'is-square' : ''}" style="--rib-list-icon:url(${variant.key === 'line-icon' ? RIB_LIST_ASSETS.card : RIB_LIST_ASSETS.bank})" aria-hidden="true"></span>` : ''}
-      ${variant.key === 'checklist' ? `<label class="rib-list__check"><input type="checkbox"${item.checked ? ' checked' : ''}><span>${esc(item.title)}</span></label>` : `<span class="rib-list__copy">${variant.key.startsWith('no-headline') ? '' : `<span class="rib-list__title">${esc(item.title)}</span>`}<span class="rib-list__subtitle">${esc(variant.key.startsWith('no-headline') ? `${item.title} ${item.subtitle || ''}` : item.subtitle || '')}</span></span>`}
+      ${variant.key === 'checklist' ? `<label class="rib-list__check"><input type="checkbox"${item.checked ? ' checked' : ''}><span>${esc(item.title)}</span></label>` : `<span class="rib-list__copy">${variant.key.startsWith('no-headline') ? `<span class="rib-list__no-headline"><strong>${esc(item.title)}</strong>${item.subtitle ? ` <span>${esc(item.subtitle)}</span>` : ''}</span>` : `<span class="rib-list__title">${esc(item.title)}</span><span class="rib-list__subtitle">${esc(item.subtitle || '')}</span>`}</span>`}
       ${isTwo || variant.key === 'headline' ? `<span class="rib-list__subject">${esc(item.subject || '')}</span>` : ''}
     </li>`).join('')}
   </ul>`;

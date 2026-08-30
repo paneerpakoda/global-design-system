@@ -51,11 +51,15 @@ class RibList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = variant == RibListVariant.checklist
-        ? 516.0
-        : _isTwoColumn
-        ? 356.0
-        : 308.0;
+    final width = switch (variant) {
+      RibListVariant.checklist => 516.0,
+      RibListVariant.twoColumn || RibListVariant.container => 356.0,
+      RibListVariant.iconCircle ||
+      RibListVariant.lineIcon ||
+      RibListVariant.iconSquare => 288.0,
+      RibListVariant.noHeadlineLarge => 276.0,
+      _ => 308.0,
+    };
     return Semantics(
       label: semanticLabel,
       container: true,
@@ -121,8 +125,8 @@ class RibList extends StatelessWidget {
           ],
           if (_hasIcon) ...[
             Container(
-              width: variant == RibListVariant.iconSquare ? 32 : 36,
-              height: variant == RibListVariant.iconSquare ? 32 : 36,
+              width: _iconDimension,
+              height: _iconDimension,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: DsColors.surfaceCoolGrey100,
@@ -131,14 +135,14 @@ class RibList extends StatelessWidget {
                 ),
               ),
               child: IconTheme(
-                data: const IconThemeData(
+                data: IconThemeData(
                   color: DsColors.primaryOrange100,
-                  size: 16,
+                  size: _iconGlyphDimension,
                 ),
                 child: item.icon ?? const Icon(Icons.account_balance),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: variant == RibListVariant.iconSquare ? 8 : 12),
           ],
           if (variant == RibListVariant.checklist) ...[
             Checkbox(
@@ -175,12 +179,46 @@ class RibList extends StatelessWidget {
                         letterSpacing: .25,
                       ),
                     ),
-                  if (item.subtitle != null || _noHeadline) ...[
+                  if (_noHeadline)
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: item.title,
+                            style: TextStyle(
+                              color: variant == RibListVariant.noHeadlineSmall
+                                  ? DsColors.neutralGrey150
+                                  : DsColors.neutralGrey140,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (item.subtitle != null)
+                            TextSpan(
+                              text: ' ${item.subtitle}',
+                              style: TextStyle(
+                                color: DsColors.neutralGrey120,
+                                fontWeight:
+                                    variant == RibListVariant.noHeadlineSmall
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                              ),
+                            ),
+                        ],
+                      ),
+                      style: TextStyle(
+                        fontSize: variant == RibListVariant.noHeadlineSmall
+                            ? 11
+                            : 12,
+                        height: variant == RibListVariant.noHeadlineSmall
+                            ? 16 / 11
+                            : 20 / 12,
+                        letterSpacing: .25,
+                      ),
+                    )
+                  else if (item.subtitle != null) ...[
                     if (!_noHeadline) const SizedBox(height: 4),
                     Text(
-                      _noHeadline
-                          ? '${item.title} ${item.subtitle ?? ''}'
-                          : item.subtitle!,
+                      item.subtitle!,
                       style: const TextStyle(
                         color: DsColors.neutralGrey120,
                         fontSize: 11,
@@ -231,6 +269,12 @@ class RibList extends StatelessWidget {
     RibListVariant.noHeadlineLarge,
     RibListVariant.noHeadlineSmall,
   ].contains(variant);
+  double get _iconDimension => switch (variant) {
+    RibListVariant.iconSquare || RibListVariant.noHeadlineSmall => 32,
+    _ => 36,
+  };
+  double get _iconGlyphDimension =>
+      variant == RibListVariant.lineIcon ? 24 : 16;
   bool get _noHeadline => const [
     RibListVariant.noHeadlineLarge,
     RibListVariant.noHeadlineSmall,

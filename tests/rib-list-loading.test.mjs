@@ -31,6 +31,11 @@ test('matches List single and two-column foundation geometry', () => {
   assert.match(css, /\.rib-list\{[^}]*width:308px[^}]*font-family:var\(--font\)/);
   assert.match(css, /\.rib-list__item\{[^}]*gap:12px[^}]*padding:12px 0[^}]*border-bottom:1px solid var\(--surface-cool-grey-110\)/);
   assert.match(css, /\.rib-list__icon\{[^}]*width:36px[^}]*height:36px[^}]*background:var\(--surface-cool-grey-100\)/);
+  assert.match(css, /\.rib-list--icon-circle,\.rib-list--line-icon,\.rib-list--icon-square\{[^}]*width:288px/);
+  assert.match(css, /\.rib-list--line-icon \.rib-list__icon::after\{[^}]*inset:6px/);
+  assert.match(css, /\.rib-list--no-headline-large\{[^}]*width:276px/);
+  assert.match(css, /\.rib-list--no-headline-small \.rib-list__icon\{[^}]*width:32px[^}]*height:32px/);
+  assert.match(css, /\.rib-list__no-headline strong\{[^}]*font-weight:600[^}]*color:var\(--neutral-grey-140\)/);
   assert.match(css, /\.rib-list--two-column\{[^}]*width:356px/);
   assert.match(css, /\.rib-list--checklist\{[^}]*width:516px/);
   assert.match(css, /\.rib-list__title\{[^}]*font-size:12px[^}]*line-height:16px[^}]*font-weight:600/);
@@ -56,6 +61,8 @@ test('provides List and Loading Flutter components backed by foundations', () =>
   assert.match(list, /enum RibListVariant/);
   assert.match(list, /DsColors\.surfaceCoolGrey110/);
   assert.match(list, /DsColors\.primaryOrange100/);
+  assert.match(list, /RibListVariant\.lineIcon \? 24 : 16/);
+  assert.match(list, /RibListVariant\.noHeadlineLarge => 276\.0/);
   assert.match(loading, /class RibLoadingIndicator extends StatelessWidget/);
   assert.match(loading, /CircularProgressIndicator/);
   assert.match(loading, /DsColors\.primaryOrange100/);
