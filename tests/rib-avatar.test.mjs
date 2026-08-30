@@ -65,10 +65,10 @@ test('publishes Avatar in the catalogue and playground', () => {
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
 
-  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','cards','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(components, /sandbox: 'avatar'/);
   assert.match(sandbox, /avatar:\s*\{/);
-  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','cards','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(sandbox, /RibAvatarGroup\(/);
 });
 

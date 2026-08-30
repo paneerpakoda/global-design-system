@@ -144,6 +144,13 @@ function renderRibCardScenario(p){
   </section>`;
 }
 
+function renderRibCheckboxScenario(p){
+  return `<section class="rib-checkbox-scenario" aria-label="Consent example">
+    <span>Preferences</span><h2>Communication choices</h2><p>Choose whether you want to receive product updates and relevant offers.</p>
+    <div class="rib-checkbox-scenario__option">${renderRibCheckbox({ size:p.size, state:p.state, label:p.label })}</div>
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -222,6 +229,27 @@ const SANDBOX = {
   variant: RibCardVariant.${p.variant},
   title: '${title}',
   onPrimaryAction: () => handleCardAction(),
+)`;
+    }
+  },
+
+  checkbox: {
+    label:'RIB Checkbox',
+    controls:[
+      { key:'label', label:'Label', type:'text', value:'Email me product updates' },
+      { key:'size', label:'Size', type:'select', options:['small','large'], value:'large' },
+      { key:'state', label:'State', type:'select', options:['default','hover','active'], value:'active' }
+    ],
+    render(p){
+      return renderRibCheckboxScenario(p);
+    },
+    dart(p){
+      const label = String(p.label || 'Checkbox').replace(/'/g, "\\'");
+      return `RibCheckbox(
+  value: ${p.state === 'active'},
+  label: '${label}',
+  size: RibCheckboxSize.${p.size},
+  onChanged: (value) => setState(() => checked = value),
 )`;
     }
   },
@@ -506,7 +534,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

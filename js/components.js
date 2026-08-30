@@ -660,7 +660,40 @@ function renderRibCardShowcase(){
   <div class="rib-card-showcase">${RIB_CARD_VARIANTS.map(variant => `<article class="rib-card-showcase__card"><header><div><span>Card</span><h3>${variant.label}</h3></div><code>${variant.width} × ${variant.height}</code></header><div class="rib-card-showcase__stage">${renderRibCard({ variant:variant.key })}</div></article>`).join('')}</div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_CHECKBOX_ASSETS = Object.freeze({
+  checked: '../assets/icons/general/filled/check-box-checked--filled--237-446.svg',
+  unchecked: '../assets/icons/general/filled/checkbox-unchecked--filled--237-445.svg'
+});
+
+const RIB_CHECKBOX_SIZES = Object.freeze([
+  { key:'small', label:'Small' },
+  { key:'large', label:'Large' }
+]);
+
+const RIB_CHECKBOX_STATES = Object.freeze([
+  { key:'default', label:'Default' },
+  { key:'hover', label:'Hover' },
+  { key:'active', label:'Active' }
+]);
+
+function renderRibCheckbox(options = {}){
+  const size = RIB_CHECKBOX_SIZES.find(item => item.key === options.size) || RIB_CHECKBOX_SIZES[0];
+  const state = RIB_CHECKBOX_STATES.find(item => item.key === options.state) || RIB_CHECKBOX_STATES[0];
+  const label = String(options.label || 'Checkbox');
+  const checked = options.checked ?? state.key === 'active';
+  return `<label class="rib-checkbox rib-checkbox--${size.key}${state.key === 'hover' ? ' is-hover' : ''}">
+    <input class="rib-checkbox__input" type="checkbox"${checked ? ' checked' : ''}>
+    <span class="rib-checkbox__control" style="--rib-checkbox-unchecked:url(${RIB_CHECKBOX_ASSETS.unchecked});--rib-checkbox-checked:url(${RIB_CHECKBOX_ASSETS.checked})" aria-hidden="true"></span>
+    <span class="rib-checkbox__label">${esc(label)}</span>
+  </label>`;
+}
+
+function renderRibCheckboxShowcase(){
+  return `<div class="rib-checkbox-source"><span>RIB only</span><div class="rib-checkbox-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=68-1276" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-checkbox-try" href="#/sandbox/checkbox"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-checkbox-showcase">${RIB_CHECKBOX_SIZES.map(size => `<article class="rib-checkbox-showcase__card"><header><div><span>Checkbox</span><h3>${size.label}</h3></div><code>20px control</code></header><div class="rib-checkbox-showcase__states">${RIB_CHECKBOX_STATES.map(state => `<div><b>${state.label}</b>${renderRibCheckbox({ size:size.key, state:state.key, label:'Checkbox' })}</div>`).join('')}</div></article>`).join('')}</div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -756,6 +789,28 @@ const COMPONENTS = {
   onPrimaryAction: downloadStatement,
 )`,
     sandbox: 'cards'
+  },
+
+  checkbox: {
+    title: 'Checkbox', group: 'Inputs', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    desc: 'The RIB Checkbox is a native binary input with 20px controls, small and large labels, and explicit default, hover, and active states.',
+    sections: [
+      { title:'RIB source component', note:'Both Figma sizes use the exact checked and unchecked glyphs while preserving native input semantics and full-row hit areas.', html:renderRibCheckboxShowcase() },
+      { title:'Foundation mapping', note:'Unchecked and resting labels use Grey120. Hover strengthens the label to Grey140; active controls use Orange100.', html:`<div class="button-foundation-grid"><article><span>Active</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Default text</span><b>Grey 120</b><code>#64696D</code></article><article><span>Hover text</span><b>Grey 140</b><code>#333638</code></article><article><span>Focus</span><b>Focus Orange</b><code>#FFE8DD</code></article></div>` }
+    ],
+    props: [
+      ['value','bool','required','Current checked state.'],
+      ['label','String','required','Visible checkbox label.'],
+      ['size','RibCheckboxSize','small','small · large'],
+      ['onChanged','ValueChanged<bool>?','required','A null callback disables interaction.']
+    ],
+    flutter:`RibCheckbox(
+  value: preferences.emailAlerts,
+  label: 'Email alerts',
+  size: RibCheckboxSize.large,
+  onChanged: preferences.setEmailAlerts,
+)`,
+    sandbox: 'checkbox'
   },
 
   buttongroups: {
@@ -978,38 +1033,6 @@ const COMPONENTS = {
   value: settings.transactionAlerts,
   label: 'Transaction alerts',
   onChanged: (v) => settings.setTransactionAlerts(v),
-)`
-  },
-
-  checkbox: {
-    title: 'Checkbox', group: 'Inputs', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Checkboxes capture independent yes/no decisions. The whole row should be tappable, labels stay visible, and disabled options remain readable.',
-    sections: [
-      { title: 'States',
-        html: `<div class="canvas col">
-          <span class="ds-ctl-row"><span class="ds-check"></span> Unchecked</span>
-          <span class="ds-ctl-row"><span class="ds-check checked"></span> Checked</span>
-          <span class="ds-ctl-row"><span class="ds-check mixed"></span> Indeterminate</span>
-          <span class="ds-ctl-row"><span class="ds-check disabled"></span> Disabled</span>
-        </div>` },
-      { title: 'Rows',
-        html: `<div class="canvas col">
-          <label class="ds-option-row"><span class="ds-check checked"></span><span><b>Email alerts</b><small>Receive transfer and login alerts.</small></span></label>
-          <label class="ds-option-row"><span class="ds-check"></span><span><b>Marketing consent</b><small>Product updates and offers from ICICI Bank.</small></span></label>
-        </div>` }
-    ],
-    props: [
-      ['checked','bool','required','Current value'],
-      ['indeterminate','bool','false','Shows a mixed state for parent rows'],
-      ['label','String?','null','Visible row label'],
-      ['helper','String?','null','Optional supporting text'],
-      ['onChanged','ValueChanged<bool>?','required','null renders disabled']
-    ],
-    flutter: `DsCheckbox(
-  checked: preferences.emailAlerts,
-  label: 'Email alerts',
-  helper: 'Receive transfer and login alerts.',
-  onChanged: preferences.setEmailAlerts,
 )`
   },
 
