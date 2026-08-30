@@ -160,6 +160,19 @@ function renderRibChipScenario(p){
   </section>`;
 }
 
+function renderRibDropdownScenario(p){
+  const items = String(p.items || '').split(',').map(label => ({ label:label.trim(), subheading:`Details for ${label.trim()}` })).filter(item => item.label);
+  return `<section class="rib-dropdown-scenario" aria-label="Account selection example"><div><span>Transfer setup</span><h2>Choose an account</h2><p>Dropdown options preserve the exact compact menu states from RIB.</p></div>${renderRibDropdown({ state:p.state, subheading:p.subheading, scroll:p.scroll, items, ariaLabel:'Accounts' })}</section>`;
+}
+
+function renderRibEmptyStateScenario(p){
+  return `<section class="rib-empty-scenario" aria-label="Policy search result">${renderRibEmptyState({ title:p.title, subline:p.subline, style:p.heading ? 'With heading' : 'Without heading', state:p.hover ? 'Hover' : 'Default', cta:p.cta, actionLabel:p.action })}</section>`;
+}
+
+function renderRibInfoScenario(p){
+  return `<section class="rib-info-scenario" aria-label="Transfer status message">${renderRibInfo({ tone:p.tone, message:p.message, centre:p.centre, stroke:p.stroke, icon:p.icon })}</section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -287,6 +300,52 @@ const SANDBOX = {
       if(p.icon !== 'none') lines.push(`leadingIcon: const Icon(Icons.${p.icon})`);
       lines.push('onPressed: () => toggleFilter()');
       return 'RibChip(\n  ' + lines.join(',\n  ') + ',\n)';
+    }
+  },
+
+  dropdown: {
+    label:'RIB Dropdown',
+    controls:[
+      { key:'state', label:'State', type:'select', options:['Expanded','Expanded Hover','Pressed','Selected Dropdown','Selected dropdown hover'], value:'Selected Dropdown' },
+      { key:'items', label:'Options', type:'text', value:'Savings account,Current account,Credit card' },
+      { key:'subheading', label:'Subheadings', type:'toggle', value:true },
+      { key:'scroll', label:'Scrollable', type:'toggle', value:true }
+    ],
+    render:p => renderRibDropdownScenario(p),
+    dart(p){
+      return `RibDropdown<String>(\n  value: accountType,\n  items: accountTypes,\n  showSubheadings: ${p.subheading},\n  onChanged: (value) => setState(() => accountType = value),\n)`;
+    }
+  },
+
+  emptystate: {
+    label:'RIB Empty state',
+    controls:[
+      { key:'title', label:'Title', type:'text', value:'No transactions found' },
+      { key:'subline', label:'Subline', type:'text', value:'You have no active term life insurances' },
+      { key:'action', label:'Action label', type:'text', value:'Add insurance' },
+      { key:'heading', label:'Show heading', type:'toggle', value:true },
+      { key:'hover', label:'Hover', type:'toggle', value:false },
+      { key:'cta', label:'Show CTA', type:'toggle', value:true }
+    ],
+    render:p => renderRibEmptyStateScenario(p),
+    dart(p){
+      return `RibEmptyState(\n  title: '${p.title.replace(/'/g, "\\'")}',\n  subline: '${p.subline.replace(/'/g, "\\'")}',\n  showHeading: ${p.heading},\n  onAction: ${p.cta ? 'addInsurance' : 'null'},\n)`;
+    }
+  },
+
+  info: {
+    label:'RIB Info',
+    controls:[
+      { key:'tone', label:'Tone', type:'select', options:['Default','Success','Error','Warning'], value:'Default' },
+      { key:'message', label:'Message', type:'text', value:'Info : Pending user action' },
+      { key:'centre', label:'Centre', type:'toggle', value:false },
+      { key:'stroke', label:'Stroke', type:'toggle', value:true },
+      { key:'icon', label:'Icon', type:'toggle', value:true }
+    ],
+    render:p => renderRibInfoScenario(p),
+    dart(p){
+      const tone = p.tone === 'Default' ? 'defaultTone' : p.tone.toLowerCase();
+      return `RibInfo(\n  message: '${p.message.replace(/'/g, "\\'")}',\n  tone: RibInfoTone.${tone},\n  centre: ${p.centre},\n  stroke: ${p.stroke},\n  showIcon: ${p.icon},\n)`;
     }
   },
 
@@ -570,7 +629,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

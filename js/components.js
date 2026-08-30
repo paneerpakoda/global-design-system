@@ -741,7 +741,67 @@ function renderRibChipShowcase(){
   <div class="rib-chip-showcase">${specimens.map(specimen => `<article class="rib-chip-showcase__card${specimen.variant === 'label-translucent' ? ' is-brand' : ''}"><header><div><span>${RIB_CHIP_VARIANTS.find(item => item.key === specimen.variant).label}</span><h3>${specimen.label}</h3></div></header><div class="rib-chip-showcase__states">${RIB_CHIP_STATES.map(state => `<div><b>${state.label}</b>${renderRibChip({ ...specimen, state:state.key, label:specimen.chipLabel })}</div>`).join('')}</div></article>`).join('')}</div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_DROPDOWN_STATES = Object.freeze(['Expanded','Expanded Hover','Pressed','Selected Dropdown','Selected dropdown hover']);
+
+function renderRibDropdown(options = {}){
+  const state = RIB_DROPDOWN_STATES.includes(options.state) ? options.state : RIB_DROPDOWN_STATES[0];
+  const selectedIndex = Number.isInteger(options.selectedIndex) ? options.selectedIndex : state.startsWith('Selected') ? 1 : -1;
+  const items = Array.isArray(options.items) && options.items.length ? options.items : [
+    { label:'Item 1', subheading:'Subheading 1' },
+    { label:'Item 2', subheading:'Subheading 2' },
+    { label:'Item 3', subheading:'Subheading 3' },
+    { label:'Item 4', subheading:'Subheading 4' },
+    { label:'Item 5', subheading:'Subheading 5' }
+  ];
+  const hasSubheading = options.subheading === true;
+  const stateClass = state === 'Expanded Hover' ? 'is-hover' : state === 'Pressed' ? 'is-pressed' : state === 'Selected dropdown hover' ? 'is-selected-hover' : '';
+  return `<div class="rib-dropdown-menu${options.scroll === false ? '' : ' has-scroll'}" role="listbox" aria-label="${esc(options.ariaLabel || 'Dropdown options')}" data-node-id="3869-5784">
+    ${items.map((item, index) => `<button type="button" class="rib-dropdown-option${index === 1 && stateClass ? ` ${stateClass}` : ''}${index === selectedIndex ? ' is-selected' : ''}" role="option" aria-selected="${index === selectedIndex ? 'true' : 'false'}"><span>${esc(item.label)}</span>${hasSubheading ? `<small>${esc(item.subheading || '')}</small>` : ''}</button>`).join('')}
+  </div>`;
+}
+
+function renderRibDropdownShowcase(){
+  return `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3869-5784" target="_blank" rel="noreferrer">Open Dropdown source</a></p><div class="rib-dropdown-showcase">${RIB_DROPDOWN_STATES.map(state => `<article><header><b>${state}</b><code>258px</code></header>${renderRibDropdown({ state, subheading:false })}</article>`).join('')}<article class="is-wide"><header><b>Subheading · Scroll</b><code>258px</code></header>${renderRibDropdown({ state:'Selected dropdown hover', subheading:true })}</article></div>`;
+}
+
+const RIB_EMPTY_STATE_ASSETS = Object.freeze({
+  empty:'../assets/rib/empty-state/empty.svg',
+  add:'../assets/rib/empty-state/add.svg'
+});
+
+function renderRibEmptyState(options = {}){
+  const style = options.style === 'With heading' ? 'With heading' : 'Without heading';
+  const title = String(options.title || 'No transactions found');
+  const subline = String(options.subline || 'You have no active term life insurances');
+  const hover = options.state === 'Hover';
+  return `<section class="rib-empty-state${style === 'With heading' ? ' has-heading' : ''}${hover ? ' is-hover' : ''}" aria-label="${esc(title)}" data-node-id="56-237">
+    <img class="rib-empty-state__icon" src="${RIB_EMPTY_STATE_ASSETS.empty}" alt="">
+    ${style === 'With heading' ? `<h3>${esc(title)}</h3>` : ''}
+    <p>${esc(subline)}</p>
+    ${options.cta === false ? '' : `<button type="button" class="rib-empty-state__action"><img src="${RIB_EMPTY_STATE_ASSETS.add}" alt="">${esc(options.actionLabel || 'Button')}</button>`}
+  </section>`;
+}
+
+const RIB_INFO_TONES = Object.freeze(['Default','Success','Error','Warning']);
+const RIB_INFO_ASSETS = Object.freeze({
+  Default:'../assets/rib/info/default.svg',
+  Success:'../assets/rib/info/success.svg',
+  Error:'../assets/rib/info/error.svg',
+  Warning:'../assets/rib/info/warning.svg'
+});
+
+function renderRibInfo(options = {}){
+  const tone = RIB_INFO_TONES.includes(options.tone) ? options.tone : 'Default';
+  const messages = { Default:'Info : Pending user action', Success:'Success : The action is complete', Error:'Error : Internal error', Warning:'Warning : This is a warning' };
+  const message = String(options.message || messages[tone]);
+  return `<div class="rib-info rib-info--${tone.toLowerCase()}${options.centre ? ' is-centred' : ''}${options.stroke ? ' has-stroke' : ''}" role="status" data-node-id="348-9040">${options.icon === false ? '' : `<img src="${RIB_INFO_ASSETS[tone]}" alt="">`}<span>${esc(message)}</span></div>`;
+}
+
+function renderRibInfoShowcase(){
+  return `<div class="rib-info-showcase">${RIB_INFO_TONES.map(tone => `<article><header><b>${tone}</b><code>Fill · Stroke · Centre</code></header>${renderRibInfo({ tone })}${renderRibInfo({ tone, stroke:true })}${renderRibInfo({ tone, centre:true })}</article>`).join('')}</div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -951,59 +1011,24 @@ const COMPONENTS = {
   },
 
   dropdown: {
-    title: 'Dropdown', group: 'Inputs', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Dropdowns select one value from a short, known list. Keep the field 356px wide on web forms where possible, reuse the input field shell, and place menu options directly below the trigger with the same radius and border treatment.',
+    title: 'Dropdown', group: 'Inputs', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    sandbox: 'dropdown',
+    desc: 'The RIB Dropdown area presents a compact option list with optional subheadings, scroll treatment, and explicit hover, pressed, selected, and selected-hover states.',
     sections: [
-      { title: 'States',
-        html: `<div class="canvas grid2">
-          <div class="ds-field">
-            <label>Country</label>
-            <div class="ds-dropdown"><span>Canada</span><i class="ti ti-chevron-down"></i></div>
-          </div>
-          <div class="ds-field is-focus">
-            <label>Country</label>
-            <div class="ds-dropdown is-open"><span>Canada</span><i class="ti ti-chevron-up"></i></div>
-            <div class="ds-menu">
-              <div class="ds-menu-item selected"><span>Canada</span><i class="ti ti-check"></i></div>
-              <div class="ds-menu-item">United States</div>
-              <div class="ds-menu-item">United Kingdom</div>
-            </div>
-          </div>
-          <div class="ds-field is-error">
-            <label>Purpose</label>
-            <div class="ds-dropdown"><span>Select purpose</span><i class="ti ti-chevron-down"></i></div>
-            <span class="ds-help">Choose one option to continue.</span>
-          </div>
-          <div class="ds-field is-disabled">
-            <label>Currency</label>
-            <div class="ds-dropdown"><span>CAD</span><i class="ti ti-lock"></i></div>
-          </div>
-        </div>` },
-      { title: 'Menu rules',
-        note: 'Menus use white surfaces, 8px radius, thin borders and compact rows. If the list exceeds 6 options, add search instead of making the menu tall.',
-        html: `<div class="canvas">
-          <div class="ds-menu" style="position:static;width:356px">
-            <div class="ds-menu-item selected"><span>Savings account · 8472</span><i class="ti ti-check"></i></div>
-            <div class="ds-menu-item">Chequing account · 1941</div>
-            <div class="ds-menu-item">USD account · 5088</div>
-            <div class="ds-menu-item disabled">Closed account · 1102</div>
-          </div>
-        </div>` }
+      { title: 'RIB source variants', note: 'Component set 3869:5784 · Expanded, Expanded Hover, Pressed, Selected Dropdown and Selected dropdown hover · subheading and scroll toggles.', html: renderRibDropdownShowcase() },
+      { title: 'Foundation mapping', html: `<div class="button-foundation-grid"><article><span>Surface</span><b>White · Cool Grey 110</b><code>#FFFFFF · #EFF1F6</code></article><article><span>Hover</span><b>Grey 60</b><code>#F7F7F7</code></article><article><span>Pressed</span><b>Amber 90</b><code>#FCF6F2</code></article><article><span>Selected</span><b>Orange 100</b><code>#F0792E</code></article></div>` }
     ],
     props: [
-      ['label','String','required','Field label, always visible'],
-      ['value','T?','null','Selected value'],
-      ['items','List<T>','required','Options, preferably 2–6 items'],
-      ['hint','String?','null','Shown when no value is selected'],
-      ['errorText','String?','null','Switches to error state'],
-      ['enabled','bool','true','Disabled state keeps selected value readable'],
-      ['onChanged','ValueChanged<T>?','required','Fires on option selection']
+      ['items','List<RibDropdownItem<T>>','required','Dropdown options'],
+      ['value','T?','null','Selected option value'],
+      ['subheading','bool','false','Shows secondary copy for every option'],
+      ['scroll','bool','true','Constrains the menu and exposes scroll'],
+      ['onChanged','ValueChanged<T>?','required','Selection callback']
     ],
-    flutter: `DsDropdown<String>(
-  label: 'Country',
-  value: 'Canada',
-  items: const ['Canada', 'United States', 'United Kingdom'],
-  onChanged: (country) => profile.setCountry(country),
+    flutter: `RibDropdown<String>(
+  value: accountType,
+  items: accountTypes,
+  onChanged: (value) => setState(() => accountType = value),
 )`
   },
 
@@ -1508,21 +1533,21 @@ DsChip(
   },
 
   info: {
-    title: 'Info', group: 'Feedback', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Info components provide short contextual help without interrupting the task. Pair the icon with tooltip, inline copy, or a compact callout depending on available space.',
+    title: 'Info', group: 'Feedback', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    sandbox: 'info',
+    desc: 'RIB Info communicates neutral information, success, errors, and warnings in a 516px callout with optional icon, centre alignment, and semantic stroke.',
     sections: [
-      { title: 'Inline info',
-        html: `<div class="canvas col">
-          <span class="ds-info-inline">Payee name <i class="ti ti-info-circle"></i></span>
-          <div class="ds-info-callout"><i class="ti ti-info-circle"></i><span>Transfers over CA$ 10,000 may require additional verification.</span></div>
-        </div>` }
+      { title: 'RIB source variants', note: 'Component set 348:9040 · Default, Success, Error and Warning · icon, centre, and stroke properties.', html: `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=348-9040" target="_blank" rel="noreferrer">Open Info source</a></p>${renderRibInfoShowcase()}` },
+      { title: 'Foundation mapping', html: `<div class="button-foundation-grid"><article><span>Default</span><b>Amber 100 / 110</b><code>#FAEFE8 · #F7E1D4</code></article><article><span>Success</span><b>Green 90 / 110</b><code>#F1F9F6 · #E2F0EA</code></article><article><span>Error</span><b>Peach 90 / 110</b><code>#FDF4F4 · #F8E8E9</code></article><article><span>Warning</span><b>Warning 80</b><code>#FEFAED</code></article></div>` }
     ],
     props: [
       ['message','String','required','Short contextual copy'],
-      ['placement','DsInfoPlacement','inline','inline · callout · tooltip'],
-      ['tone','DsTone','neutral','neutral · info · warning']
+      ['tone','RibInfoTone','defaultTone','defaultTone · success · error · warning'],
+      ['centre','bool','false','Centres icon and message'],
+      ['stroke','bool','false','Adds the tone-specific outline'],
+      ['showIcon','bool','true','Shows the tone icon']
     ],
-    flutter: `DsInfo(message: 'Transfers over CA$ 10,000 may require additional verification.')`
+    flutter: `RibInfo(message: 'Info : Pending user action')`
   },
 
   progress: {
@@ -1548,21 +1573,24 @@ DsChip(
   },
 
   emptystate: {
-    title: 'Empty state', group: 'Feedback', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Empty states explain why a surface has no content and offer one clear next action. Keep the illustration/icon quiet and the copy short.',
+    title: 'Empty state', group: 'Feedback', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    sandbox: 'emptystate',
+    desc: 'The RIB Empty state explains absent content with a quiet icon, concise subline, optional heading and one secondary action.',
     sections: [
-      { title: 'Default',
-        html: `<div class="canvas">
-          <div class="ds-empty-state"><span><i class="ti ti-inbox"></i></span><b>No payees yet</b><p>Add a payee to start sending transfers from this account.</p><button class="ds-btn primary sm"><i class="ti ti-plus"></i> Add payee</button></div>
-        </div>` }
+      { title: 'RIB source variants', note: 'Component set 56:237 · Default and Hover · With heading and Without heading · optional CTA.', html: `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=56-237" target="_blank" rel="noreferrer">Open Empty state source</a></p><div class="rib-empty-state-showcase">${renderRibEmptyState({ style:'Without heading' })}${renderRibEmptyState({ style:'Without heading', state:'Hover' })}${renderRibEmptyState({ style:'With heading' })}</div>` }
     ],
     props: [
       ['title','String','required','Empty-state heading'],
-      ['message','String','required','Short explanation'],
-      ['action','DsButtonAction?','null','Primary recovery action'],
-      ['icon','IconData?','null','Quiet illustrative icon']
+      ['subline','String','required','Short explanation'],
+      ['showHeading','bool','false','Shows the title above the subline'],
+      ['actionLabel','String?','Button','Optional secondary action label'],
+      ['onAction','VoidCallback?','null','Action callback']
     ],
-    flutter: `DsEmptyState(title: 'No payees yet', message: 'Add a payee to start sending transfers.', action: addPayee)`
+    flutter: `RibEmptyState(
+  title: 'No transactions found',
+  subline: 'You have no active term life insurances',
+  onAction: addInsurance,
+)`
   },
 
   upload: {
