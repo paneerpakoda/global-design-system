@@ -28,7 +28,6 @@ class RibCheckbox extends StatelessWidget {
       checked: value,
       enabled: enabled,
       label: label,
-      button: true,
       child: InkWell(
         onTap: enabled ? () => onChanged!(!value) : null,
         borderRadius: BorderRadius.circular(4),

@@ -827,7 +827,8 @@ const COMPONENTS = {
       ['identifier','String?','null','Masked account, policy, or investment identifier.'],
       ['primaryMetric','RibCardMetric?','null','Primary amount or value.'],
       ['secondaryMetric','RibCardMetric?','null','Supporting value such as due date or return.'],
-      ['onPrimaryAction','VoidCallback?','null','Primary footer action.']
+      ['onPrimaryAction','VoidCallback?','null','Primary footer action.'],
+      ['onSecondaryAction','VoidCallback?','null','Optional second footer action for product detail.']
     ],
     flutter:`RibCard(
   variant: RibCardVariant.loan,

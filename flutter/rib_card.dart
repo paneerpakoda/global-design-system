@@ -205,20 +205,50 @@ class RibCard extends StatelessWidget {
         color: _isOffer ? null : const Color(0x33000000),
         gradient: _isOffer ? DsColors.hero : null,
       ),
-      alignment: Alignment.centerRight,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextButton.icon(
-        onPressed: onPrimaryAction,
-        icon: Icon(
-          _isOffer ? Icons.chevron_right : Icons.download_outlined,
-          size: 14,
-        ),
-        label: Text(_isOffer ? 'Get started' : 'Statement'),
-        style: TextButton.styleFrom(
-          foregroundColor: DsColors.neutralBaseWhite,
-          textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-        ),
-      ),
+      child: _isOffer
+          ? Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: onPrimaryAction,
+                icon: const Icon(Icons.chevron_right, size: 14),
+                label: const Text('Get started'),
+                style: _footerActionStyle(),
+              ),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: onPrimaryAction,
+                  icon: const Icon(Icons.download_outlined, size: 14),
+                  label: const Text('Statement'),
+                  style: _footerActionStyle(),
+                ),
+                TextButton(
+                  onPressed: onSecondaryAction,
+                  style: _footerActionStyle(),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('See details'),
+                      SizedBox(width: 4),
+                      Icon(Icons.chevron_right, size: 14),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  ButtonStyle _footerActionStyle() {
+    return TextButton.styleFrom(
+      foregroundColor: DsColors.neutralBaseWhite,
+      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      minimumSize: const Size(0, 36),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

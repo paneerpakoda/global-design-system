@@ -75,6 +75,7 @@ test('provides a reusable Flutter RibCard backed by foundation tokens', () => {
   assert.match(flutter, /DsColors\.primaryOrange100/);
   assert.match(flutter, /DsColors\.pastelAmber90/);
   assert.match(flutter, /DsColors\.hero/);
+  assert.match(flutter, /onSecondaryAction/);
 });
 
 test('keeps the fixed Figma specimens reachable on narrow screens', () => {
