@@ -128,6 +128,14 @@ function renderRibButtonScenario(p){
   </section>`;
 }
 
+function renderRibCalendarScenario(p){
+  const state = ribCalendarState(p.mode, p.state);
+  return `<section class="rib-calendar-scenario" aria-label="Transfer date example">
+    <div class="rib-calendar-scenario__copy"><span>International transfer</span><h2>Choose a transfer date</h2><p>Select when the payment should leave your account.</p></div>
+    ${renderRibCalendar({ mode:p.mode, state })}
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -164,6 +172,29 @@ const SANDBOX = {
       lines.push('expanded: ' + p.expanded);
       lines.push(p.state === 'disabled' ? 'onPressed: null' : 'onPressed: () => handleTap()');
       return 'RibButton(\n  ' + lines.join(',\n  ') + ',\n)';
+    }
+  },
+
+  calendar: {
+    label:'RIB Calendar',
+    controls:[
+      { key:'mode', label:'Variant', type:'select', options:['date','range','month-year'], value:'date' },
+      { key:'state', label:'State', type:'select', options:['No date selected','Hover','Selected','Default','Start date hover','Start date selected','End date hover','End date selected'], value:'Selected' }
+    ],
+    render(p){
+      return renderRibCalendarScenario(p);
+    },
+    dart(p){
+      const mode = p.mode === 'month-year' ? 'monthYear' : p.mode;
+      const lines = [
+        `mode: RibCalendarMode.${mode}`,
+        `month: DateTime(${p.mode === 'date' ? '2023' : '2020'}, 10)`
+      ];
+      if(p.mode === 'date' && p.state === 'Selected') lines.push('selectedDate: DateTime(2023, 10, 8)');
+      if(p.mode === 'range' && ['Start date selected','End date hover','End date selected'].includes(p.state)) lines.push('rangeStart: DateTime(2020, 10, 8)');
+      if(p.mode === 'range' && p.state === 'End date selected') lines.push('rangeEnd: DateTime(2020, 10, 16)');
+      lines.push('onDateSelected: (date) => setState(() => selectedDate = date)');
+      return 'RibCalendar(\n  ' + lines.join(',\n  ') + ',\n)';
     }
   },
 
@@ -447,7 +478,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

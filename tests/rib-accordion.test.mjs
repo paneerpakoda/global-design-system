@@ -159,13 +159,13 @@ test('publishes Accordion and Activity timeline across the catalogue and playgro
   const sandbox = read('js/sandbox.js');
   const app = read('js/app.js');
 
-  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(app, /PUBLISHED_COMPONENT_IDS\.map\(id =>/);
   assert.match(app, /const compCount = PUBLISHED_COMPONENT_IDS\.length/);
   assert.match(app, /if \(!c \|\| !PUBLISHED_COMPONENT_IDS\.includes\(id\)\)/);
   assert.doesNotMatch(app, /#\/c\/button/);
 
-  assert.match(sandbox, /const PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /const PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(sandbox, /let sbCurrent = 'button'/);
   assert.match(sandbox, /PUBLISHED_SANDBOX_IDS\.map\(id =>/);
   assert.match(sandbox, /PUBLISHED_SANDBOX_IDS\.includes\(id\)/);

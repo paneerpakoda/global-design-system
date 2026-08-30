@@ -510,7 +510,101 @@ function renderRibBreadcrumbShowcase(){
   </div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_CALENDAR_ASSETS = Object.freeze({
+  previous:'../assets/icons/general/line/chevron-left--line--235-116.svg',
+  next:'../assets/icons/general/line/chevron-right--line--235-115.svg',
+  down:'../assets/icons/general/filled/chevron-down--filled--679-239.svg',
+  up:'../assets/icons/general/filled/chevron-up--filled--717-260.svg'
+});
+
+const RIB_CALENDAR_VARIANTS = [
+  { key:'date', label:'Date', states:['No date selected','Hover','Selected'] },
+  { key:'range', label:'Date range', states:['Default','Start date hover','Start date selected','End date hover','End date selected'] },
+  { key:'month-year', label:'Month and year', states:['Selected','Hover'] }
+];
+
+function renderRibCalendarIcon(asset, label = ''){
+  return `<span class="rib-calendar__icon" style="--rib-calendar-icon:url(${asset})"${label ? ` aria-label="${label}"` : ' aria-hidden="true"'}></span>`;
+}
+
+function ribCalendarState(mode, requested){
+  const variant = RIB_CALENDAR_VARIANTS.find(item => item.key === mode) || RIB_CALENDAR_VARIANTS[0];
+  return variant.states.includes(requested) ? requested : variant.states[0];
+}
+
+function renderRibCalendarGrid(mode, state){
+  const weekDays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const selectedDay = mode === 'date' && state === 'Selected' ? 8
+    : mode === 'range' && ['Start date selected','End date hover','End date selected'].includes(state) ? 8 : null;
+  const endDay = mode === 'range' && state === 'End date selected' ? 16 : null;
+  const hoverDay = state === 'Hover' || state === 'Start date hover' ? 8 : state === 'End date hover' ? 16 : null;
+  const rangeActive = mode === 'range' && ['End date hover','End date selected'].includes(state);
+  const cells = [null,null,null,...Array.from({ length:31 }, (_, index) => index + 1)];
+
+  return `<div class="rib-calendar__grid" role="grid" aria-label="October ${mode === 'date' ? '2023' : '2020'}">
+    ${weekDays.map(day => `<span class="rib-calendar__weekday" role="columnheader">${day}</span>`).join('')}
+    ${cells.map(day => {
+      if(day == null) return '<span class="rib-calendar__cell is-empty" role="gridcell"></span>';
+      const selected = day === selectedDay || day === endDay;
+      const inRange = rangeActive && day >= 8 && day <= 16;
+      const classes = [
+        'rib-calendar__cell',
+        inRange ? (state === 'End date selected' ? 'is-range-selected' : 'is-range-hover') : '',
+        day === 8 && inRange ? 'is-range-start' : '',
+        day === 16 && inRange ? 'is-range-end' : ''
+      ].filter(Boolean).join(' ');
+      const dateStateClasses = [
+        day === 2 ? ' is-today' : '',
+        selected ? ' is-selected' : '',
+        day === hoverDay ? ' is-hover' : ''
+      ].filter(Boolean).join('');
+      return `<span class="${classes}" role="gridcell"><button type="button" class="rib-calendar__date${dateStateClasses}" aria-label="${day} October ${mode === 'date' ? '2023' : '2020'}" aria-selected="${selected ? 'true' : 'false'}">${day}</button></span>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderRibCalendarMonthYear(state){
+  const months = ['July','August','September','October','November','December'];
+  const years = ['2017','2018','2019','2020','2021','2022'];
+  return `<div class="rib-calendar__picker" aria-label="Choose month and year">
+    <div class="rib-calendar__picker-column" role="listbox" aria-label="Month">
+      ${months.map(month => `<button type="button" role="option" aria-selected="${month === 'October'}" class="${month === 'October' ? 'is-selected' : ''}${state === 'Hover' && month === 'September' ? ' is-hover' : ''}">${month}</button>`).join('')}
+    </div>
+    <div class="rib-calendar__picker-column" role="listbox" aria-label="Year">
+      ${years.map(year => `<button type="button" role="option" aria-selected="${year === '2020'}" class="${year === '2020' ? 'is-selected' : ''}">${year}</button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderRibCalendar(options = {}){
+  const mode = RIB_CALENDAR_VARIANTS.some(item => item.key === options.mode) ? options.mode : 'date';
+  const state = ribCalendarState(mode, options.state);
+  const range = mode === 'range';
+  const monthYear = mode === 'month-year';
+  const year = mode === 'date' ? '2023' : '2020';
+  const helper = range ? (['Start date selected','End date hover','End date selected'].includes(state) ? 'Choose end date' : 'Choose start date') : monthYear ? 'Choose start date' : '';
+  const classes = ['rib-calendar', `rib-calendar--${mode}`].join(' ');
+
+  return `<section class="${classes}" aria-label="${mode === 'date' ? 'Date calendar' : mode === 'range' ? 'Date range calendar' : 'Month and year picker'}">
+    <header class="rib-calendar__header">
+      ${helper ? `<span class="rib-calendar__helper">${helper}</span>` : ''}
+      <div class="rib-calendar__navigation">
+        <button type="button" class="rib-calendar__month-label" aria-label="Choose month and year">October ${year}${renderRibCalendarIcon(monthYear ? RIB_CALENDAR_ASSETS.up : RIB_CALENDAR_ASSETS.down)}</button>
+        ${monthYear ? '' : `<div class="rib-calendar__arrows"><button type="button" aria-label="Choose previous month">${renderRibCalendarIcon(RIB_CALENDAR_ASSETS.previous)}</button><button type="button" aria-label="Choose next month">${renderRibCalendarIcon(RIB_CALENDAR_ASSETS.next)}</button></div>`}
+      </div>
+    </header>
+    ${monthYear ? renderRibCalendarMonthYear(state) : renderRibCalendarGrid(mode, state)}
+  </section>`;
+}
+
+function renderRibCalendarShowcase(){
+  return `<div class="rib-calendar-source"><span>RIB only</span><div class="rib-calendar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1815-1068" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-calendar-try" href="#/sandbox/calendar"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-calendar-showcase">
+    ${RIB_CALENDAR_VARIANTS.map(variant => `<article class="rib-calendar-showcase__card${variant.key === 'range' ? ' is-wide' : ''}"><header><div><span>Calendar</span><h3>${variant.label}</h3></div><code>258px</code></header><div class="rib-calendar-showcase__states">${variant.states.map(state => `<div class="rib-calendar-stage"><b>${state}</b>${renderRibCalendar({ mode:variant.key, state })}</div>`).join('')}</div></article>`).join('')}
+  </div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -557,6 +651,30 @@ const COMPONENTS = {
   onPressed: submitTransfer,
 )`,
     sandbox: 'button'
+  },
+
+  calendar: {
+    title: 'Calendar', group: 'Inputs', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    desc: 'The RIB Calendar supports single-date, date-range, and month/year selection in the exact compact 258px desktop shell.',
+    sections: [
+      { title:'RIB source component', note:'Every source state is reproduced with the audited RIB foundations, local glyphs, and calendar grid semantics.', html:renderRibCalendarShowcase() },
+      { title:'Foundation mapping', note:'Selected dates use Orange100; hover and range previews use Cool Grey 100; confirmed ranges use Amber100; the shell uses Cool Grey 110 and Shadow 200.', html:`<div class="button-foundation-grid"><article><span>Selected</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Range</span><b>Amber 100</b><code>#FAEFE8</code></article><article><span>Hover</span><b>Cool Grey 100</b><code>#F8F9FB</code></article><article><span>Border</span><b>Cool Grey 110</b><code>#EFF1F6</code></article><article><span>Text</span><b>Grey 120 · 140</b><code>#64696D · #333638</code></article><article><span>Elevation</span><b>Shadow 200</b><code>0 4 4 · 12%</code></article></div>` }
+    ],
+    props: [
+      ['mode','RibCalendarMode','date','date · range · monthYear'],
+      ['month','DateTime','required','Visible calendar month.'],
+      ['selectedDate','DateTime?','null','Selected date in single-date mode.'],
+      ['rangeStart','DateTime?','null','Selected range start.'],
+      ['rangeEnd','DateTime?','null','Selected range end.'],
+      ['onDateSelected','ValueChanged<DateTime>?','null','Selection callback.']
+    ],
+    flutter:`RibCalendar(
+  mode: RibCalendarMode.date,
+  month: DateTime(2023, 10),
+  selectedDate: DateTime(2023, 10, 8),
+  onDateSelected: setDate,
+)`,
+    sandbox: 'calendar'
   },
 
   buttongroups: {
@@ -1300,25 +1418,6 @@ DsChip(
       ['icon','IconData?','null','Quiet illustrative icon']
     ],
     flutter: `DsEmptyState(title: 'No payees yet', message: 'Add a payee to start sending transfers.', action: addPayee)`
-  },
-
-  calendar: {
-    title: 'Calendar', group: 'Inputs', status: 'beta', version: '0.1', updated: '18 Jun 2026',
-    desc: 'Calendar supports date picking in forms and scheduled-payment flows. Keep the field shell aligned with Input fields and use a compact monthly grid in overlays.',
-    sections: [
-      { title: 'Date picker',
-        html: `<div class="canvas col">
-          <div class="ifield-example"><div class="ifield-shell"><span class="ifield-value">18 Jun 2026</span><i class="ti ti-calendar ifield-trailing"></i></div></div>
-          <div class="ds-calendar"><div class="cal-head"><i class="ti ti-chevron-left"></i><b>June 2026</b><i class="ti ti-chevron-right"></i></div><div class="cal-grid">${['S','M','T','W','T','F','S','14','15','16','17','18','19','20','21','22','23','24','25','26','27'].map(d => `<span${d === '18' ? ' class="active"' : ''}>${d}</span>`).join('')}</div></div>
-        </div>` }
-    ],
-    props: [
-      ['value','DateTime?','null','Selected date'],
-      ['minDate','DateTime?','null','Earliest selectable date'],
-      ['maxDate','DateTime?','null','Latest selectable date'],
-      ['onChanged','ValueChanged<DateTime>?','required','Date selection callback']
-    ],
-    flutter: `DsDatePicker(value: scheduledDate, onChanged: setScheduledDate)`
   },
 
   upload: {

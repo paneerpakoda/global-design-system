@@ -80,9 +80,9 @@ test('publishes Button in the component catalogue and playground', () => {
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
 
-  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(components, /sandbox: 'button'/);
-  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(sandbox, /let sbCurrent = 'button'/);
   assert.match(sandbox, /renderRibButton\(/);
   assert.match(sandbox, /RibButton\(/);

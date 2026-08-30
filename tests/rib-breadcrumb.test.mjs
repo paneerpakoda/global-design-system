@@ -61,10 +61,10 @@ test('publishes Breadcrumb in the catalogue and playground', () => {
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
 
-  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(components, /sandbox: 'breadcrumbs'/);
   assert.match(sandbox, /breadcrumbs:\s*\{/);
-  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
   assert.match(sandbox, /RibBreadcrumb\(/);
 });
 
