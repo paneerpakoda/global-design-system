@@ -663,9 +663,9 @@ ${items}
   }
 };
 
-/* ---------- sandbox page rendering ---------- */
+/* ---------- component mini playground rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['accordion','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator']);
 
 let sbCurrent = 'button';
 let sbProps = {};
@@ -682,13 +682,10 @@ function selectSandboxComponent(id){
   return sbCurrent;
 }
 
-function renderSandboxPage(){
+function renderMiniPlayground(id){
+  selectSandboxComponent(id);
   if (!sbProps[sbCurrent]) sbProps[sbCurrent] = sbDefaults(sbCurrent);
-  const picker = PUBLISHED_SANDBOX_IDS.map(id =>
-    '<button data-sb-pick="' + id + '"' + (id === sbCurrent ? ' class="active"' : '') + '>' + esc(SANDBOX[id].label) + '</button>'
-  ).join('');
-  return '<div class="seg" id="sbPicker">' + picker + '</div>' +
-    '<div class="sb-layout is-' + sbCurrent + '">' +
+  return '<div class="sb-layout is-' + sbCurrent + '" aria-label="' + esc(SANDBOX[sbCurrent].label) + ' mini playground">' +
     '<div class="sb-panel" id="sbControls">' + sbControlsHtml() + '</div>' +
     '<div class="sb-preview" id="sbPreview">' + SANDBOX[sbCurrent].render(sbProps[sbCurrent]) + '</div>' +
     '<div class="sb-code" id="sbCode">' + codeblock(SANDBOX[sbCurrent].dart(sbProps[sbCurrent]), 'dart — generated live') + '</div>' +
@@ -727,14 +724,6 @@ function sbRefresh(){
 
 function bindSandbox(root){
   root.addEventListener('click', e => {
-    const pick = e.target.closest('[data-sb-pick]');
-    if (pick) {
-      sbCurrent = pick.getAttribute('data-sb-pick');
-      history.replaceState(null, '', '#/sandbox/' + sbCurrent);
-      const main = document.getElementById('sandboxRoot');
-      if (main) { main.innerHTML = renderSandboxPage(); }
-      return;
-    }
     const accordionToggle = e.target.closest('[data-rib-accordion-toggle]');
     if (accordionToggle && sbCurrent === 'accordion') {
       const accordion = accordionToggle.closest('[data-rib-accordion-index]');
@@ -745,7 +734,7 @@ function bindSandbox(root){
         : nextIndex;
       const main = document.getElementById('sandboxRoot');
       if (main) {
-        main.innerHTML = renderSandboxPage();
+        main.innerHTML = renderMiniPlayground(sbCurrent);
         const nextToggle = main.querySelector(`[data-rib-accordion-index="${nextIndex}"] [data-rib-accordion-toggle]`);
         nextToggle?.focus();
       }

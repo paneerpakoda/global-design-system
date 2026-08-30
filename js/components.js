@@ -234,7 +234,7 @@ function renderRibAccordion(options = {}){
 }
 
 function renderRibAccordionShowcase(){
-  return `<div class="rib-accordion-source"><span>RIB only</span><div class="rib-accordion-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10048" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-accordion-try" href="#/sandbox/accordion"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-accordion-source"><span>RIB only</span><div class="rib-accordion-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10048" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-accordion-try" href="#/sandbox/accordion"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-accordion-showcase">
     ${RIB_ACCORDION_VARIANTS.map((variant, index) => `<article class="rib-accordion-showcase__card is-variant-${variant.key}${variant.width > 386 ? ' is-wide' : ''}">
       <header class="rib-accordion-showcase__card-head"><div><span>${index === 0 ? 'Standard' : index < 3 ? 'Icons' : 'Container'}</span><h3>${variant.label}</h3></div><code>${variant.width}px Figma · 118% preview</code></header>
@@ -358,7 +358,7 @@ function renderRibActivityCalendar(options = {}){
 }
 
 function renderRibActivityTimelineShowcase(){
-  return `<div class="rib-activity-source"><span>RIB only</span><div class="rib-activity-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10047" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-activity-try" href="#/sandbox/activity-timeline"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-activity-source"><span>RIB only</span><div class="rib-activity-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10047" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-activity-try" href="#/sandbox/activity-timeline"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-activity-showcase">
     ${RIB_ACTIVITY_VARIANTS.map(variant => `<article class="rib-activity-showcase__card">
       <header><div><span>Activity timeline</span><h3>${variant.label}</h3></div><code>288px · ${variant.key === 'single' ? '40px' : '60px'} cards</code></header>
@@ -427,7 +427,7 @@ function renderRibAvatarGroup(options = {}){
 }
 
 function renderRibAvatarShowcase(){
-  return `<div class="rib-avatar-source"><span>RIB only</span><div class="rib-avatar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10046" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-avatar-try" href="#/sandbox/avatar"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-avatar-source"><span>RIB only</span><div class="rib-avatar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10046" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-avatar-try" href="#/sandbox/avatar"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-avatar-showcase">
     <article class="rib-avatar-showcase__card">
       <header><div><span>Standard</span><h3>Picture and mnemonic colours</h3></div><code>40px visual · 64px label</code></header>
@@ -497,7 +497,7 @@ function renderRibBreadcrumbShowcase(){
     { label:'2 items', items:['Item 1','Item 2'] },
     { label:'3 items', items:['Item 1','Item 2','Item 3'] }
   ];
-  return `<div class="rib-breadcrumb-source"><span>RIB only</span><div class="rib-breadcrumb-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=875-4938" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-breadcrumb-try" href="#/sandbox/breadcrumbs"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-breadcrumb-source"><span>RIB only</span><div class="rib-breadcrumb-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=875-4938" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-breadcrumb-try" href="#/sandbox/breadcrumbs"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-breadcrumb-showcase">
     <article class="rib-breadcrumb-showcase__card is-variants">
       <header><div><span>Breadcrumb</span><h3>1 item · 2 items · 3 items</h3></div><code>472px · 48px</code></header>
@@ -598,7 +598,7 @@ function renderRibCalendar(options = {}){
 }
 
 function renderRibCalendarShowcase(){
-  return `<div class="rib-calendar-source"><span>RIB only</span><div class="rib-calendar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1815-1068" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-calendar-try" href="#/sandbox/calendar"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-calendar-source"><span>RIB only</span><div class="rib-calendar-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1815-1068" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-calendar-try" href="#/sandbox/calendar"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-calendar-showcase">
     ${RIB_CALENDAR_VARIANTS.map(variant => `<article class="rib-calendar-showcase__card${variant.key === 'range' ? ' is-wide' : ''}"><header><div><span>Calendar</span><h3>${variant.label}</h3></div><code>258px</code></header><div class="rib-calendar-showcase__states">${variant.states.map(state => `<div class="rib-calendar-stage"><b>${state}</b>${renderRibCalendar({ mode:variant.key, state })}</div>`).join('')}</div></article>`).join('')}
   </div>`;
@@ -656,7 +656,7 @@ function renderRibCard(options = {}){
 }
 
 function renderRibCardShowcase(){
-  return `<div class="rib-card-source"><span>RIB only</span><div class="rib-card-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10044" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-card-try" href="#/sandbox/cards"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-card-source"><span>RIB only</span><div class="rib-card-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10044" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-card-try" href="#/sandbox/cards"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-card-showcase">${RIB_CARD_VARIANTS.map(variant => `<article class="rib-card-showcase__card"><header><div><span>Card</span><h3>${variant.label}</h3></div><code>${variant.width} × ${variant.height}</code></header><div class="rib-card-showcase__stage">${renderRibCard({ variant:variant.key })}</div></article>`).join('')}</div>`;
 }
 
@@ -689,7 +689,7 @@ function renderRibCheckbox(options = {}){
 }
 
 function renderRibCheckboxShowcase(){
-  return `<div class="rib-checkbox-source"><span>RIB only</span><div class="rib-checkbox-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=68-1276" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-checkbox-try" href="#/sandbox/checkbox"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-checkbox-source"><span>RIB only</span><div class="rib-checkbox-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=68-1276" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-checkbox-try" href="#/sandbox/checkbox"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-checkbox-showcase">${RIB_CHECKBOX_SIZES.map(size => `<article class="rib-checkbox-showcase__card"><header><div><span>Checkbox</span><h3>${size.label}</h3></div><code>20px control</code></header><div class="rib-checkbox-showcase__states">${RIB_CHECKBOX_STATES.map(state => `<div><b>${state.label}</b>${renderRibCheckbox({ size:size.key, state:state.key, label:'Checkbox' })}</div>`).join('')}</div></article>`).join('')}</div>`;
 }
 
@@ -737,7 +737,7 @@ function renderRibChipShowcase(){
     { variant:'label-white', size:'label', label:'White label', chipLabel:'Account number', trailingIcon:'copy' },
     { variant:'label-translucent', size:'label', label:'Translucent label', chipLabel:'Savings account', trailingIcon:'copy' }
   ];
-  return `<div class="rib-chip-source"><span>RIB only</span><div class="rib-chip-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1135-15928" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-chip-try" href="#/sandbox/chip"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  return `<div class="rib-chip-source"><span>RIB only</span><div class="rib-chip-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1135-15928" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-chip-try" href="#/sandbox/chip"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>
   <div class="rib-chip-showcase">${specimens.map(specimen => `<article class="rib-chip-showcase__card${specimen.variant === 'label-translucent' ? ' is-brand' : ''}"><header><div><span>${RIB_CHIP_VARIANTS.find(item => item.key === specimen.variant).label}</span><h3>${specimen.label}</h3></div></header><div class="rib-chip-showcase__states">${RIB_CHIP_STATES.map(state => `<div><b>${state.label}</b>${renderRibChip({ ...specimen, state:state.key, label:specimen.chipLabel })}</div>`).join('')}</div></article>`).join('')}</div>`;
 }
 
@@ -900,7 +900,7 @@ function renderRibLoadingIndicator(options = {}){
   return `<span class="rib-loading-indicator rib-loading-indicator--${size}" role="status" aria-live="polite"><span class="rib-loading-indicator__spinner" aria-hidden="true"></span><span>${esc(label)}</span></span>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordions','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator']);
 
 const COMPONENTS = {
 
@@ -910,7 +910,7 @@ const COMPONENTS = {
     sections: [
       { title: 'RIB source component',
         note: 'The catalogue reproduces the source component set directly: type sections, size groups, icon positions and state columns all map to the Figma properties.',
-        html: `<div class="rib-button-source"><span>RIB only</span><div class="rib-button-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=8-2" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-button-try" href="#/sandbox/button"><i class="ti ti-player-play"></i>Try in playground</a></div></div>${renderButtonMatrix()}` },
+        html: `<div class="rib-button-source"><span>RIB only</span><div class="rib-button-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=8-2" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-button-try" href="#/sandbox/button"><i class="ti ti-player-play"></i>Try in mini playground</a></div></div>${renderButtonMatrix()}` },
       { title: 'Foundation mapping',
         note: 'Every visual state resolves to the audited RIB foundations. The source white-on-Orange100 pairing is preserved exactly, but remains below AA contrast for normal text and needs design review before production use.',
         html: `<div class="button-foundation-grid">

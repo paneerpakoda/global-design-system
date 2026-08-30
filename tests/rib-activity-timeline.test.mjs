@@ -83,10 +83,10 @@ test('publishes Activity timeline in the catalogue and playground', () => {
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
 
-  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
   assert.match(components, /sandbox: 'activity-timeline'/);
   assert.match(sandbox, /['"]activity-timeline['"]:\s*\{/);
-  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['accordion','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
   assert.match(sandbox, /RibActivityCalendarTimeline\(/);
 });
 

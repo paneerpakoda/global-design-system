@@ -29,9 +29,8 @@ Pull requests run the same contract and snapshot checks. A successful push to `m
 |---|---|
 | **Overview** | System summary, metrics and principles |
 | **Foundations** | Complete RIB colours/gradients/variables, typography, responsive grids, 4pt spacing, radius, effects and iconography |
-| **Components** | Component variants, states, props and implementation guidance |
+| **Components** | Alphabetical component catalogue, static variant references, per-component mini playgrounds and implementation guidance |
 | **Pattern lab** | Login, OTP verification, transfer review and accounts-home flows |
-| **Playground** | Live component property/state controls with Flutter call generation |
 | **Platform exports** | Kotlin/React, Flutter and SwiftUI tokens and theme files, plus shared JSON |
 
 ## Export contract
@@ -43,7 +42,7 @@ Pull requests run the same contract and snapshot checks. A successful push to `m
 | SwiftUI | `GlobalDSTokens.swift`, `GlobalDSTheme.swift` | SwiftUI colours, variables, typography, grids, effects and an `EnvironmentValues` theme |
 | Shared | `ds_tokens.json` | Platform-neutral pipeline and design-tool interchange |
 
-The Kotlin export deliberately keeps its token file independent of a specific React styling library. The Developers page shows how to consume it with the JetBrains Kotlin React and Emotion wrappers. Flutter component snippets in the existing component catalogue and playground remain Flutter-specific; this change adds cross-platform foundation exports rather than claiming cross-platform component implementations.
+The Kotlin export deliberately keeps its token file independent of a specific React styling library. The Developers page shows how to consume it with the JetBrains Kotlin React and Emotion wrappers. Flutter component snippets in the component catalogue and mini playgrounds remain Flutter-specific; this change adds cross-platform foundation exports rather than claiming cross-platform component implementations.
 
 ## Architecture
 
@@ -62,7 +61,7 @@ icici-global-ds/
 │   ├── exports.js      # Deterministic three-platform export contract
 │   ├── components.js
 │   ├── patterns.js
-│   ├── sandbox.js
+│   ├── sandbox.js      # Per-component mini playground definitions and controls
 │   ├── motion.js
 │   └── app.js          # Navigation, pages and download UI
 ├── kotlin-react/       # Checked-in generated snapshots
@@ -93,7 +92,7 @@ The tests verify all 139 RIB assets, exact representative Figma values, the dupl
 
 1. Add the component entry to `js/components.js`.
 2. Add matching `ds-*` styles to `css/app.css`.
-3. Optionally add a playground definition in `js/sandbox.js` and use it in `js/patterns.js`.
+3. Add its mini playground definition in `js/sandbox.js` and reference that definition from the component's `sandbox` field.
 
 ## Roadmap
 

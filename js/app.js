@@ -14,13 +14,10 @@ const NAV = [
     { route: '#/f/icons',      label: 'Iconography',        icon: 'ti-star' }
   ]},
   { section: 'Components', items: PUBLISHED_COMPONENT_IDS.map(id => ({
-    route: '#/c/' + id, label: COMPONENTS[id].title, icon: null, status: COMPONENTS[id].status
+    route: '#/c/' + id, label: COMPONENTS[id].title, icon: null
   }))},
   { section: 'Patterns', items: [
     { route: '#/patterns', label: 'Pattern lab', icon: 'ti-layout-grid' }
-  ]},
-  { section: 'Sandbox', items: [
-    { route: '#/sandbox', label: 'Playground', icon: 'ti-flask' }
   ]},
   { section: 'Developers', items: [
     { route: '#/developers', label: 'Platform exports', icon: 'ti-code' }
@@ -194,7 +191,6 @@ function renderHome(){
     <div class="cards-grid">
       <div class="link-card" data-go="#/f/colors" data-tilt="3" data-spotlight><i class="ti ti-palette"></i><h3>Foundations</h3><p>Colours, type, spacing, radius — the raw material of every screen.</p></div>
       <div class="link-card" data-go="#/c/accordions" data-tilt="3" data-spotlight><i class="ti ti-components"></i><h3>Components</h3><p>Visual specifications, behavior, states and implementation guidance for reusable building blocks.</p></div>
-      <div class="link-card" data-go="#/sandbox" data-tilt="3" data-spotlight><i class="ti ti-flask"></i><h3>Playground</h3><p>Explore component properties and states live before moving into platform implementation.</p></div>
       <div class="link-card" data-go="#/patterns" data-tilt="3" data-spotlight><i class="ti ti-layout-grid"></i><h3>Pattern lab</h3><p>Login, OTP, transfers — full flows with switchable states.</p></div>
     </div>
   </section>
@@ -695,11 +691,17 @@ function renderComponent(id){
   const c = COMPONENTS[id];
   if (!c || !PUBLISHED_COMPONENT_IDS.includes(id)) return '<div class="empty">Component not found.</div>';
   let html = pageHeader({ crumbs:['Components', c.group, c.title], title:c.title,
-    status:c.status, version:c.version, updated:c.updated, desc:c.desc });
+    version:c.version, updated:c.updated, desc:c.desc });
+  if (c.sandbox) {
+    html += `<section class="section component-mini-playground"><h2 class="section-title">Mini playground</h2>
+      <p class="section-note">Change this component's properties and states here. The catalogue specimens below are static references.</p>
+      <div id="sandboxRoot">${renderMiniPlayground(c.sandbox)}</div>
+    </section>`;
+  }
   c.sections.forEach(s => {
     html += sectionHtml({
       title:s.title,
-      html:s.html,
+      html:'<div class="component-static-preview" data-static-component-preview>' + s.html + '</div>',
       guidance:s.note ? { label:'Usage guidance', html:'<p class="guidance-note">' + esc(s.note) + '</p>' } : null
     });
   });
@@ -709,8 +711,6 @@ function renderComponent(id){
       <tbody>${c.props.map(r => '<tr>' + r.map(cell => '<td>' + esc(cell) + '</td>').join('') + '</tr>').join('')}</tbody>
     </table></div></section>`;
   html += `<section class="section"><h2 class="section-title">Flutter</h2>${codeblock(c.flutter, 'dart')}</section>`;
-  const sandboxHref = c.sandbox ? '#/sandbox/' + c.sandbox : '#/sandbox';
-  html += `<div class="callout"><i class="ti ti-flask"></i><div>Want to try the props live? Open this component in the <a href="${sandboxHref}" style="font-weight:600;color:var(--brand-600)">sandbox</a>.</div></div>`;
   return html;
 }
 
@@ -740,14 +740,6 @@ function renderPatternsPage(){
       ${guidanceHtml('Pattern guidance', '<p class="guidance-note">' + esc(p.desc) + '</p>')}
     </div>
   </div>`;
-  return html;
-}
-
-function renderSandboxRoute(){
-  let html = pageHeader({ crumbs:['Sandbox','Playground'], title:'Playground', status:'beta', version:'0.9',
-    updated:'08 Jun 2026', noResources:true,
-    desc:'Pick a component, toggle its properties and states, and copy the exact Flutter call that produces what you see. What you ship is what you tested here.' });
-  html += '<div id="sandboxRoot">' + renderSandboxPage() + '</div>';
   return html;
 }
 
@@ -1197,6 +1189,36 @@ function renderDevelopers(){
 const mainEl = document.getElementById('main');
 const navEl = document.getElementById('nav');
 
+function bindStaticComponentPreviews(root){
+  const interactiveSelector = ':is(button,input,select,textarea,summary,[contenteditable="true"],[role="button"],[role="switch"],[role="checkbox"],[role="radio"],[role="tab"])';
+  const prepare = () => {
+    root.querySelectorAll('[data-static-component-preview] ' + interactiveSelector).forEach(control => {
+      control.inert = true;
+      control.setAttribute('inert', '');
+      control.setAttribute('tabindex', '-1');
+      control.setAttribute('aria-disabled', 'true');
+    });
+  };
+  const preventStaticInteraction = event => {
+    const target = event.target.closest && event.target.closest('[data-static-component-preview]');
+    if (!target) return;
+    const interactiveTarget = event.target.closest(interactiveSelector + ',label');
+    if (!interactiveTarget || interactiveTarget.tagName === 'A') return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  };
+  root.addEventListener('click', preventStaticInteraction, true);
+  root.addEventListener('input', preventStaticInteraction, true);
+  root.addEventListener('change', preventStaticInteraction, true);
+  return prepare;
+}
+
+const prepareStaticComponentPreviews = bindStaticComponentPreviews(mainEl);
+
+function componentIdForSandbox(sandboxId){
+  return PUBLISHED_COMPONENT_IDS.find(id => COMPONENTS[id].sandbox === sandboxId) || PUBLISHED_COMPONENT_IDS[0];
+}
+
 function buildNav(filter){
   const f = (filter || '').toLowerCase();
   navEl.innerHTML = NAV.map(group => {
@@ -1232,12 +1254,14 @@ function route(){
   else if (parts[0] === 'c') html = renderComponent(parts[1]);
   else if (parts[0] === 'patterns') html = renderPatternsPage();
   else if (parts[0] === 'sandbox') {
-    selectSandboxComponent(parts[1]);
-    html = renderSandboxRoute();
+    const componentId = componentIdForSandbox(parts[1]);
+    history.replaceState(null, '', '#/c/' + componentId);
+    html = renderComponent(componentId);
   }
   else if (parts[0] === 'developers' || parts[0] === 'flutter') html = renderDevelopers();
   else html = renderHome();
   mainEl.innerHTML = '<div class="page">' + html + appFooter() + '</div>';
+  prepareStaticComponentPreviews();
   mainEl.scrollTop = 0;
   window.scrollTo(0, 0);
   markActive();

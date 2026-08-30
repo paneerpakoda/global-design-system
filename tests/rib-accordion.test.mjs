@@ -103,8 +103,8 @@ test('lays out specimens in aligned cards and links directly to the Accordion pl
   assert.match(components, /href="#\/sandbox\/accordion"/);
   assert.match(components, /sandbox: 'accordion'/);
   assert.match(sandbox, /function selectSandboxComponent/);
-  assert.match(sandbox, /history\.replaceState\(null, '', '#\/sandbox\/' \+ sbCurrent\)/);
-  assert.match(app, /selectSandboxComponent\(parts\[1\]\)/);
+  assert.match(sandbox, /function renderMiniPlayground\(id\)/);
+  assert.match(app, /componentIdForSandbox\(parts\[1\]\)/);
   assert.match(css, /\.rib-accordion-showcase\{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.rib-accordion-showcase__card\.is-wide/);
 });
@@ -159,15 +159,15 @@ test('publishes Accordion and Activity timeline across the catalogue and playgro
   const sandbox = read('js/sandbox.js');
   const app = read('js/app.js');
 
-  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordions','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
   assert.match(app, /PUBLISHED_COMPONENT_IDS\.map\(id =>/);
   assert.match(app, /const compCount = PUBLISHED_COMPONENT_IDS\.length/);
   assert.match(app, /if \(!c \|\| !PUBLISHED_COMPONENT_IDS\.includes\(id\)\)/);
   assert.doesNotMatch(app, /#\/c\/button/);
 
-  assert.match(sandbox, /const PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordion','activity-timeline','avatar','breadcrumbs'\]\)/);
+  assert.match(sandbox, /const PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['accordion','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
   assert.match(sandbox, /let sbCurrent = 'button'/);
-  assert.match(sandbox, /PUBLISHED_SANDBOX_IDS\.map\(id =>/);
+  assert.doesNotMatch(sandbox, /PUBLISHED_SANDBOX_IDS\.map\(id =>/);
   assert.match(sandbox, /PUBLISHED_SANDBOX_IDS\.includes\(id\)/);
 });
 
