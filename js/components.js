@@ -801,7 +801,55 @@ function renderRibInfoShowcase(){
   return `<div class="rib-info-showcase">${RIB_INFO_TONES.map(tone => `<article><header><b>${tone}</b><code>Fill · Stroke · Centre</code></header>${renderRibInfo({ tone })}${renderRibInfo({ tone, stroke:true })}${renderRibInfo({ tone, centre:true })}</article>`).join('')}</div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_INPUT_FIELD_TYPES = Object.freeze(['Label inline','Label out','Text area input']);
+const RIB_INPUT_FIELD_STATES = Object.freeze(['Default','Hover','Typing','Disabled','Filled']);
+const RIB_INPUT_FIELD_ASSETS = Object.freeze({
+  help:'../assets/rib/input-field/help.svg',
+  error:'../assets/rib/input-field/error.svg'
+});
+
+function renderRibInputField(options = {}){
+  const type = RIB_INPUT_FIELD_TYPES.includes(options.type) ? options.type : 'Label inline';
+  const state = RIB_INPUT_FIELD_STATES.includes(options.state) ? options.state : 'Default';
+  const label = String(options.label || 'Label');
+  const value = String(options.value || (state === 'Filled' ? 'Input' : ''));
+  const helper = String(options.helper || 'This is a help text');
+  const error = options.error === true;
+  const id = String(options.id || 'rib-input-field');
+  const isTextarea = type === 'Text area input';
+  const stateClass = state.toLowerCase();
+  const helpAsset = error ? RIB_INPUT_FIELD_ASSETS.error : RIB_INPUT_FIELD_ASSETS.help;
+  const control = isTextarea
+    ? `<textarea class="rib-input-field__control" id="${esc(id)}"${state === 'Disabled' ? ' disabled' : ''} aria-invalid="${error ? 'true' : 'false'}" aria-describedby="${esc(id)}-help" placeholder="${esc(label)}">${esc(value)}</textarea>`
+    : `<input class="rib-input-field__control" id="${esc(id)}"${state === 'Disabled' ? ' disabled' : ''} aria-invalid="${error ? 'true' : 'false'}" aria-describedby="${esc(id)}-help" type="text" value="${esc(value)}" placeholder="${esc(label)}">`;
+  return `<label class="rib-input-field rib-input-field--${isTextarea ? 'textarea' : type === 'Label out' ? 'label-out' : 'inline'} is-${stateClass}${error ? ' has-error' : ''}${options.large ? ' is-large' : ''}" data-node-id="941-3119">
+    ${type === 'Label out' ? `<span class="rib-input-field__outside-label">${esc(label)}</span>` : ''}
+    <span class="rib-input-field__shell">${options.inputIcon ? '<span class="rib-input-field__prefix" aria-hidden="true">₹</span>' : ''}${control}${options.rightLabel ? `<span class="rib-input-field__right-label">${esc(options.rightLabel)}</span>` : ''}</span>
+    ${options.showHelp === false ? '' : `<span class="rib-input-field__help" id="${esc(id)}-help"><img src="${helpAsset}" alt="">${esc(helper)}</span>`}
+  </label>`;
+}
+
+function renderRibInputFieldShowcase(){
+  return `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=941-3119" target="_blank" rel="noreferrer">Open Input field source</a></p><div class="rib-input-field-showcase">${RIB_INPUT_FIELD_TYPES.map(type => `<article><header><b>${type}</b><code>Text Size · Default / Large</code></header>${RIB_INPUT_FIELD_STATES.map(state => `<div class="rib-input-field-showcase__row"><span>${state}</span>${renderRibInputField({ type, state, error:state === 'Filled', value:state === 'Filled' ? 'Input' : '', rightLabel:type === 'Label inline' ? 'Text' : '', id:`${type}-${state}` })}</div>`).join('')}</article>`).join('')}</div>`;
+}
+
+const RIB_LABEL_SIZES = Object.freeze(['Icon-Large','Large','Medium','Small','Badge']);
+const RIB_LABEL_COLOURS = Object.freeze(['Translucent','Inactive','Default-Grey','Green','Maroon','Blue','Red','Orange']);
+
+function renderRibLabel(options = {}){
+  const size = RIB_LABEL_SIZES.includes(options.size) ? options.size : 'Small';
+  const colour = RIB_LABEL_COLOURS.includes(options.colour) ? options.colour : 'Inactive';
+  const text = String(options.text || 'Label text');
+  const className = value => value.toLowerCase().replaceAll(' ','-');
+  const icon = size === 'Icon-Large' ? '<span class="rib-label__icon" aria-hidden="true"></span>' : '';
+  return `<span class="rib-label rib-label--${className(size)} rib-label--${className(colour)}" data-node-id="4049-5384">${icon}${esc(text)}</span>`;
+}
+
+function renderRibLabelShowcase(){
+  return `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4049-5384" target="_blank" rel="noreferrer">Open Label source</a></p><div class="rib-label-showcase">${RIB_LABEL_COLOURS.map(colour => `<article><b>${colour}</b>${RIB_LABEL_SIZES.map(size => `<div><small>${size}</small>${renderRibLabel({ colour, size })}</div>`).join('')}</article>`).join('')}</div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -967,46 +1015,28 @@ const COMPONENTS = {
   },
 
   textfield: {
-    title: 'Input fields', group: 'Inputs', status: 'stable', version: '1.4', updated: '18 Jun 2026',
-    desc: 'Input fields use Mulish and a single state model across text, mobile, amount and OTP variants. Keep labels medium, field text regular, and use orange only for active typing and red only for validation failure.',
+    title: 'Input fields', group: 'Inputs', status: 'stable', version: '2.0', updated: '30 Aug 2026',
+    sandbox: 'textfield',
+    desc: 'The RIB Input field supports inline labels, outside labels and text areas, in Default or Large text sizes, across default, hover, typing, disabled, filled and error presentations.',
     sections: [
-      { title: 'Required states',
-        note: 'These are the canonical states for every input variant in GlobalDS.',
-        html: renderInputStateModel() },
-      { title: 'Typography weights',
-        note: 'The production field treatment should stay light. Avoid bold field values; reserve semibold only for compact metadata and actions.',
-        html: `<div class="input-type-spec">
-          <div><span>Label</span><b style="font-weight:500">Mulish 14/20 · 500</b></div>
-          <div><span>Placeholder</span><b style="font-weight:400;color:var(--gray-500)">Mulish 14/20 · 400</b></div>
-          <div><span>Entered value</span><b style="font-weight:400">Mulish 14/20 · 400</b></div>
-          <div><span>Helper / error</span><b style="font-weight:500">Mulish 12/16 · 500</b></div>
-          <div><span>Affix / country code</span><b style="font-weight:500">Mulish 12/16 · 500</b></div>
-          <div><span>Field action</span><b style="font-weight:600">Mulish 12/16 · 600</b></div>
-        </div>` },
-      { title: 'Variant and state matrix',
-        note: 'Each variant below is shown in the same state order: empty, active, typing, filled, filled hover and error.',
-        html: renderInputVariantGrid() }
+      { title: 'RIB source variants', note: 'Component set 941:3119 · Type, Text Size, State, Error, helper, icon, right-label and tooltip properties.', html: renderRibInputFieldShowcase() },
+      { title: 'Foundation mapping', html: `<div class="button-foundation-grid"><article><span>Default stroke</span><b>Cool Grey 110</b><code>#EFF1F6</code></article><article><span>Typing</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Error</span><b>Error 100</b><code>#D8272D</code></article><article><span>Disabled</span><b>Cool Grey 100 · Grey 90</b><code>#F8F9FB · #B2B5B8</code></article></div>` }
     ],
     props: [
-      ['label','String?','null','Optional top or floating label'],
-      ['hint','String?','null','Placeholder/example content'],
-      ['helper','String?','null','Persistent helper text below the field'],
+      ['label','String','required','Inline or outside label'],
+      ['type','RibInputFieldType','labelInline','labelInline · labelOut · textArea'],
+      ['textSize','RibInputTextSize','defaultSize','defaultSize · large'],
+      ['helper','String?','null','Persistent helper text'],
       ['errorText','String?','null','Replaces helper and switches to error state'],
-      ['prefixIcon','IconData?','null','Leading icon'],
-      ['suffixIcon','IconData?','null','Trailing icon such as eye or keyboard'],
-      ['suffixText','String?','null','Trailing text such as currency or unit'],
-      ['countryCode','String?','null','Enables phone input mode with country selector'],
-      ['floatingLabel','bool','false','Uses the compact inset label treatment'],
-      ['enabled','bool','true','Disabled fields keep their value readable'],
-      ['keyboardType','TextInputType','text','Use phone, number, emailAddress or text']
+      ['leading','Widget?','null','Optional input icon'],
+      ['rightLabel','String?','null','Optional trailing label'],
+      ['enabled','bool','true','Disables editing while preserving the value'],
+      ['controller','TextEditingController?','null','Native Flutter input controller']
     ],
-    flutter: `DsTextField(
-  label: 'Mobile number',
-  hint: 'Enter mobile number',
-  countryCode: '+91',
-  suffixIcon: TablerIcons.keyboard,
-  errorText: state.invalidMobile ? 'Please enter Customer Identification (CIF) Number' : null,
-  onChanged: controller.setMobile,
+    flutter: `RibInputField(
+  label: 'User ID',
+  helper: 'This is a help text',
+  controller: userIdController,
 )`
   },
 
@@ -1222,6 +1252,27 @@ DsChip(
   leadingIcon: TablerIcons.calendar,
   selected: filter.isThisMonth,
   onTap: () => filter.toggleThisMonth(),
+)`
+  },
+
+  label: {
+    title: 'Label', group: 'Display', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    sandbox: 'label',
+    desc: 'RIB Labels annotate compact account and product metadata with five sizes and eight foundation-backed colour treatments.',
+    sections: [
+      { title: 'RIB source variants', note: 'Component set 4049:5384 · Icon-Large, Large, Medium, Small and Badge · eight colour variants.', html: renderRibLabelShowcase() },
+      { title: 'Usage contract', note: 'Use semantic colours only when the label carries status meaning. Badge is a top-edge marker; Translucent is reserved for dark or branded surfaces.', html: `<div class="button-foundation-grid"><article><span>Neutral</span><b>Grey 60 / Cool Grey 110</b><code>#F7F7F7 · #EFF1F6</code></article><article><span>Positive</span><b>Green 100</b><code>#E5F4EE</code></article><article><span>Attention</span><b>Amber 100</b><code>#FAEFE8</code></article><article><span>Critical</span><b>Peach 100</b><code>#FCEEEE</code></article></div>` }
+    ],
+    props: [
+      ['text','String','required','Compact visible label'],
+      ['size','RibLabelSize','small','iconLarge · large · medium · small · badge'],
+      ['colour','RibLabelColour','inactive','translucent · inactive · defaultGrey · green · maroon · blue · red · orange'],
+      ['icon','Widget?','null','Optional icon for iconLarge']
+    ],
+    flutter: `RibLabel(
+  text: 'Active',
+  size: RibLabelSize.medium,
+  colour: RibLabelColour.green,
 )`
   },
 

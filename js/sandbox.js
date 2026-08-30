@@ -466,44 +466,48 @@ ${items}
   },
 
   textfield: {
-    label: 'Text field',
+    label: 'RIB Input fields',
     controls: [
-      { key:'label',    label:'Label',          type:'text',   value:'User ID' },
-      { key:'value',    label:'Value',          type:'text',   value:'' },
-      { key:'hint',     label:'Placeholder',    type:'text',   value:'Enter your user ID' },
-      { key:'helper',   label:'Helper text',    type:'text',   value:'As printed on your welcome kit.' },
-      { key:'state',    label:'State',          type:'select', options:['default','focus','error','disabled'], value:'default' },
-      { key:'icon',     label:'Prefix icon',    type:'toggle', value:true },
-      { key:'password', label:'Password mode',  type:'toggle', value:false }
+      { key:'label', label:'Label', type:'text', value:'User ID' },
+      { key:'value', label:'Value', type:'text', value:'' },
+      { key:'helper', label:'Helper text', type:'text', value:'This is a help text' },
+      { key:'type', label:'Type', type:'select', options:['Label inline','Label out','Text area input'], value:'Label inline' },
+      { key:'state', label:'State', type:'select', options:['Default','Hover','Typing','Disabled','Filled'], value:'Default' },
+      { key:'large', label:'Large text', type:'toggle', value:false },
+      { key:'error', label:'Error', type:'toggle', value:false },
+      { key:'icon', label:'Input icon', type:'toggle', value:false },
+      { key:'rightLabel', label:'Right label', type:'text', value:'Text' }
     ],
     render(p){
-      let cls = 'ds-field';
-      if (p.state === 'focus') cls += ' is-focus';
-      if (p.state === 'error') cls += ' is-error';
-      if (p.state === 'disabled') cls += ' is-disabled';
-      const helper = p.state === 'error' ? 'This doesn\'t look right — check and retry.' : p.helper;
-      return '<div class="' + cls + '">' +
-        '<label>' + esc(p.label) + '</label>' +
-        '<div class="ds-input">' +
-        (p.icon ? '<i class="ti ti-user"></i>' : '') +
-        '<input ' + (p.password ? 'type="password" ' : '') +
-        (p.value ? 'value="' + esc(p.value) + '" ' : '') +
-        'placeholder="' + esc(p.hint) + '"' + (p.state === 'disabled' ? ' disabled' : '') + '>' +
-        (p.password ? '<i class="ti ti-eye"></i>' : '') +
-        '</div>' +
-        (helper ? '<span class="ds-help">' + esc(helper) + '</span>' : '') +
-        '</div>';
+      return renderRibInputField({ label:p.label, value:p.value, helper:p.helper, type:p.type, state:p.state, large:p.large, error:p.error, inputIcon:p.icon, rightLabel:p.rightLabel });
     },
     dart(p){
-      const lines = ["label: '" + p.label.replace(/'/g, "\\'") + "'"];
-      if (p.hint) lines.push("hint: '" + p.hint.replace(/'/g, "\\'") + "'");
+      const type = { 'Label inline':'labelInline', 'Label out':'labelOut', 'Text area input':'textArea' }[p.type];
+      const lines = ["label: '" + p.label.replace(/'/g, "\\'") + "'", `type: RibInputFieldType.${type}`];
       if (p.helper) lines.push("helper: '" + p.helper.replace(/'/g, "\\'") + "'");
-      if (p.icon) lines.push('prefixIcon: TablerIcons.user');
-      if (p.password) lines.push('obscure: true');
-      if (p.state === 'error') lines.push("errorText: 'This doesn\\'t look right — check and retry.'");
-      if (p.state === 'disabled') lines.push('enabled: false');
-      lines.push('onChanged: (value) => controller.update(value)');
-      return 'DsTextField(\n  ' + lines.join(',\n  ') + ',\n)';
+      if (p.rightLabel) lines.push("rightLabel: '" + p.rightLabel.replace(/'/g, "\\'") + "'");
+      if (p.error) lines.push("errorText: '" + p.helper.replace(/'/g, "\\'") + "'");
+      if (p.icon) lines.push('leading: const Icon(Icons.currency_rupee)');
+      lines.push('textSize: RibInputTextSize.' + (p.large ? 'large' : 'defaultSize'));
+      lines.push('enabled: ' + (p.state !== 'Disabled'));
+      return 'RibInputField(\n  ' + lines.join(',\n  ') + ',\n)';
+    }
+  },
+
+  label: {
+    label:'RIB Label',
+    controls:[
+      { key:'text', label:'Text', type:'text', value:'Active' },
+      { key:'size', label:'Size', type:'select', options:['Icon-Large','Large','Medium','Small','Badge'], value:'Medium' },
+      { key:'colour', label:'Colour', type:'select', options:['Translucent','Inactive','Default-Grey','Green','Maroon','Blue','Red','Orange'], value:'Green' }
+    ],
+    render(p){
+      const dark = p.colour === 'Translucent';
+      return `<section class="rib-label-scenario${dark ? ' is-dark' : ''}" aria-label="Product metadata label">${renderRibLabel(p)}</section>`;
+    },
+    dart(p){
+      const camel = value => value.toLowerCase().replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      return `RibLabel(\n  text: '${p.text.replace(/'/g, "\\'")}',\n  size: RibLabelSize.${camel(p.size)},\n  colour: RibLabelColour.${camel(p.colour)},\n)`;
     }
   },
 
@@ -629,7 +633,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};
