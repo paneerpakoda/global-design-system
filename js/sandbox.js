@@ -511,6 +511,38 @@ ${items}
     }
   },
 
+  lists: {
+    label:'RIB Lists',
+    controls:[
+      { key:'variant', label:'Variant', type:'select', options:['single','numbered','icon-circle','line-icon','icon-square','no-headline-large','no-headline-small','headline','two-column','container','checklist'], value:'icon-circle' },
+      { key:'title', label:'Headline', type:'text', value:'Savings account' },
+      { key:'subtitle', label:'Supporting text', type:'text', value:'Primary account for everyday banking' },
+      { key:'subject', label:'Subject', type:'text', value:'₹ 48,250' }
+    ],
+    render(p){
+      const items = [0,1,2].map(index => ({ title:index ? `${p.title} ${index + 1}` : p.title, subtitle:p.subtitle, subject:p.subject, checked:index === 0 }));
+      return `<section class="rib-list-scenario" aria-label="Account list example">${renderRibList({ variant:p.variant, items, ariaLabel:'Accounts' })}</section>`;
+    },
+    dart(p){
+      const variant = p.variant.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      return `RibList(\n  items: accountItems,\n  variant: RibListVariant.${variant},\n  onTap: openAccount,\n)`;
+    }
+  },
+
+  loadingindicator: {
+    label:'RIB Loading indicator',
+    controls:[
+      { key:'label', label:'Label', type:'text', value:'Loading account details' },
+      { key:'size', label:'Size', type:'select', options:['small','medium','large'], value:'medium' }
+    ],
+    render(p){
+      return `<section class="rib-list-scenario" aria-label="Loading example">${renderRibLoadingIndicator(p)}</section>`;
+    },
+    dart(p){
+      return `RibLoadingIndicator(\n  label: '${p.label.replace(/'/g, "\\'")}',\n  size: RibLoadingSize.${p.size},\n)`;
+    }
+  },
+
   otp: {
     label: 'OTP & grid card',
     controls: [
@@ -633,7 +665,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

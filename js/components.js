@@ -849,7 +849,58 @@ function renderRibLabelShowcase(){
   return `<p class="rib-source-link"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4049-5384" target="_blank" rel="noreferrer">Open Label source</a></p><div class="rib-label-showcase">${RIB_LABEL_COLOURS.map(colour => `<article><b>${colour}</b>${RIB_LABEL_SIZES.map(size => `<div><small>${size}</small>${renderRibLabel({ colour, size })}</div>`).join('')}</article>`).join('')}</div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_LIST_VARIANTS = Object.freeze([
+  { key:'single', label:'Single column' },
+  { key:'numbered', label:'Numbered' },
+  { key:'icon-circle', label:'Filled icon + circle' },
+  { key:'line-icon', label:'Line icon' },
+  { key:'icon-square', label:'Filled icon + square' },
+  { key:'no-headline-large', label:'No Headline Large' },
+  { key:'no-headline-small', label:'No Headline Small' },
+  { key:'headline', label:'Headline' },
+  { key:'two-column', label:'Two column standard' },
+  { key:'container', label:'Two column container' },
+  { key:'checklist', label:'Checklist' }
+]);
+const RIB_LIST_ASSETS = Object.freeze({ bank:'../assets/rib/list/bank.svg', card:'../assets/rib/list/block-card.svg' });
+const RIB_LIST_SOURCE_LINKS = Object.freeze([
+  'https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4122-2771',
+  'https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4122-2906',
+  'https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4251-15996',
+  'https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4254-17222',
+  'https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=4254-17224'
+]);
+
+function renderRibList(options = {}){
+  const variant = RIB_LIST_VARIANTS.find(item => item.key === options.variant) || RIB_LIST_VARIANTS[0];
+  const items = Array.isArray(options.items) && options.items.length ? options.items : [
+    { title:'Headline', subtitle:'Dummy text for long sentences here', subject:'Subject' },
+    { title:'Headline', subtitle:'Dummy text for long sentences here', subject:'Subject' }
+  ];
+  const isTwo = ['two-column','container','checklist'].includes(variant.key);
+  const modifiers = [isTwo ? 'rib-list--two-column' : '', variant.key === 'checklist' ? 'rib-list--checklist' : '', `rib-list--${variant.key}`].filter(Boolean).join(' ');
+  return `<ul class="rib-list ${modifiers}" aria-label="${esc(options.ariaLabel || variant.label)}">
+    ${items.map((item, index) => `<li class="rib-list__item${variant.key === 'container' ? ' is-container' : ''}">
+      ${variant.key === 'numbered' ? `<span class="rib-list__number">${index + 1}</span>` : ''}
+      ${['icon-circle','line-icon','icon-square','no-headline-large','no-headline-small'].includes(variant.key) ? `<span class="rib-list__icon ${variant.key === 'icon-square' ? 'is-square' : ''}" style="--rib-list-icon:url(${variant.key === 'line-icon' ? RIB_LIST_ASSETS.card : RIB_LIST_ASSETS.bank})" aria-hidden="true"></span>` : ''}
+      ${variant.key === 'checklist' ? `<label class="rib-list__check"><input type="checkbox"${item.checked ? ' checked' : ''}><span>${esc(item.title)}</span></label>` : `<span class="rib-list__copy">${variant.key.startsWith('no-headline') ? '' : `<span class="rib-list__title">${esc(item.title)}</span>`}<span class="rib-list__subtitle">${esc(variant.key.startsWith('no-headline') ? `${item.title} ${item.subtitle || ''}` : item.subtitle || '')}</span></span>`}
+      ${isTwo || variant.key === 'headline' ? `<span class="rib-list__subject">${esc(item.subject || '')}</span>` : ''}
+    </li>`).join('')}
+  </ul>`;
+}
+
+function renderRibListShowcase(){
+  const links = RIB_LIST_SOURCE_LINKS.map(link => `<a href="${link}" target="_blank" rel="noreferrer">${link.split('node-id=')[1]}</a>`).join(' · ');
+  return `<p class="rib-source-link">${links}</p><div class="rib-list-showcase">${RIB_LIST_VARIANTS.map(variant => `<article><header><b>${variant.label}</b><code>${['two-column','container'].includes(variant.key) ? '356px' : variant.key === 'checklist' ? '516px' : '308px'}</code></header>${renderRibList({ variant:variant.key })}</article>`).join('')}</div>`;
+}
+
+function renderRibLoadingIndicator(options = {}){
+  const size = ['small','medium','large'].includes(options.size) ? options.size : 'medium';
+  const label = String(options.label || 'Loading');
+  return `<span class="rib-loading-indicator rib-loading-indicator--${size}" role="status" aria-live="polite"><span class="rib-loading-indicator__spinner" aria-hidden="true"></span><span>${esc(label)}</span></span>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -1529,27 +1580,19 @@ DsChip(
   },
 
   loadingindicator: {
-    title: 'Loading Indicator', group: 'Feedback', status: 'beta', version: '0.1', updated: '18 Jun 2026',
-    desc: 'Loading indicators are included as a utility. Prefer button-level loading for submissions and skeleton states for page-level loading.',
+    title: 'Loading Indicator', group: 'Feedback', status: 'beta', version: '0.2', updated: '30 Aug 2026',
+    sandbox: 'loadingindicator',
+    desc: 'A compact, accessible indeterminate progress signal built exclusively from GlobalDS foundations. No published Loading indicator component set is available in the linked RIB library.',
     sections: [
-      { title: 'Inline',
-        html: `<div class="canvas">
-          <span class="ds-loading"><span class="ds-spinner"></span> Loading account details</span>
-          <button class="ds-btn primary sm" disabled><span class="ds-spinner"></span> Continue</button>
-        </div>` },
-      { title: 'Page placeholder',
-        html: `<div class="canvas col">
-          <div class="ds-skeleton" style="width:60%"></div>
-          <div class="ds-skeleton" style="width:90%"></div>
-          <div class="ds-skeleton" style="width:72%"></div>
-        </div>` }
+      { title: 'Sizes', note: 'Foundation-backed fallback. Motion stops when the customer requests reduced motion.', html: `<div class="rib-loading-showcase">${['small','medium','large'].map(size => `<article><b>${size}</b>${renderRibLoadingIndicator({ size, label:'Loading account details' })}</article>`).join('')}</div>` },
+      { title: 'Usage', note: 'Use for short, indeterminate waits. Use Progress for known completion and a skeleton for page-level loading.', html: `<div class="canvas">${renderRibLoadingIndicator({ label:'Verifying transfer details' })}</div>` }
     ],
     props: [
-      ['label','String?','null','Optional accessible loading label'],
-      ['size','DsLoaderSize','small','small · medium'],
-      ['visible','bool','true','Controls visibility']
+      ['label','String','Loading','Visible and announced loading label'],
+      ['size','RibLoadingSize','medium','small · medium · large'],
+      ['visible','bool','true','Controls whether status is present']
     ],
-    flutter: `DsLoadingIndicator(label: 'Loading account details')`
+    flutter: `RibLoadingIndicator(label: 'Loading account details')`
   },
 
   radiobutton: {
@@ -1700,24 +1743,24 @@ DsChip(
   },
 
   lists: {
-    title: 'Lists', group: 'Display', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Lists organize repeated rows such as payees, settings and account actions. Rows use compact type, optional icon/avatar and a clear trailing affordance.',
+    title: 'Lists', group: 'Display', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    sandbox: 'lists',
+    desc: 'RIB Lists organize single-column, numbered, icon-led, headline, two-column, contained and checklist information with a compact shared type hierarchy.',
     sections: [
-      { title: 'Action list',
-        html: `<div class="canvas">
-          <div class="ds-list">
-            <div class="ds-list-row"><i class="ti ti-user-plus"></i><span><b>Add new payee</b><small>Send money to someone new</small></span><i class="ti ti-chevron-right"></i></div>
-            <div class="ds-list-row"><i class="ti ti-shield-check"></i><span><b>Security settings</b><small>Manage verification methods</small></span><i class="ti ti-chevron-right"></i></div>
-            <div class="ds-list-row"><i class="ti ti-file-text"></i><span><b>Statements</b><small>Download account documents</small></span><i class="ti ti-chevron-right"></i></div>
-          </div>
-        </div>` }
+      { title: 'RIB source variants', note: 'Five published component sets on the Lists page cover Single column, Headline, Two column container, Two column standard and Checklist.', html: renderRibListShowcase() },
+      { title: 'Foundation mapping', html: `<div class="button-foundation-grid"><article><span>Divider</span><b>Cool Grey 110</b><code>#EFF1F6</code></article><article><span>Icon surface</span><b>Cool Grey 100</b><code>#F8F9FB</code></article><article><span>Headline</span><b>Grey 140</b><code>#333638</code></article><article><span>Body</span><b>Grey 120</b><code>#64696D</code></article></div>` }
     ],
     props: [
-      ['items','List<DsListItem>','required','Rows to render'],
-      ['dense','bool','false','Use compact row height'],
-      ['onTap','ValueChanged<int>?','null','Row action callback']
+      ['items','List<RibListItem>','required','Rows to render'],
+      ['variant','RibListVariant','singleColumn','Source list presentation'],
+      ['onTap','ValueChanged<int>?','null','Optional row action'],
+      ['onChecked','ValueChanged<int>?','null','Checklist value callback']
     ],
-    flutter: `DsList(items: settingsItems, onTap: openItem)`
+    flutter: `RibList(
+  items: accountItems,
+  variant: RibListVariant.iconCircle,
+  onTap: openItem,
+)`
   },
 
   activitytimeline: {
