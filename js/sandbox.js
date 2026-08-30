@@ -151,6 +151,15 @@ function renderRibCheckboxScenario(p){
   </section>`;
 }
 
+function renderRibChipScenario(p){
+  const translucent = p.variant === 'label-translucent';
+  const size = p.variant === 'standard' ? p.size : 'label';
+  return `<section class="rib-chip-scenario${translucent ? ' is-translucent' : ''}" aria-label="Filter chip example">
+    <div class="rib-chip-scenario__copy"><span>Transactions</span><h2>Refine your results</h2><p>Use chips for compact filters, selections, and short contextual actions.</p></div>
+    <div class="rib-chip-scenario__preview">${renderRibChip({ variant:p.variant, size, state:p.state, label:p.label, leadingIcon:p.icon === 'none' ? null : p.icon })}</div>
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -251,6 +260,33 @@ const SANDBOX = {
   size: RibCheckboxSize.${p.size},
   onChanged: (value) => setState(() => checked = value),
 )`;
+    }
+  },
+
+  chip: {
+    label:'RIB Chip',
+    controls:[
+      { key:'label', label:'Label', type:'text', value:'Repeat transfer' },
+      { key:'variant', label:'Variant', type:'select', options:['standard','label-white','label-translucent'], value:'standard' },
+      { key:'size', label:'Standard size', type:'select', options:['large','medium','small'], value:'medium' },
+      { key:'state', label:'State', type:'select', options:['default','hover','selected'], value:'selected' },
+      { key:'icon', label:'Leading icon', type:'select', options:['none','repeat','copy'], value:'repeat' }
+    ],
+    render(p){
+      return renderRibChipScenario(p);
+    },
+    dart(p){
+      const variant = p.variant.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      const label = String(p.label || 'Chip').replace(/'/g, "\\'");
+      const lines = [
+        `label: '${label}'`,
+        `variant: RibChipVariant.${variant}`,
+        `size: RibChipSize.${p.size}`,
+        `selected: ${p.state === 'selected'}`
+      ];
+      if(p.icon !== 'none') lines.push(`leadingIcon: const Icon(Icons.${p.icon})`);
+      lines.push('onPressed: () => toggleFilter()');
+      return 'RibChip(\n  ' + lines.join(',\n  ') + ',\n)';
     }
   },
 
@@ -534,7 +570,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

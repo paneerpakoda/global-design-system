@@ -693,7 +693,55 @@ function renderRibCheckboxShowcase(){
   <div class="rib-checkbox-showcase">${RIB_CHECKBOX_SIZES.map(size => `<article class="rib-checkbox-showcase__card"><header><div><span>Checkbox</span><h3>${size.label}</h3></div><code>20px control</code></header><div class="rib-checkbox-showcase__states">${RIB_CHECKBOX_STATES.map(state => `<div><b>${state.label}</b>${renderRibCheckbox({ size:size.key, state:state.key, label:'Checkbox' })}</div>`).join('')}</div></article>`).join('')}</div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_CHIP_ASSETS = Object.freeze({
+  repeat: '../assets/icons/general/line/repeat--line--237-432.svg',
+  copy: '../assets/icons/general/line/copy--line--237-435.svg',
+  close: '../assets/icons/general/line/close--line--237-434.svg',
+  down: '../assets/icons/general/line/chevron-down--line--235-118.svg'
+});
+
+const RIB_CHIP_VARIANTS = Object.freeze([
+  { key:'standard', label:'Standard' },
+  { key:'label-white', label:'Label white' },
+  { key:'label-translucent', label:'Label translucent' }
+]);
+
+const RIB_CHIP_STATES = Object.freeze([
+  { key:'default', label:'Default' },
+  { key:'hover', label:'Hover' },
+  { key:'selected', label:'Selected' }
+]);
+
+function renderRibChipIcon(name){
+  const asset = RIB_CHIP_ASSETS[name];
+  return asset ? `<span class="rib-chip__icon" style="--rib-chip-icon:url(${asset})" aria-hidden="true"></span>` : '';
+}
+
+function renderRibChip(options = {}){
+  const variant = RIB_CHIP_VARIANTS.find(item => item.key === options.variant) || RIB_CHIP_VARIANTS[0];
+  const state = RIB_CHIP_STATES.find(item => item.key === options.state) || RIB_CHIP_STATES[0];
+  const size = ['large','medium','small'].includes(options.size) ? options.size : variant.key === 'standard' ? 'medium' : 'label';
+  const label = String(options.label || 'Chip');
+  const selected = state.key === 'selected' || options.selected === true;
+  const leading = options.leadingIcon ? renderRibChipIcon(options.leadingIcon) : '';
+  const trailing = options.trailingIcon ? renderRibChipIcon(options.trailingIcon) : '';
+  return `<button type="button" class="rib-chip rib-chip--${variant.key} rib-chip--${size}${state.key !== 'default' ? ` is-${state.key}` : ''}" aria-pressed="${selected ? 'true' : 'false'}">${leading}<span>${esc(label)}</span>${trailing}</button>`;
+}
+
+function renderRibChipShowcase(){
+  const specimens = [
+    { variant:'standard', size:'large', label:'Large', chipLabel:'View details', trailingIcon:'down' },
+    { variant:'standard', size:'medium', label:'Medium · leading', chipLabel:'Repeat', leadingIcon:'repeat' },
+    { variant:'standard', size:'medium', label:'Medium · trailing', chipLabel:'Options', trailingIcon:'down' },
+    { variant:'standard', size:'small', label:'Small', chipLabel:'Filter', trailingIcon:'close' },
+    { variant:'label-white', size:'label', label:'White label', chipLabel:'Account number', trailingIcon:'copy' },
+    { variant:'label-translucent', size:'label', label:'Translucent label', chipLabel:'Savings account', trailingIcon:'copy' }
+  ];
+  return `<div class="rib-chip-source"><span>RIB only</span><div class="rib-chip-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=1135-15928" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-chip-try" href="#/sandbox/chip"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-chip-showcase">${specimens.map(specimen => `<article class="rib-chip-showcase__card${specimen.variant === 'label-translucent' ? ' is-brand' : ''}"><header><div><span>${RIB_CHIP_VARIANTS.find(item => item.key === specimen.variant).label}</span><h3>${specimen.label}</h3></div></header><div class="rib-chip-showcase__states">${RIB_CHIP_STATES.map(state => `<div><b>${state.label}</b>${renderRibChip({ ...specimen, state:state.key, label:specimen.chipLabel })}</div>`).join('')}</div></article>`).join('')}</div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','checkbox','chip','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -811,6 +859,32 @@ const COMPONENTS = {
   onChanged: preferences.setEmailAlerts,
 )`,
     sandbox: 'checkbox'
+  },
+
+  chip: {
+    title: 'Chip', group: 'Display', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    desc: 'RIB Chips are compact selectable actions across three standard sizes and two label treatments, with optional local action glyphs.',
+    sections: [
+      { title:'RIB source components', note:'The matrix covers Standard and Label chip families, their supported sizes and icon positions, and Default, Hover, and Selected states.', html:renderRibChipShowcase() },
+      { title:'Foundation mapping', note:'Selected standard chips combine Amber90 with Orange100. White labels use Cool Grey 110 and Button White shadow; translucent labels use audited white alpha foundations.', html:`<div class="button-foundation-grid"><article><span>Selected</span><b>Amber 90 · Orange 100</b><code>#FCF6F2 · #F0792E</code></article><article><span>Default border</span><b>Grey 70</b><code>#E7E8E9</code></article><article><span>White label</span><b>Cool Grey 110</b><code>#EFF1F6</code></article><article><span>Translucent</span><b>White 10% · 20%</b><code>rgba(255,255,255,.10/.20)</code></article><article><span>Elevation</span><b>Button White</b><code>0 1 2 · 6%</code></article></div>` }
+    ],
+    props: [
+      ['label','String','required','Visible chip text.'],
+      ['variant','RibChipVariant','standard','standard · labelWhite · labelTranslucent'],
+      ['size','RibChipSize','medium','large · medium · small'],
+      ['selected','bool','false','Current toggle state.'],
+      ['leadingIcon','Widget?','null','Optional leading action glyph.'],
+      ['trailingIcon','Widget?','null','Optional trailing action glyph.'],
+      ['onPressed','VoidCallback?','required','Chip action callback.']
+    ],
+    flutter:`RibChip(
+  label: 'Repeat',
+  size: RibChipSize.medium,
+  selected: filters.repeat,
+  leadingIcon: const Icon(Icons.repeat),
+  onPressed: toggleRepeat,
+)`,
+    sandbox: 'chip'
   },
 
   buttongroups: {
@@ -1122,40 +1196,6 @@ DsChip(
   leadingIcon: TablerIcons.calendar,
   selected: filter.isThisMonth,
   onTap: () => filter.toggleThisMonth(),
-)`
-  },
-
-  chips: {
-    title: 'Chips', group: 'Display', status: 'stable', version: '1.0', updated: '18 Jun 2026',
-    desc: 'Chips are compact interactive filters and selections. They use pill radius, 12px body text and clear selected state.',
-    sections: [
-      { title: 'Filter chips',
-        html: `<div class="canvas">
-          <span class="ds-chip selected"><i class="ti ti-check"></i> All</span>
-          <span class="ds-chip">Transfers</span>
-          <span class="ds-chip">Bills</span>
-          <span class="ds-chip">Deposits</span>
-          <span class="ds-chip"><i class="ti ti-calendar"></i> This month</span>
-        </div>` },
-      { title: 'Removable chips',
-        html: `<div class="canvas">
-          <span class="ds-chip selected">Canada <i class="ti ti-x"></i></span>
-          <span class="ds-chip selected">CAD <i class="ti ti-x"></i></span>
-          <span class="ds-chip">Add filter <i class="ti ti-plus"></i></span>
-        </div>` }
-    ],
-    props: [
-      ['label','String','required','Chip text'],
-      ['selected','bool','false','Selected visual state'],
-      ['leadingIcon','IconData?','null','Optional leading icon'],
-      ['trailingIcon','IconData?','null','Optional close or add icon'],
-      ['onTap','VoidCallback?','required','Chip action']
-    ],
-    flutter: `DsChip(
-  label: 'This month',
-  leadingIcon: TablerIcons.calendar,
-  selected: filter.isThisMonth,
-  onTap: filter.toggleThisMonth,
 )`
   },
 
