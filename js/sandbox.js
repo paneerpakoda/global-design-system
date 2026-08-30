@@ -136,6 +136,14 @@ function renderRibCalendarScenario(p){
   </section>`;
 }
 
+function renderRibCardScenario(p){
+  const title = String(p.title || '').trim() || undefined;
+  return `<section class="rib-card-scenario" aria-label="Product card example">
+    <div class="rib-card-scenario__copy"><span>Products</span><h2>Your banking at a glance</h2><p>Use a card variant that matches the product family and information hierarchy.</p></div>
+    ${renderRibCard({ variant:p.variant, title })}
+  </section>`;
+}
+
 const SANDBOX = {
 
   button: {
@@ -195,6 +203,26 @@ const SANDBOX = {
       if(p.mode === 'range' && p.state === 'End date selected') lines.push('rangeEnd: DateTime(2020, 10, 16)');
       lines.push('onDateSelected: (date) => setState(() => selectedDate = date)');
       return 'RibCalendar(\n  ' + lines.join(',\n  ') + ',\n)';
+    }
+  },
+
+  cards: {
+    label:'RIB Cards',
+    controls:[
+      { key:'variant', label:'Variant', type:'select', options:['loan','investment','insurance','offer'], value:'loan' },
+      { key:'title', label:'Custom title', type:'text', value:'' }
+    ],
+    render(p){
+      return renderRibCardScenario(p);
+    },
+    dart(p){
+      const fallback = { loan:'Education loan', investment:'National Pension System', insurance:'Life insurance', offer:'Build wealth for tomorrow' }[p.variant];
+      const title = String(p.title || fallback).replace(/'/g, "\\'");
+      return `RibCard(
+  variant: RibCardVariant.${p.variant},
+  title: '${title}',
+  onPrimaryAction: () => handleCardAction(),
+)`;
     }
   },
 
@@ -478,7 +506,7 @@ ${items}
 
 /* ---------- sandbox page rendering ---------- */
 
-const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','accordion','activity-timeline','avatar','breadcrumbs']);
+const PUBLISHED_SANDBOX_IDS = Object.freeze(['button','calendar','cards','accordion','activity-timeline','avatar','breadcrumbs']);
 
 let sbCurrent = 'button';
 let sbProps = {};

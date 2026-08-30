@@ -604,7 +604,63 @@ function renderRibCalendarShowcase(){
   </div>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','accordions','activity-timeline','avatar','breadcrumbs']);
+const RIB_CARD_ASSETS = Object.freeze({
+  loan: '../assets/icons/product/line/education-loan--line--530-321.svg',
+  investment: '../assets/icons/product/filled/nps--filled--934-464.svg',
+  insurance: '../assets/icons/product/line/life-insurance--line--235-402.svg',
+  download: '../assets/icons/general/line/download--line--599-44.svg',
+  next: '../assets/icons/general/line/chevron-right--line--235-115.svg',
+  ornamentTop: '../assets/components/cards/offer-ornament-top.svg',
+  ornamentBottom: '../assets/components/cards/offer-ornament-bottom.svg'
+});
+
+const RIB_CARD_VARIANTS = Object.freeze([
+  { key:'loan', label:'Loan', width:272, height:150 },
+  { key:'investment', label:'Investment', width:290, height:130 },
+  { key:'insurance', label:'Insurance', width:272, height:160 },
+  { key:'offer', label:'Offer', width:288, height:160 }
+]);
+
+function renderRibCardIcon(asset, className = ''){
+  return `<span class="rib-card__icon ${className}" style="--rib-card-icon:url(${asset})" aria-hidden="true"></span>`;
+}
+
+function renderRibCard(options = {}){
+  const variant = RIB_CARD_VARIANTS.find(item => item.key === options.variant) || RIB_CARD_VARIANTS[0];
+  const content = {
+    loan: { title:'Education loan', number:'LN 003501 ···· 8472', metricLabel:'Outstanding', metric:'₹ 8,40,000', secondaryLabel:'Next EMI', secondary:'₹ 18,420' },
+    investment: { title:'National Pension System', number:'PRAN ···· 9021', metricLabel:'Current value', metric:'₹ 4,28,650', secondaryLabel:'Returns', secondary:'+12.4%' },
+    insurance: { title:'Life insurance', number:'Policy ···· 6734', metricLabel:'Sum assured', metric:'₹ 50,00,000', secondaryLabel:'Premium due', secondary:'18 Sep' },
+    offer: { title:'Build wealth for tomorrow', number:'Start an SIP from ₹500', metricLabel:'', metric:'', secondaryLabel:'', secondary:'' }
+  }[variant.key];
+  const title = String(options.title || content.title);
+  const icon = RIB_CARD_ASSETS[variant.key];
+
+  if(variant.key === 'offer') {
+    return `<article class="rib-card rib-card--offer" aria-label="Investment offer card">
+      <img class="rib-card__ornament is-top" src="${RIB_CARD_ASSETS.ornamentTop}" alt="">
+      <img class="rib-card__ornament is-bottom" src="${RIB_CARD_ASSETS.ornamentBottom}" alt="">
+      <div class="rib-card__offer-copy"><span class="rib-card__offer-mark">₹</span><div><h3>${esc(title)}</h3><p>${esc(content.number)}</p></div></div>
+      <footer class="rib-card__footer"><button type="button" class="rib-card__action">Get started ${renderRibCardIcon(RIB_CARD_ASSETS.next)}</button></footer>
+    </article>`;
+  }
+
+  const aria = variant.key === 'loan' ? 'Education loan account card' : `${variant.label} account card`;
+  return `<article class="rib-card rib-card--${variant.key}" aria-label="${aria}">
+    <div class="rib-card__body">
+      <header class="rib-card__heading">${renderRibCardIcon(icon, 'is-product')}<div><h3>${esc(title)}</h3><p>${esc(content.number)}</p></div></header>
+      <div class="rib-card__metrics"><span><small>${content.metricLabel}</small><b>${content.metric}</b></span><span><small>${content.secondaryLabel}</small><b>${content.secondary}</b></span></div>
+    </div>
+    ${variant.key === 'investment' ? '' : `<footer class="rib-card__footer"><button type="button" class="rib-card__action">${renderRibCardIcon(RIB_CARD_ASSETS.download)} Statement</button><button type="button" class="rib-card__action">See details ${renderRibCardIcon(RIB_CARD_ASSETS.next)}</button></footer>`}
+  </article>`;
+}
+
+function renderRibCardShowcase(){
+  return `<div class="rib-card-source"><span>RIB only</span><div class="rib-card-source__actions"><a href="https://www.figma.com/design/TNYMpYpdcSbrPo6QidRBzC/Components---RIB?node-id=3981-10044" target="_blank" rel="noreferrer">Open source component <i class="ti ti-external-link"></i></a><a class="rib-card-try" href="#/sandbox/cards"><i class="ti ti-player-play"></i>Try in playground</a></div></div>
+  <div class="rib-card-showcase">${RIB_CARD_VARIANTS.map(variant => `<article class="rib-card-showcase__card"><header><div><span>Card</span><h3>${variant.label}</h3></div><code>${variant.width} × ${variant.height}</code></header><div class="rib-card-showcase__stage">${renderRibCard({ variant:variant.key })}</div></article>`).join('')}</div>`;
+}
+
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['button','calendar','cards','accordions','activity-timeline','avatar','breadcrumbs']);
 
 const COMPONENTS = {
 
@@ -675,6 +731,31 @@ const COMPONENTS = {
   onDateSelected: setDate,
 )`,
     sandbox: 'calendar'
+  },
+
+  cards: {
+    title: 'Cards', group: 'Display', status: 'stable', version: '1.0', updated: '30 Aug 2026',
+    desc: 'RIB Cards present loans, investments, insurance policies, and offers in compact branded product surfaces with clear metrics and actions.',
+    sections: [
+      { title:'RIB source components', note:'Representative source cards preserve their exact Figma dimensions, product hierarchy, actions, and local decorative artwork.', html:renderRibCardShowcase() },
+      { title:'Foundation mapping', note:'Branded cards use Orange100 or the approved Hero gradient. Offer surfaces use Amber90, while Amber110 remains the audited #F7E1D4 foundation value.', html:`<div class="button-foundation-grid"><article><span>Product fill</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Investment fill</span><b>Hero gradient</b><code>#EF8C24 → #F06837</code></article><article><span>Offer border</span><b>Amber 90</b><code>#FCF6F2</code></article><article><span>Offer support</span><b>Amber 110</b><code>#F7E1D4</code></article><article><span>Footer</span><b>Black 20%</b><code>rgba(0,0,0,.20)</code></article><article><span>Content</span><b>White 100</b><code>#FFFFFF</code></article></div>` }
+    ],
+    props: [
+      ['variant','RibCardVariant','loan','loan · investment · insurance · offer'],
+      ['title','String','required','Product or offer title.'],
+      ['identifier','String?','null','Masked account, policy, or investment identifier.'],
+      ['primaryMetric','RibCardMetric?','null','Primary amount or value.'],
+      ['secondaryMetric','RibCardMetric?','null','Supporting value such as due date or return.'],
+      ['onPrimaryAction','VoidCallback?','null','Primary footer action.']
+    ],
+    flutter:`RibCard(
+  variant: RibCardVariant.loan,
+  title: 'Education loan',
+  identifier: 'LN 003501 ···· 8472',
+  primaryMetric: const RibCardMetric('Outstanding', '₹ 8,40,000'),
+  onPrimaryAction: downloadStatement,
+)`,
+    sandbox: 'cards'
   },
 
   buttongroups: {
@@ -1645,83 +1726,6 @@ DsChip(
   title: 'Scheduled maintenance',
   message: 'Transfers will be unavailable 14 Jun, 02:00–04:00 EST.',
   dismissible: true,
-)`
-  },
-
-  cards: {
-    title: 'Cards', group: 'Display', status: 'stable', version: '1.4', updated: '18 Jun 2026',
-    desc: 'Cards group banking content into reusable surfaces: promo modules, offer cards, account cards, quick links and account list cards. Use white surfaces with quiet borders by default; reserve branded fills for account and promo moments.',
-    sections: [
-      { title: 'Promo and offers',
-        note: 'Promo and offer cards use compact content, a small icon plate and restrained color. They should advertise one thing, not become a layout container.',
-        html: `<div class="canvas grid2">
-          <article class="ds-promo-card">
-            <span class="ds-promo-icon"><i class="ti ti-sparkles"></i></span>
-            <div><strong>Unlock preferred FX rates</strong><p>Send money globally with reduced transfer fees.</p></div>
-            <i class="ti ti-chevron-right"></i>
-          </article>
-          <article class="ds-offer-card red">
-            <span class="ds-promo-icon"><i class="ti ti-gift"></i></span>
-            <div><strong>Travel card offer</strong><p>Earn bonus rewards on eligible overseas spends.</p></div>
-          </article>
-          <article class="ds-offer-card blue">
-            <span class="ds-promo-icon"><i class="ti ti-plane"></i></span>
-            <div><strong>Book faster</strong><p>Save beneficiary details for repeat transfers.</p></div>
-          </article>
-          <article class="ds-offer-card brown">
-            <span class="ds-promo-icon"><i class="ti ti-building-bank"></i></span>
-            <div><strong>Wealth access</strong><p>Connect with a relationship manager in Canada.</p></div>
-          </article>
-        </div>` },
-      { title: 'Account card',
-        html: `<div class="canvas">
-          <div class="ds-account-card">
-            <div class="ac-top"><span>Savings · CAD</span><i class="ti ti-eye" style="font-size:15px"></i></div>
-            <div class="ac-bal">CA$ 24,580.32</div>
-            <div class="ac-num">003501 ···· 8472</div>
-            <div class="ac-foot"><span>Available CA$ 23,100.00</span><span>View details <i class="ti ti-chevron-right" style="font-size:11px"></i></span></div>
-          </div>
-        </div>` },
-      { title: 'Account list cards',
-        note: 'Account cards in lists stay white and border-led. They can expose two compact text actions on hover or within a detail drawer.',
-        html: `<div class="canvas grid2">
-          <article class="ds-basic-card account">
-            <div class="ds-basic-card-head"><span class="ds-label translucent">Savings</span><span class="ds-currency-tag">CAD</span></div>
-            <strong>Everyday Savings</strong>
-            <p>•••• 8472</p>
-            <div class="ds-basic-card-balance"><span>Available balance</span><b>CA$ 24,580.32</b></div>
-            <div class="ds-card-actions"><button class="ds-btn tertiary xs">Details</button><button class="ds-btn tertiary xs">Statement</button></div>
-          </article>
-          <article class="ds-basic-card account">
-            <div class="ds-basic-card-head"><span class="ds-label maroon">Current</span><span class="ds-currency-tag">USD</span></div>
-            <strong>Global Chequing</strong>
-            <p>•••• 1941</p>
-            <div class="ds-basic-card-balance"><span>Available balance</span><b>US$ 8,410.00</b></div>
-            <div class="ds-card-actions"><button class="ds-btn tertiary xs">Details</button><button class="ds-btn tertiary xs">Statement</button></div>
-          </article>
-        </div>` },
-      { title: 'Quick action tiles',
-        html: `<div class="canvas">
-          <div class="ds-quick-grid">
-            <div class="ds-quick"><i class="ti ti-send"></i>Send</div>
-            <div class="ds-quick"><i class="ti ti-receipt"></i>Pay bills</div>
-            <div class="ds-quick"><i class="ti ti-file-download"></i>Statement</div>
-            <div class="ds-quick"><i class="ti ti-dots"></i>More</div>
-          </div>
-        </div>` }
-    ],
-    props: [
-      ['account','Account','required','Account model — type, currency, balance, number'],
-      ['masked','bool','false','Hides the balance behind dots'],
-      ['onToggleMask','VoidCallback?','null','Eye affordance callback'],
-      ['onTap','VoidCallback?','null','Navigates to account detail'],
-      ['variant','DsCardVariant','account','account · promo · offer · quickLink']
-    ],
-    flutter: `DsAccountCard(
-  account: accounts.primary,
-  masked: privacyMode,
-  onToggleMask: () => setState(() => privacyMode = !privacyMode),
-  onTap: () => context.push('/accounts/primary'),
 )`
   },
 
