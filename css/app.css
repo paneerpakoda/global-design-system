@@ -1,8 +1,3 @@
-/* ============================================================
-   GlobalDS Portal — app chrome + DS component styles
-   Token source of truth: js/tokens.js (this file mirrors it)
-   ============================================================ */
-
 :root{
   --brand-orange:#E3530F; --brand-maroon:#BE2A2A;
   --primary-orange-80:#F7B68D; --primary-orange-90:#F3975D; --primary-orange-100:#F0792E;
@@ -1794,13 +1789,6 @@ a.rib-breadcrumb__unit:focus-visible{border-radius:2px;outline:2px solid var(--p
   .ds-topnav-tabs span{height:28px;padding:0 9px}
 }
 
-/* ============================================================
-   GlobalDS Portal app skin — applied from DESIGN-cal.md
-   White canvas, near-black app CTAs, side navigation, generous
-   SaaS spacing, product UI fragments and a dark closing footer.
-   Scoped to the hub chrome/home so GlobalDS demos stay faithful.
-   ============================================================ */
-
 :root{
   --dos-primary:#111111;
   --dos-primary-active:#242424;
@@ -1921,45 +1909,6 @@ body{background:var(--dos-canvas);color:var(--dos-ink)}
 .metric{background:var(--dos-card);border-radius:var(--r-md);padding:28px 32px;box-shadow:none}
 .metric small{font-size:13px;color:var(--dos-muted)}
 .metric strong{font-family:var(--dos-display);font-size:36px;font-weight:600;letter-spacing:-.03em;color:var(--dos-ink)}
-.platform-scope{padding-top:8px}
-.platform-scope-head{display:flex;align-items:flex-end;justify-content:space-between;gap:48px;margin-bottom:28px}
-.platform-scope-head>div{max-width:680px}
-.platform-scope-head>p{max-width:430px;font-size:15px;line-height:1.6;color:var(--dos-body)}
-.platform-kicker{display:block;margin-bottom:12px;font-size:11px;font-weight:750;letter-spacing:.11em;text-transform:uppercase;color:var(--brand-600)}
-.platform-scope-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:20px}
-.platform-scope-primary,.platform-scope-deferred{border-radius:14px;padding:28px}
-.platform-scope-primary{background:var(--dos-dark);color:var(--neutral-base-white)}
-.platform-scope-primary>header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.12)}
-.platform-scope-primary>header span{font-size:13px;color:#A1A1AA}
-.platform-scope-primary>header strong{font-size:13px;font-weight:650}
-.source-system-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:24px 0 20px}
-.source-system-list>div{display:flex;align-items:flex-start;gap:10px;min-width:0}
-.source-system-list i{margin-top:2px;font-size:16px;color:#6CE9A6}
-.source-system-list span{display:block;min-width:0}
-.source-system-list strong{display:block;font-size:14px;font-weight:650;color:var(--neutral-base-white)}
-.source-system-list small{display:block;margin-top:4px;font-size:11px;line-height:1.4;color:#A1A1AA}
-.platform-scope-primary>p{max-width:620px;font-size:13px;line-height:1.55;color:#D4D4D8}
-.platform-scope-deferred{background:var(--pastel-amber-100);border:1px solid var(--pastel-amber-120)}
-.platform-scope-deferred h3{font-size:22px;line-height:1.2;letter-spacing:-.025em;color:var(--dos-ink)}
-.platform-scope-deferred>p{margin-top:10px;font-size:13px;line-height:1.55;color:var(--dos-body)}
-.platform-scope-deferred>div{display:flex;gap:8px;margin-top:22px}
-.platform-scope-deferred>div>span{flex:1;border:1px solid rgba(207,202,175,.78);border-radius:10px;background:rgba(255,255,255,.66);padding:11px 12px}
-.platform-scope-deferred strong,.platform-scope-deferred small{display:block}
-.platform-scope-deferred strong{font-size:13px;color:var(--dos-ink)}
-.platform-scope-deferred small{margin-top:2px;font-size:11px;color:var(--dos-muted)}
-.platform-ledger{margin-top:20px;overflow:hidden;border:1px solid var(--dos-hairline);border-radius:14px;background:var(--neutral-base-white)}
-.platform-row{display:grid;grid-template-columns:minmax(180px,1.15fr) minmax(160px,1fr) minmax(150px,.72fr);gap:24px;align-items:center;min-height:70px;padding:13px 20px;border-top:1px solid var(--dos-hairline-soft)}
-.platform-row:first-child{border-top:0}
-.platform-row>span{font-size:13px;color:var(--dos-body)}
-.platform-row>span:first-child strong,.platform-row>span:first-child small{display:block}
-.platform-row>span:first-child strong{font-size:14px;font-weight:650;color:var(--dos-ink)}
-.platform-row>span:first-child small{margin-top:3px;font-size:11px;color:var(--dos-muted)}
-.platform-row>span:last-child{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--dos-ink)}
-.platform-row>span:last-child i{width:8px;height:8px;border-radius:50%;background:var(--gray-400)}
-.platform-row[data-adoption="now"]>span:last-child i{background:var(--succ-600)}
-.platform-row[data-adoption="deferred"]>span:last-child i{background:var(--warn-700)}
-.platform-row-head{min-height:44px;background:var(--dos-soft)}
-.platform-row-head>span{font-size:10px!important;font-weight:750!important;letter-spacing:.08em;text-transform:uppercase;color:var(--dos-muted)!important}
 .cards-grid{gap:24px;margin-top:24px}
 .link-card{border:0;border-radius:var(--r-md);background:var(--dos-card);padding:32px;box-shadow:none}
 .link-card:hover{border-color:transparent;box-shadow:0 4px 12px rgba(0,0,0,.08)}
@@ -2220,8 +2169,6 @@ body{background:var(--dos-canvas);color:var(--dos-ink)}
   .nav-sec{grid-column:1/-1;padding:12px 2px 5px}
   .sidebar-foot{display:none}
   .cal-hero{grid-template-columns:1fr;gap:32px;padding-top:56px}
-  .platform-scope-head{align-items:flex-start;flex-direction:column;gap:16px}
-  .platform-scope-grid{grid-template-columns:1fr}
   .product-mockup-card{max-width:620px}
   .type-specimen-panel{grid-template-columns:1fr;gap:24px}
 }
@@ -2249,13 +2196,6 @@ body{background:var(--dos-canvas);color:var(--dos-ink)}
   .section{margin-bottom:64px}
   .component-mini-playground{padding:20px}
   .metric-grid,.cards-grid{grid-template-columns:1fr}
-  .platform-scope-head{margin-bottom:20px}
-  .platform-scope-grid{gap:14px}
-  .platform-scope-primary,.platform-scope-deferred{padding:22px}
-  .source-system-list{grid-template-columns:1fr;padding:20px 0}
-  .platform-scope-deferred>div{flex-direction:column}
-  .platform-ledger{overflow-x:auto}
-  .platform-row{min-width:650px}
   .cta-band-light{padding:32px 20px}
   .app-footer-inner{grid-template-columns:1fr;padding:48px 0}
   .app-footer nav{grid-template-columns:1fr 1fr}

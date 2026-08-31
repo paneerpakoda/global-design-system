@@ -50,7 +50,7 @@ test('exposes a Flutter-first Developers destination', () => {
   assert.match(app, /label: 'Flutter'/);
   assert.match(app, /Flutter package/);
   assert.match(app, /package:global_ds\/global_ds\.dart/);
-  assert.match(app, /Kotlin\/React and SwiftUI are deferred/);
+  assert.doesNotMatch(app, /renderPlatformScope/);
   assert.doesNotMatch(app, /Platform exports/);
 });
 

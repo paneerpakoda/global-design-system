@@ -14,23 +14,6 @@ vm.runInContext(read('js/iconography.js'), context, { filename: 'js/iconography.
 vm.runInContext(read('js/tokens.js'), context, { filename: 'js/tokens.js' });
 const DS = vm.runInContext('DS', context);
 
-test('captures the complete ICICI platform landscape and current convergence scope', () => {
-  assert.deepEqual(
-    Array.from(DS.platforms, platform => platform.id),
-    ['rib', 'imobile', 'cib', 'instabiz', 'ucj', 'csp', 'public-website', 'm2i'],
-  );
-
-  assert.deepEqual(
-    Array.from(DS.sourceSystems, system => system.id),
-    ['imobile-android', 'imobile-ios', 'rib'],
-  );
-
-  assert.deepEqual(
-    Array.from(DS.deferredSystems, system => system.id),
-    ['cib', 'instabiz'],
-  );
-});
-
 test('publishes the agreed canonical colour families', () => {
   assert.deepEqual(
     Object.keys(DS.color),

@@ -1,12 +1,3 @@
-/* ============================================================
-   ICICI Global DS — app shell motion behaviours
-   Scoped to the DESIGNOS HUB chrome only (home + sidebar).
-   No DS component is touched here. Global object `Motion`;
-   app.js calls Motion.afterRender() after every route().
-   Idempotent (data-m-on) and honours prefers-reduced-motion.
-   Tilt + magnetic pull are intentionally LOW intensity.
-   ============================================================ */
-
 const Motion = (() => {
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const once = (el) => { if (el.dataset.mOn) return false; el.dataset.mOn = '1'; return true; };
@@ -16,7 +7,6 @@ const Motion = (() => {
   }, { threshold: 0.25 }) : null;
   const onView = (el, fn) => { if (!io || reduce) { fn(); return; } el._mView = fn; io.observe(el); };
 
-  /* count-up — for the hub's metric tiles (tabular figures, settles, no bounce) */
   function countUp(el){
     if (!once(el)) return;
     const raw = (el.dataset.countup || el.textContent).trim();
@@ -45,7 +35,6 @@ const Motion = (() => {
     });
   }
 
-  /* reveal words — gentle staggered rise for the home hero title */
   function revealWords(el){
     if (!once(el)) return;
     const text = el.textContent;
@@ -61,10 +50,9 @@ const Motion = (() => {
     });
   }
 
-  /* VERY subtle 3D tilt (+ spotlight if present) — hub navigation tiles */
   function tilt(el){
     if (!once(el) || reduce) return;
-    const max = parseFloat(el.dataset.tilt) || 3;          // degrees — keep low
+    const max = parseFloat(el.dataset.tilt) || 3;
     const spot = el.hasAttribute('data-spotlight');
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
@@ -81,7 +69,6 @@ const Motion = (() => {
     });
   }
 
-  /* faint cursor spotlight — only for spotlight tiles that don't already tilt */
   function spotlight(el){
     if (el.hasAttribute('data-tilt') || !once(el) || reduce) return;
     el.addEventListener('pointermove', (e) => {
@@ -91,10 +78,9 @@ const Motion = (() => {
     });
   }
 
-  /* VERY low magnetic pull — used only on the hub's hero CTA */
   function magnetic(el){
     if (!once(el) || reduce) return;
-    const strength = parseFloat(el.dataset.magnetic) || 0.12;   // keep low
+    const strength = parseFloat(el.dataset.magnetic) || 0.12;
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
       el.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * strength).toFixed(1) + 'px,' +
@@ -103,7 +89,6 @@ const Motion = (() => {
     el.addEventListener('pointerleave', () => { el.style.transform = ''; });
   }
 
-  /* sidebar sliding active pill */
   function syncNav(){
     const nav = document.getElementById('nav'); if (!nav) return;
     let pill = nav.querySelector(':scope > .nav-pill');
@@ -121,7 +106,7 @@ const Motion = (() => {
     root = root || document;
     root.querySelectorAll('[data-countup]').forEach(countUp);
     root.querySelectorAll('[data-reveal-words]').forEach(revealWords);
-    root.querySelectorAll('[data-tilt]').forEach(tilt);          /* tilt before spotlight (shared once-guard) */
+    root.querySelectorAll('[data-tilt]').forEach(tilt);
     root.querySelectorAll('[data-spotlight]').forEach(spotlight);
     root.querySelectorAll('[data-magnetic]').forEach(magnetic);
     syncNav();

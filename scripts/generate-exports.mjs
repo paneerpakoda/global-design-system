@@ -13,9 +13,7 @@ for (const relativePath of ['js/rib-atoms.js', 'js/iconography.js', 'js/tokens.j
 
 const exportsApi = vm.runInContext('GlobalDSExports', context);
 const outputDirectories = {
-  'kotlin-react': 'kotlin-react',
   flutter: 'flutter/lib/src/foundations',
-  swiftui: 'swiftui',
 };
 
 for (const target of exportsApi.targets) {

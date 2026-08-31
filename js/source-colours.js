@@ -93,7 +93,7 @@ const GlobalDSSourceColours = (() => {
   const ios = {
     id: 'ios',
     label: 'iMobile iOS',
-    sourceLabel: 'As On WIP',
+    sourceLabel: 'Source audit',
     description: 'The iOS work-in-progress palette, including four grouped values reconstructed from the visible source.',
     sections: [
       { title: 'Primary colours', ramps: ['primaryOrange', 'primaryMaroon'] },

@@ -49,125 +49,6 @@ function exportHeader(commentPrefix){
     commentPrefix + ' Generated from js/tokens.js. Do not edit by hand.\n';
 }
 
-function kotlinReactTokens(){
-  let output = exportHeader('//');
-  output += 'package com.icici.globalds\n\n';
-  output += '/** Framework-neutral Kotlin values for Kotlin/JS React applications. */\n';
-  output += 'object GlobalDSColors {\n';
-  for (const token of exportColorEntries()) {
-    output += '    // TOKEN_COLOR: ' + token.path + '\n';
-    output += '    const val ' + token.name + ' = "' + token.value + '"\n';
-  }
-  output += '\n    // Semantic variables resolved from the RIB Tokens collection.\n';
-  DS.variables.forEach(variable => {
-    output += '    // TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
-    output += '    const val ' + exportVariableName(variable.name) + ' = "' + variable.resolvedValue + '"\n';
-  });
-  output += '}\n\n';
-  output += 'data class GlobalDSLayoutGrid(\n';
-  output += '    val pattern: String, val alignment: String, val count: Int,\n';
-  output += '    val sectionSizePx: Double?, val gutterSizePx: Double, val offsetPx: Double, val visible: Boolean,\n';
-  output += ')\n\nobject GlobalDSGrids {\n';
-  DS.grid.forEach(style => {
-    output += '    // TOKEN_GRID: grid.' + style.viewport + '\n';
-    output += '    val ' + exportVariableName(style.name) + ' = listOf(\n';
-    style.layoutGrids.forEach(grid => {
-      output += '        GlobalDSLayoutGrid("' + grid.pattern + '", "' + grid.alignment + '", ' + grid.count + ', ' +
-        (grid.sectionSize === undefined ? 'null' : grid.sectionSize + '.0') + ', ' + grid.gutterSize + '.0, ' +
-        grid.offset + '.0, ' + grid.visible + '),\n';
-    });
-    output += '    )\n';
-  });
-  output += '}\n\n';
-  output += 'data class GlobalDSEffect(val color: String, val x: Double, val y: Double, val radius: Double, val spread: Double)\n\n';
-  output += 'object GlobalDSEffects {\n';
-  DS.effects.forEach(style => {
-    const effect = style.effects[0];
-    output += '    // TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
-    output += '    val ' + style.token + ' = GlobalDSEffect("' + effect.color + '", ' + effect.offset.x + '.0, ' +
-      effect.offset.y + '.0, ' + effect.radius + '.0, ' + effect.spread + '.0)\n';
-  });
-  output += '}\n\n';
-  output += 'object GlobalDSSpacing {\n';
-  DS.space.forEach(token => {
-    output += '    const val ' + exportTokenName('space', token.dart) + ' = ' + token.px + '.0\n';
-  });
-  output += '}\n\n';
-  output += 'object GlobalDSRadius {\n';
-  DS.radius.forEach(token => {
-    output += '    const val ' + exportTokenName('radius', token.dart) + ' = ' + token.px + '.0\n';
-  });
-  output += '}\n\n';
-  output += 'data class GlobalDSTextStyle(\n';
-  output += '    val fontFamily: String,\n';
-  output += '    val fontSizePx: Double,\n';
-  output += '    val lineHeightPx: Double,\n';
-  output += '    val fontWeight: Int,\n';
-  output += '    val letterSpacingEm: Double,\n';
-  output += '    val textDecoration: String,\n';
-  output += '    val textCase: String,\n';
-  output += ')\n\n';
-  output += 'object GlobalDSTypography {\n';
-  output += '    const val fontFamily = "' + DS.typeface.family + '"\n\n';
-  DS.type.forEach(token => {
-    output += '    // TOKEN_TYPE: typography.' + token.token + '\n';
-    output += '    val ' + token.token + ' = GlobalDSTextStyle(\n';
-    output += '        fontFamily = fontFamily,\n';
-    output += '        fontSizePx = ' + token.size + '.0,\n';
-    output += '        lineHeightPx = ' + token.height + '.0,\n';
-    output += '        fontWeight = ' + token.weight + ',\n';
-    output += '        letterSpacingEm = ' + exportTrackingEm(token).toFixed(4) + ',\n';
-    output += '        textDecoration = "' + token.decoration + '",\n';
-    output += '        textCase = "' + token.textCase + '",\n';
-    output += '    )\n\n';
-  });
-  output += '    // Backwards-compatible component aliases.\n';
-  Object.entries(DS.typeAliases).forEach(([alias, token]) => {
-    output += '    val ' + alias + ' = ' + token + '\n';
-  });
-  output += '}\n';
-  return output;
-}
-
-function kotlinReactTheme(){
-  return exportHeader('//') + `package com.icici.globalds
-
-/** Stable semantic bridge for Kotlin/JS React and CSS-in-Kotlin consumers. */
-data class GlobalDSTheme(
-    val primary: String,
-    val onPrimary: String,
-    val secondary: String,
-    val onSecondary: String,
-    val surface: String,
-    val onSurface: String,
-    val error: String,
-) {
-    fun cssVariables(): Map<String, String> = mapOf(
-        "--globalds-color-primary" to primary,
-        "--globalds-color-on-primary" to onPrimary,
-        "--globalds-color-secondary" to secondary,
-        "--globalds-color-on-secondary" to onSecondary,
-        "--globalds-color-surface" to surface,
-        "--globalds-color-on-surface" to onSurface,
-        "--globalds-color-error" to error,
-        "--globalds-font-family" to GlobalDSTypography.fontFamily,
-    )
-
-    companion object {
-        val light = GlobalDSTheme(
-            primary = GlobalDSColors.primaryOrange100,
-            onPrimary = GlobalDSColors.neutralGrey150,
-            secondary = GlobalDSColors.primaryMaroon100,
-            onSecondary = GlobalDSColors.neutralBaseWhite,
-            surface = GlobalDSColors.neutralBaseWhite,
-            onSurface = GlobalDSColors.neutralGrey150,
-            error = GlobalDSColors.error100,
-        )
-    }
-}
-`;
-}
-
 function flutterHex(hex){
   const value = hex.replace('#', '').toUpperCase();
   return value.length === 8
@@ -433,141 +314,6 @@ class DsButtonDecorations {
 `;
 }
 
-function swiftRGB(hex){
-  const value = parseInt(hex.replace('#', ''), 16);
-  return {
-    red: ((value >> 16) & 255) / 255,
-    green: ((value >> 8) & 255) / 255,
-    blue: (value & 255) / 255
-  };
-}
-
-function swiftRGBA(hex){
-  const raw = hex.replace('#', '');
-  const rgb = swiftRGB('#' + raw.slice(0, 6));
-  return { ...rgb, alpha: raw.length === 8 ? parseInt(raw.slice(6, 8), 16) / 255 : 1 };
-}
-
-function swiftNumber(value){
-  return Number(value).toFixed(4).replace(/0+$/, '').replace(/\.$/, '.0');
-}
-
-function swiftWeight(weight){
-  return ({ 400: 'regular', 500: 'medium', 600: 'semibold', 700: 'bold', 800: 'heavy' })[weight] || 'regular';
-}
-
-function swiftUITokens(){
-  let output = 'import SwiftUI\n\n' + exportHeader('//');
-  output += 'enum GlobalDSColors {\n';
-  for (const token of exportColorEntries()) {
-    const rgb = swiftRGB(token.value);
-    output += '    // TOKEN_COLOR: ' + token.path + '\n';
-    output += '    static let ' + token.name + ' = Color(.sRGB, red: ' + swiftNumber(rgb.red) +
-      ', green: ' + swiftNumber(rgb.green) + ', blue: ' + swiftNumber(rgb.blue) + ', opacity: 1)\n';
-  }
-  output += '\n    // Semantic variables resolved from the RIB Tokens collection.\n';
-  DS.variables.forEach(variable => {
-    const rgb = swiftRGB(variable.resolvedValue);
-    output += '    // TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
-    output += '    static let ' + exportVariableName(variable.name) + ' = Color(.sRGB, red: ' + swiftNumber(rgb.red) +
-      ', green: ' + swiftNumber(rgb.green) + ', blue: ' + swiftNumber(rgb.blue) + ', opacity: 1)\n';
-  });
-  output += '}\n\nstruct GlobalDSLayoutGrid {\n';
-  output += '    let pattern: String\n    let alignment: String\n    let count: Int\n    let sectionSize: CGFloat?\n    let gutterSize: CGFloat\n    let offset: CGFloat\n    let visible: Bool\n}\n\n';
-  output += 'enum GlobalDSGrids {\n';
-  DS.grid.forEach(style => {
-    output += '    // TOKEN_GRID: grid.' + style.viewport + '\n';
-    output += '    static let ' + exportVariableName(style.name) + ': [GlobalDSLayoutGrid] = [\n';
-    style.layoutGrids.forEach(grid => {
-      output += '        .init(pattern: "' + grid.pattern + '", alignment: "' + grid.alignment + '", count: ' + grid.count +
-        ', sectionSize: ' + (grid.sectionSize === undefined ? 'nil' : grid.sectionSize) + ', gutterSize: ' + grid.gutterSize +
-        ', offset: ' + grid.offset + ', visible: ' + grid.visible + '),\n';
-    });
-    output += '    ]\n';
-  });
-  output += '}\n\nstruct GlobalDSEffectToken {\n';
-  output += '    let color: Color\n    let x: CGFloat\n    let y: CGFloat\n    let radius: CGFloat\n    let spread: CGFloat\n}\n\n';
-  output += 'enum GlobalDSEffects {\n';
-  DS.effects.forEach(style => {
-    const effect = style.effects[0];
-    const rgba = swiftRGBA(effect.color);
-    output += '    // TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
-    output += '    static let ' + style.token + ' = GlobalDSEffectToken(color: Color(.sRGB, red: ' + swiftNumber(rgba.red) +
-      ', green: ' + swiftNumber(rgba.green) + ', blue: ' + swiftNumber(rgba.blue) + ', opacity: ' + swiftNumber(rgba.alpha) +
-      '), x: ' + effect.offset.x + ', y: ' + effect.offset.y + ', radius: ' + effect.radius + ', spread: ' + effect.spread + ')\n';
-  });
-  output += '}\n\nenum GlobalDSSpacing {\n';
-  DS.space.forEach(token => {
-    output += '    static let ' + exportTokenName('space', token.dart) + ': CGFloat = ' + token.px + '\n';
-  });
-  output += '}\n\nenum GlobalDSRadius {\n';
-  DS.radius.forEach(token => {
-    output += '    static let ' + exportTokenName('radius', token.dart) + ': CGFloat = ' + token.px + '\n';
-  });
-  output += '}\n\nstruct GlobalDSTextStyle {\n';
-  output += '    let size: CGFloat\n    let lineHeight: CGFloat\n    let weight: Font.Weight\n';
-  output += '    let tracking: CGFloat\n    let isUnderlined: Bool\n    let textCase: String\n\n';
-  output += '    var font: Font { .custom(GlobalDSTypography.fontFamily, size: size).weight(weight) }\n';
-  output += '    var lineSpacing: CGFloat { max(0, lineHeight - size) }\n';
-  output += '}\n\nenum GlobalDSTypography {\n';
-  output += '    static let fontFamily = "' + DS.typeface.family + '"\n\n';
-  DS.type.forEach(token => {
-    output += '    // TOKEN_TYPE: typography.' + token.token + '\n';
-    output += '    static let ' + token.token + ' = GlobalDSTextStyle(size: ' + token.size +
-      ', lineHeight: ' + token.height + ', weight: .' + swiftWeight(token.weight) +
-      ', tracking: ' + token.tracking + ', isUnderlined: ' + (token.decoration === 'UNDERLINE') +
-      ', textCase: "' + token.textCase + '")\n';
-  });
-  output += '\n    // Backwards-compatible component aliases.\n';
-  Object.entries(DS.typeAliases).forEach(([alias, token]) => {
-    output += '    static let ' + alias + ' = ' + token + '\n';
-  });
-  output += '}\n';
-  return output;
-}
-
-function swiftUITheme(){
-  return `import SwiftUI
-
-` + exportHeader('//') + `struct GlobalDSTheme {
-    let primary: Color
-    let onPrimary: Color
-    let secondary: Color
-    let onSecondary: Color
-    let surface: Color
-    let onSurface: Color
-    let error: Color
-
-    static let light = GlobalDSTheme(
-        primary: GlobalDSColors.primaryOrange100,
-        onPrimary: GlobalDSColors.neutralGrey150,
-        secondary: GlobalDSColors.primaryMaroon100,
-        onSecondary: GlobalDSColors.neutralBaseWhite,
-        surface: GlobalDSColors.neutralBaseWhite,
-        onSurface: GlobalDSColors.neutralGrey150,
-        error: GlobalDSColors.error100
-    )
-}
-
-private struct GlobalDSThemeKey: EnvironmentKey {
-    static let defaultValue = GlobalDSTheme.light
-}
-
-extension EnvironmentValues {
-    var globalDSTheme: GlobalDSTheme {
-        get { self[GlobalDSThemeKey.self] }
-        set { self[GlobalDSThemeKey.self] = newValue }
-    }
-}
-
-extension View {
-    func globalDSTheme(_ theme: GlobalDSTheme) -> some View {
-        environment(\\.globalDSTheme, theme)
-    }
-}
-`;
-}
-
 function platformNeutralTokensJson(){
   const colors = {};
   for (const [ramp, definition] of Object.entries(DS.color)) colors[ramp] = definition.stops;
@@ -576,9 +322,6 @@ function platformNeutralTokensJson(){
     source: DS.ribAtoms.meta,
     foundationCoverage: DS.foundationCoverage,
     foundationIssues: DS.foundationIssues,
-    platforms: DS.platforms,
-    sourceSystems: DS.sourceSystems,
-    deferredSystems: DS.deferredSystems,
     colors,
     semanticColors: DS.semanticColor,
     gradient: DS.gradient.hero,
@@ -598,20 +341,14 @@ function platformNeutralTokensJson(){
 }
 
 const GlobalDSExportGenerators = Object.freeze({
-  'global_ds_tokens.kt': kotlinReactTokens,
-  'global_ds_theme.kt': kotlinReactTheme,
   'ds_tokens.dart': flutterTokens,
   'ds_theme.dart': flutterTheme,
-  'GlobalDSTokens.swift': swiftUITokens,
-  'GlobalDSTheme.swift': swiftUITheme,
   'ds_tokens.json': platformNeutralTokensJson
 });
 
 const GlobalDSExports = Object.freeze({
   targets: Object.freeze([
-    Object.freeze({ id: 'kotlin-react', label: 'Kotlin · ReactJS', language: 'Kotlin', status: 'deferred', files: Object.freeze(['global_ds_tokens.kt', 'global_ds_theme.kt']) }),
-    Object.freeze({ id: 'flutter', label: 'Flutter', language: 'Dart', status: 'supported', files: Object.freeze(['ds_tokens.dart', 'ds_theme.dart']) }),
-    Object.freeze({ id: 'swiftui', label: 'SwiftUI', language: 'Swift', status: 'deferred', files: Object.freeze(['GlobalDSTokens.swift', 'GlobalDSTheme.swift']) })
+    Object.freeze({ id: 'flutter', label: 'Flutter', language: 'Dart', status: 'supported', files: Object.freeze(['ds_tokens.dart', 'ds_theme.dart']) })
   ]),
   commonFiles: Object.freeze(['ds_tokens.json']),
   generate(filename){

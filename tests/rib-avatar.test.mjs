@@ -36,14 +36,15 @@ test('renders labelled avatars and a semantic avatar group', () => {
   assert.match(components, /esc\(initials\)/);
 });
 
-test('ships exact local Figma image assets without expiring URLs', () => {
-  const photo = path.join(projectRoot, 'assets/rib/avatar/amar.jpeg');
+test('ships a generic local avatar asset without personal imagery', () => {
+  const avatar = path.join(projectRoot, 'assets/rib/avatar/avatar-placeholder.svg');
   const logo = path.join(projectRoot, 'assets/rib/avatar/icici-bank-mark.svg');
 
-  assert.ok(fs.existsSync(photo), 'Figma avatar photo should exist');
-  assert.ok(fs.statSync(photo).size > 1000, 'Figma avatar photo should not be a placeholder');
+  assert.ok(fs.existsSync(avatar), 'Generic avatar should exist');
+  assert.match(read('assets/rib/avatar/avatar-placeholder.svg'), /^<svg/);
   assert.ok(fs.existsSync(logo), 'Figma bank mark should exist');
   assert.match(read('assets/rib/avatar/icici-bank-mark.svg'), /^<svg/);
+  assert.doesNotMatch(read('js/components.js'), /Amar|Sunidhi|Aditya|Preksha|Udita|Roshan/);
   assert.doesNotMatch(read('js/components.js'), /figma\.com\/api\/mcp\/asset/);
 });
 

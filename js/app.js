@@ -1,7 +1,3 @@
-/* ============================================================
-   GlobalDS Portal — app shell, navigation, and documentation pages
-   ============================================================ */
-
 const NAV = [
   { section: 'Getting started', items: [
     { route: '#/home', label: 'Overview', icon: 'ti-home' }
@@ -23,8 +19,6 @@ const NAV = [
     { route: '#/developers', label: 'Flutter', icon: 'ti-brand-flutter' }
   ]}
 ];
-
-/* ---------- shared page header (the component we designed) ---------- */
 
 function pageHeader(o){
   const crumbs = o.crumbs.map((c, i) =>
@@ -146,8 +140,6 @@ function appFooter(){
   </footer>`;
 }
 
-/* ---------- pages ---------- */
-
 function renderHome(){
   const compCount = PUBLISHED_COMPONENT_IDS.length;
   const tokenCount = DS.foundationCoverage.total;
@@ -173,10 +165,9 @@ function renderHome(){
     <div class="metric"><small>Components</small><strong data-countup>${compCount}</strong></div>
     <div class="metric"><small>Audited foundation assets</small><strong data-countup>${tokenCount}</strong></div>
     <div class="metric"><small>Patterns</small><strong data-countup>${Object.keys(PATTERNS).length}</strong></div>
-    <div class="metric"><small>Platform estate</small><strong>8 platforms</strong></div>
+    <div class="metric"><small>Supported package</small><strong>Flutter</strong></div>
   </div>
   ${ribCoverageHtml()}
-  ${renderPlatformScope()}
   <section class="section">
     <h2 class="section-title">Made for the whole product team</h2>
     <p class="section-note">Use the same source to discuss design decisions, validate journeys and implement consistent Flutter experiences.</p>
@@ -319,7 +310,6 @@ function renderColors(){
       <div class="colour-swatch-grid">${swatches}</div>
     </article>`;
   };
-  // compact "<label> — note" list for the ramps in a section
   const rampNotes = (ramps) => `<dl class="colour-note-list">${ramps.map(ramp => {
     const def = DS.color[ramp];
     return `<div><dt>${esc(def.label)} <code>DsColors.${esc(ramp)}*</code></dt><dd>${esc(def.note)}</dd></div>`;
@@ -614,12 +604,12 @@ function renderShape(){
   ];
   const effectGroups = [
     { id:'depth', title:'Depth', note:'Four generic RIB depth primitives. They have no component meaning until a component maps one.' },
-    { id:'special', title:'Special shadows', note:'Two source-named shadows retained exactly; component aliases remain deferred.' },
+    { id:'special', title:'Special shadows', note:'Two source-named shadows retained exactly; component aliases are introduced only when needed.' },
     { id:'rings', title:'Interaction rings', note:'Zero-blur spread effects for outline and focus treatment.' }
   ];
   let html = pageHeader({ crumbs:['Foundations','Radius & effects'], title:'Radius & effects', status:'stable', version:'1.2',
     updated:DS.meta.updated,
-    desc:'GlobalDS retains all eight RIB effect primitives. Component and semantic effect aliases remain deferred until their components are defined.' });
+    desc:'GlobalDS retains all eight RIB effect primitives. Component and semantic effect aliases are introduced only when their components are defined.' });
   html += `<section class="section shape-section">
     <article class="foundation-card shape-scale-card">
       <div class="foundation-card-head">
@@ -801,21 +791,8 @@ function renderDevelopers(){
     }
   });
 
-  html += `<section class="section" aria-labelledby="deferred-targets-title">
-    <h2 class="section-title" id="deferred-targets-title">Deferred targets</h2>
-    <div class="callout warning">
-      <i class="ti ti-clock-pause" aria-hidden="true"></i>
-      <div>
-        <strong>Kotlin/React and SwiftUI are deferred.</strong>
-        <p>Reference snapshots remain in the repository for future convergence, but they are not supported developer integrations. JSON remains an internal validation artifact.</p>
-      </div>
-    </div>
-  </section>`;
-
   return html;
 }
-
-/* ---------- router & shell ---------- */
 
 const mainEl = document.getElementById('main');
 const navEl = document.getElementById('nav');
@@ -898,8 +875,6 @@ function route(){
   markActive();
   if (window.Motion) Motion.afterRender(mainEl);
 }
-
-/* ---------- global interactions ---------- */
 
 document.addEventListener('click', e => {
   const copyBtn = e.target.closest('[data-copy]');

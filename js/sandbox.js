@@ -1,9 +1,3 @@
-/* ============================================================
-   ICICI Global DS — sandbox (component playground)
-   Toggle props/states, see the component live, and get the
-   matching Flutter call generated underneath.
-   ============================================================ */
-
 const RIB_ACCORDION_FAQS = [
   {
     question: 'When will the beneficiary receive my transfer?',
@@ -410,7 +404,7 @@ ${subtitle}        expanded: expandedQuestionIndex == index,
     controls: [
       { key:'presentation', label:'Presentation', type:'select', options:['single','group'], value:'group' },
       { key:'color', label:'Mnemonic colour', type:'select', options:['picture','orange','blue','gold','maroon','multi'], value:'picture' },
-      { key:'label', label:'Name', type:'text', value:'Amar' },
+      { key:'label', label:'Label', type:'text', value:'Beneficiary' },
       { key:'initials', label:'Initials', type:'text', value:'A' },
       { key:'headline', label:'Group headline', type:'text', value:'Recent beneficiaries' },
       { key:'bankLogo', label:'Bank logo', type:'toggle', value:false }
@@ -426,7 +420,7 @@ ${subtitle}        expanded: expandedQuestionIndex == index,
 )`;
       }
       const image = p.color === 'picture'
-        ? "\n  image: const AssetImage('assets/rib/avatar/amar.jpeg'),"
+        ? "\n  image: const AssetImage('assets/profile.png'),"
         : '';
       const bankLogo = p.bankLogo
         ? '\n  bankLogo: bankLogo,'

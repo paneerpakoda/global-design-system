@@ -1,9 +1,3 @@
-/* ============================================================
-   GlobalDS — design tokens (single source of truth)
-   The app renders foundations from this object and generates the
-   supported Flutter package plus deferred reference snapshots from it.
-   ============================================================ */
-
 const DS = {
   meta: {
     name: 'GlobalDS',
@@ -12,12 +6,6 @@ const DS = {
     version: '0.5.0',
     updated: '28 Aug 2026'
   },
-
-  deliveryTargets: [
-    { id:'kotlin-react', label:'Kotlin · ReactJS', status:'deferred' },
-    { id:'flutter', label:'Flutter', status:'supported' },
-    { id:'swiftui', label:'SwiftUI', status:'deferred' }
-  ],
 
   /* RIB is the canonical foundation source for this release. */
   ribAtoms: GlobalDSRIBAtoms,
@@ -29,28 +17,6 @@ const DS = {
   ),
   variables: GlobalDSRIBAtoms.variables,
   grid: GlobalDSRIBAtoms.gridStyles,
-
-  platforms: [
-    { id:'rib', name:'RIB', fullName:'Retail Internet Banking', channel:'Retail · Web', adoption:'now' },
-    { id:'imobile', name:'iMobile', fullName:'Retail Mobile Banking', channel:'Retail · Mobile', adoption:'now' },
-    { id:'cib', name:'CIB', fullName:'Corporate Internet Banking', channel:'Corporate · Web', adoption:'deferred' },
-    { id:'instabiz', name:'InstaBiz', fullName:'Corporate Mobile Banking', channel:'Corporate · Mobile', adoption:'deferred' },
-    { id:'ucj', name:'UCJ', fullName:'Unified Customer Journey', channel:'Onboarding journeys', adoption:'future' },
-    { id:'csp', name:'CSP', fullName:'Common Service Platforms', channel:'Service journeys', adoption:'future' },
-    { id:'public-website', name:'Public Website', fullName:'Non Logged In (NLI)', channel:'Public web', adoption:'future' },
-    { id:'m2i', name:'M2I', fullName:'M2I', channel:'Platform', adoption:'future' }
-  ],
-
-  sourceSystems: [
-    { id:'imobile-android', name:'iMobile Android', basis:'Existing Android design system' },
-    { id:'imobile-ios', name:'iMobile iOS', basis:'Existing iOS design system' },
-    { id:'rib', name:'RIB', basis:'Existing RIB design system' }
-  ],
-
-  deferredSystems: [
-    { id:'cib', name:'CIB', reason:'DFF is not yet ready for GlobalDS convergence.' },
-    { id:'instabiz', name:'InstaBiz', reason:'DFF is not yet ready for GlobalDS convergence.' }
-  ],
 
   color: {
     brand: {
@@ -248,8 +214,8 @@ const DS = {
       shadow200:'RIB depth primitive 200; component role intentionally unassigned.',
       shadow300:'RIB depth primitive 300; component role intentionally unassigned.',
       shadow400:'RIB depth primitive 400; component role intentionally unassigned.',
-      shadowButtonWhite:'Source-defined white-button shadow; component alias deferred.',
-      shadowBottomSticky:'Source-defined upward shadow for bottom-sticky surfaces; component alias deferred.',
+      shadowButtonWhite:'Source-defined white-button shadow; add a component alias only when used.',
+      shadowBottomSticky:'Source-defined upward shadow for bottom-sticky surfaces; add a component alias only when used.',
       ringOrangeOutline:'Source-defined one-pixel orange interaction ring.',
       ringFocus:'Source-defined three-pixel focus halo.',
     };

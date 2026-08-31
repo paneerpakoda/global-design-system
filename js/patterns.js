@@ -1,10 +1,3 @@
-/* ============================================================
-   ICICI Global DS — pattern lab
-   Full banking flows rendered in a phone frame, with
-   switchable states. Each pattern lists the components it
-   composes so devs can jump to the API docs.
-   ============================================================ */
-
 function statusRow(light){
   return '<div class="ds-status"' + (light ? ' style="color:#fff"' : '') + '>' +
     '<span>9:41</span><span class="si"><i class="ti ti-antenna-bars-5"></i>' +

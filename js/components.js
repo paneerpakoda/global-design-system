@@ -1,9 +1,3 @@
-/* ============================================================
-   ICICI Global DS — component registry
-   Each entry drives: sidebar nav, doc page, props table,
-   Flutter snippet. Sandbox definitions live in sandbox.js.
-   ============================================================ */
-
 const INPUT_FIELD_STATES = [
   { key: 'empty', className: 'empty', label: 'Empty', desc: 'Placeholder only, default border, no value.' },
   { key: 'active', className: 'active', label: 'Active', desc: 'Interactive state with subtle elevation, before text entry.' },
@@ -377,21 +371,21 @@ const RIB_AVATAR_COLORS = [
 ];
 
 const RIB_AVATAR_GROUP_PEOPLE = [
-  { label:'Amar', color:'picture', imageUrl:'assets/rib/avatar/amar.jpeg' },
-  { label:'Sunidhi', initials:'S', color:'gold' },
-  { label:'Aditya', initials:'A', color:'maroon' },
-  { label:'Preksha', initials:'P', color:'multi' },
-  { label:'Udita', initials:'U', color:'orange' },
-  { label:'Roshan', initials:'R', color:'blue' }
+  { label:'Beneficiary 1', color:'picture', imageUrl:'assets/rib/avatar/avatar-placeholder.svg' },
+  { label:'Beneficiary 2', initials:'B2', color:'gold' },
+  { label:'Beneficiary 3', initials:'B3', color:'maroon' },
+  { label:'Beneficiary 4', initials:'B4', color:'multi' },
+  { label:'Beneficiary 5', initials:'B5', color:'orange' },
+  { label:'Beneficiary 6', initials:'B6', color:'blue' }
 ];
 
 function renderRibAvatar(options = {}){
   const color = RIB_AVATAR_COLORS.some(item => item.key === options.color)
     ? options.color
     : 'picture';
-  const label = String(options.label || 'Amar');
+  const label = String(options.label || 'Beneficiary');
   const initials = String(options.initials || label.trim().charAt(0) || 'A').slice(0, 2).toUpperCase();
-  const imageUrl = options.imageUrl || 'assets/rib/avatar/amar.jpeg';
+  const imageUrl = options.imageUrl || 'assets/rib/avatar/avatar-placeholder.svg';
   const bankLogo = Boolean(options.bankLogo);
   const visual = color === 'picture'
     ? `<img class="rib-avatar__image" src="${esc(imageUrl)}" alt="" width="40" height="40">`
@@ -795,7 +789,7 @@ const RIB_INFO_ASSETS = Object.freeze({
 
 function renderRibInfo(options = {}){
   const tone = RIB_INFO_TONES.includes(options.tone) ? options.tone : 'Default';
-  const messages = { Default:'Info : Pending user action', Success:'Success : The action is complete', Error:'Error : Internal error', Warning:'Warning : This is a warning' };
+  const messages = { Default:'Info : Pending user action', Success:'Success : The action is complete', Error:'Error : Something went wrong', Warning:'Warning : This is a warning' };
   const message = String(options.message || messages[tone]);
   return `<div class="rib-info rib-info--${tone.toLowerCase()}${options.centre ? ' is-centred' : ''}${options.stroke ? ' has-stroke' : ''}" role="status" data-node-id="348-9040">${options.icon === false ? '' : `<img src="${RIB_INFO_ASSETS[tone]}" alt="">`}<span>${esc(message)}</span></div>`;
 }
@@ -1357,9 +1351,9 @@ DsChip(
       ['bankLogo','Widget?','null','Optional exact bank mark rendered inside the badge.']
     ],
     flutter: `RibAvatar(
-  label: 'Amar',
+  label: 'Beneficiary',
   color: RibAvatarColor.picture,
-  image: const AssetImage('assets/rib/avatar/amar.jpeg'),
+  image: const AssetImage('assets/profile.png'),
 )`
   },
 

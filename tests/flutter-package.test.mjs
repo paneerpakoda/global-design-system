@@ -66,7 +66,7 @@ test('generates package-aware Mulish typography from the governed token source',
   assert.match(tokens, /package: fontPackage,/);
 });
 
-test('marks Flutter supported while retaining native reference targets as deferred', () => {
+test('publishes Flutter as the supported generation target', () => {
   const context = vm.createContext({ console });
   for (const relativePath of ['js/rib-atoms.js', 'js/iconography.js', 'js/tokens.js', 'js/exports.js']) {
     vm.runInContext(read(relativePath), context, { filename: relativePath });
@@ -75,11 +75,7 @@ test('marks Flutter supported while retaining native reference targets as deferr
   const exportsApi = vm.runInContext('GlobalDSExports', context);
   assert.deepEqual(
     Array.from(exportsApi.targets, target => [target.id, target.status]),
-    [
-      ['kotlin-react', 'deferred'],
-      ['flutter', 'supported'],
-      ['swiftui', 'deferred'],
-    ],
+    [['flutter', 'supported']],
   );
   assert.deepEqual(Array.from(exportsApi.commonFiles), ['ds_tokens.json']);
 });
@@ -95,8 +91,6 @@ test('documents package installation instead of browser downloads', () => {
   assert.match(app, /ref: v0\.5\.0/);
   assert.match(app, /path: flutter/);
   assert.match(app, /package:global_ds\/global_ds\.dart/);
-  assert.match(app, /Kotlin\/React and SwiftUI/);
-  assert.match(app, /deferred/i);
   assert.doesNotMatch(app, /data-dl=/);
   assert.doesNotMatch(app, /GlobalDSExports\.generate/);
   assert.doesNotMatch(app, /Platform exports/);

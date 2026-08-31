@@ -1,29 +1,12 @@
-/* ============================================================
-   ICICI Global DS — app shell motion & typeface
-   Unlumen-inspired polish applied to the DESIGNOS HUB ONLY
-   (sidebar, page transitions, home). The DS components stay
-   motion-free and Flutter-faithful; this file only guards their
-   documented Mulish typeface.
-   Colour values are never introduced; brand tokens only.
-   Motion is deliberately restrained — tilt + magnetic pull are
-   kept very subtle on purpose.
-   ============================================================ */
-
 :root{
   --ease-out:cubic-bezier(.22,.61,.36,1);
   --ease-soft:cubic-bezier(.4,0,.2,1);
-  --ease-spring:cubic-bezier(.34,1.2,.64,1);   /* mild, gentle overshoot */
+  --ease-spring:cubic-bezier(.34,1.2,.64,1);
   --dur-1:.16s; --dur-2:.26s; --dur-3:.45s;
-  /* The hub's own UI typeface. Mulish stays the DS token (below). */
   --app-font:'Geist','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 
-/* ------------------------------------------------------------
-   Typeface split — the app chrome uses --app-font; Mulish (the
-   documented DS token) is scoped to the component demos, the
-   pattern phone, the sandbox preview and the type specimen, so
-   what's "documented" always renders in the real product font.
-   ------------------------------------------------------------ */
+/* Component previews use the product typeface; portal chrome uses --app-font. */
 body{font-family:var(--app-font)}
 .canvas,
 .sb-preview,
@@ -41,18 +24,12 @@ body{font-family:var(--app-font)}
 .cta-band-light .ds-btn.primary,
 .cta-band-light .ds-btn.secondary{font-family:var(--font)}
 
-/* ------------------------------------------------------------
-   Respect reduced motion.
-   ------------------------------------------------------------ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   .page>*{opacity:1 !important;transform:none !important}
   [data-tilt],[data-magnetic]{transform:none !important}
 }
 
-/* ------------------------------------------------------------
-   Page mount — a staggered fade-up on route change.
-   ------------------------------------------------------------ */
 @keyframes ds-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .page>*{animation:ds-rise var(--dur-3) var(--ease-out) backwards}
 .page>*:nth-child(1){animation-delay:0s}
@@ -62,10 +39,6 @@ body{font-family:var(--app-font)}
 .page>*:nth-child(5){animation-delay:.16s}
 .page>*:nth-child(n+6){animation-delay:.2s}
 
-/* ------------------------------------------------------------
-   Sidebar — a sliding indicator behind the active item + a
-   small playful nudge on the brand mark.
-   ------------------------------------------------------------ */
 #nav{position:relative}
 .nav-pill{position:absolute;left:0;top:0;width:var(--pill-w,calc(100% - 24px));height:34px;border-radius:10px;
   background:var(--dos-soft,#fff);box-shadow:inset 0 0 0 1px var(--dos-hairline,#e5e7eb),0 1px 2px rgba(32,36,40,.04);
@@ -79,10 +52,6 @@ body{font-family:var(--app-font)}
 .brand-mark{transition:transform var(--dur-2) var(--ease-spring)}
 .brand:hover .brand-mark{transform:rotate(-6deg) scale(1.05)}
 
-/* ------------------------------------------------------------
-   Home — navigation tiles get a VERY subtle 3D tilt + cursor
-   spotlight. These are hub tiles, not DS components.
-   ------------------------------------------------------------ */
 .link-card{transition:border-color var(--dur-2) ease,box-shadow var(--dur-2) ease}
 .link-card:hover{box-shadow:var(--effect-shadow-200)}
 [data-tilt]{transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateY(var(--ty,0));
@@ -94,12 +63,9 @@ body{font-family:var(--app-font)}
   background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),var(--brand-50),transparent 60%)}
 [data-spotlight]:hover::before{opacity:.9}
 
-/* VERY low magnetic pull — used only on the hub's hero CTA. */
 [data-magnetic]{transition:transform var(--dur-2) var(--ease-spring),background .12s ease,border-color .12s ease,box-shadow var(--dur-2) ease}
 
-/* Home hero title — per-word reveal (uses the same keyframe). */
 .ds-reveal-word{display:inline-block;animation:ds-rise var(--dur-3) var(--ease-out) backwards}
 
-/* Live status dot — slow, quiet pulse. */
 .sidebar-foot .dot{animation:ds-pulse 3s var(--ease-soft) infinite}
 @keyframes ds-pulse{0%,100%{box-shadow:0 0 0 0 rgba(18,183,106,.45)}50%{box-shadow:0 0 0 5px rgba(18,183,106,0)}}

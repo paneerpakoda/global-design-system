@@ -14,7 +14,7 @@ test('validates pull requests and main before publishing the portal', () => {
   assert.match(workflow, /push:[\s\S]*branches: \[main\]/);
   assert.match(workflow, /node --test tests\/\*\.test\.mjs/);
   assert.match(workflow, /node scripts\/generate-exports\.mjs/);
-  assert.match(workflow, /git diff --exit-code -- flutter kotlin-react swiftui/);
+  assert.match(workflow, /git diff --exit-code -- flutter\/lib\/src\/foundations/);
   assert.match(workflow, /subosito\/flutter-action@v2/);
   assert.match(workflow, /channel: stable/);
   assert.match(workflow, /working-directory: flutter/);
