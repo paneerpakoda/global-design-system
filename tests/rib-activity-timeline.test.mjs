@@ -62,7 +62,7 @@ test('matches the Figma card, connector, type and state style contract', () => {
 
   assert.match(css, /\.rib-activity-timeline\{[^}]*width:min\(288px,100%\)[^}]*gap:12px/);
   assert.match(css, /\.rib-activity-timeline__connector\{[^}]*left:24px[^}]*width:1px[^}]*height:100%/);
-  assert.match(css, /\.rib-activity-card\{[^}]*min-height:40px[^}]*border:1px solid var\(--surface-cool-grey-100\)[^}]*border-radius:12px[^}]*box-shadow:var\(--effect-shadow-button-white\)/);
+  assert.match(css, /\.rib-activity-card\{[^}]*min-height:40px[^}]*border:1px solid var\(--surface-cool-grey-100\)[^}]*border-radius:var\(--r-md\)[^}]*box-shadow:var\(--effect-shadow-button-white\)/);
   assert.match(css, /\.rib-activity-card\.is-double\{[^}]*min-height:60px/);
   assert.match(css, /\.rib-activity-card__label\{[^}]*font-size:12px[^}]*line-height:16px[^}]*font-weight:600[^}]*letter-spacing:\.25px/);
   assert.match(css, /\.rib-activity-card__sub-label,[^{]+\{[^}]*font-size:11px[^}]*line-height:16px[^}]*letter-spacing:\.25px/);
@@ -112,7 +112,7 @@ test('matches the Figma calendar timeline composition in the playground', () => 
 });
 
 test('provides a reusable Flutter Activity timeline implementation', () => {
-  const flutter = read('flutter/rib_activity_timeline.dart');
+  const flutter = read('flutter/lib/src/components/rib_activity_timeline.dart');
 
   assert.match(flutter, /enum RibActivityTimelineState/);
   assert.match(flutter, /enum RibActivityTimelineType/);

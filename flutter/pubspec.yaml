@@ -1,0 +1,29 @@
+name: global_ds
+description: ICICI Bank GlobalDS foundations, Material theme, and Flutter components.
+version: 0.5.0
+publish_to: none
+repository: https://github.com/paneerpakoda/global-design-system
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Mulish
+      fonts:
+        - asset: lib/fonts/Mulish-Regular.ttf
+          weight: 400
+        - asset: lib/fonts/Mulish-SemiBold.ttf
+          weight: 600
+        - asset: lib/fonts/Mulish-Bold.ttf
+          weight: 700

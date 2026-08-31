@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 class RibDropdownItem<T> {
   const RibDropdownItem({
@@ -54,8 +54,8 @@ class RibDropdown<T> extends StatelessWidget {
               constraints: const BoxConstraints(minHeight: 40),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                  horizontal: DsSpacing.lg,
+                  vertical: DsSpacing.md,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,26 +63,20 @@ class RibDropdown<T> extends StatelessWidget {
                   children: [
                     Text(
                       item.label,
-                      style: TextStyle(
+                      style: DsText.s1Regular.copyWith(
                         color: selected
                             ? DsColors.primaryOrange100
                             : DsColors.neutralGrey130,
-                        fontSize: 12,
-                        height: 16 / 12,
-                        letterSpacing: .25,
                       ),
                     ),
                     if (showSubheadings && item.subheading != null) ...[
-                      const SizedBox(height: 4),
+                      const SizedBox(height: DsSpacing.xs),
                       Text(
                         item.subheading!,
-                        style: TextStyle(
+                        style: DsText.p3Reg.copyWith(
                           color: selected
                               ? DsColors.primaryOrange100
                               : DsColors.neutralGrey120,
-                          fontSize: 10,
-                          height: 16 / 10,
-                          letterSpacing: .25,
                         ),
                       ),
                     ],
@@ -105,17 +99,18 @@ class RibDropdown<T> extends StatelessWidget {
         decoration: BoxDecoration(
           color: DsColors.neutralBaseWhite,
           border: Border.all(color: DsColors.surfaceCoolGrey110),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x1F000000),
-              offset: Offset(0, 4),
-              blurRadius: 4,
-            ),
-          ],
+          borderRadius: BorderRadius.circular(DsRadius.md),
+          boxShadow: [_boxShadowFrom(DsEffects.shadow200)],
         ),
         child: list,
       ),
     );
   }
 }
+
+BoxShadow _boxShadowFrom(DsEffectToken effect) => BoxShadow(
+      color: effect.color,
+      offset: Offset(effect.offsetX, effect.offsetY),
+      blurRadius: effect.radius,
+      spreadRadius: effect.spread,
+    );

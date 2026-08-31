@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibChipVariant { standard, labelWhite, labelTranslucent }
 
@@ -43,11 +43,11 @@ class RibChip extends StatelessWidget {
     return size == RibChipSize.large ? 16 : 8;
   }
 
-  double get _fontSize => size == RibChipSize.small
-      ? 10
-      : size == RibChipSize.medium
-      ? 11
-      : 12;
+  TextStyle get _textStyle => switch (size) {
+        RibChipSize.small => DsText.p3Semi,
+        RibChipSize.medium => DsText.p2Semi,
+        RibChipSize.large => DsText.s1Semi,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +65,9 @@ class RibChip extends StatelessWidget {
         child: InkWell(
           onTap: onPressed,
           borderRadius: BorderRadius.circular(
-            size == RibChipSize.small ? 4 : 8,
+            size == RibChipSize.small ? DsRadius.xs : DsRadius.sm,
           ),
-          focusColor: const Color(0xFFFFE8DD),
+          focusColor: DsEffects.ringFocus.color,
           child: Container(
             height: _height,
             padding: EdgeInsets.symmetric(horizontal: _horizontalPadding),
@@ -75,7 +75,7 @@ class RibChip extends StatelessWidget {
               color: colors.background,
               border: Border.all(color: colors.border),
               borderRadius: BorderRadius.circular(
-                size == RibChipSize.small ? 4 : 8,
+                size == RibChipSize.small ? DsRadius.xs : DsRadius.sm,
               ),
               boxShadow: hasShadow
                   ? [
@@ -96,20 +96,14 @@ class RibChip extends StatelessWidget {
                     data: IconThemeData(size: 14, color: colors.foreground),
                     child: leadingIcon!,
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: DsSpacing.xs),
                 ],
                 Text(
                   label,
-                  style: TextStyle(
-                    color: colors.foreground,
-                    fontSize: _fontSize,
-                    height: 16 / _fontSize,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: .25,
-                  ),
+                  style: _textStyle.copyWith(color: colors.foreground),
                 ),
                 if (trailingIcon != null) ...[
-                  const SizedBox(width: 4),
+                  const SizedBox(width: DsSpacing.xs),
                   IconTheme(
                     data: IconThemeData(size: 14, color: colors.foreground),
                     child: trailingIcon!,

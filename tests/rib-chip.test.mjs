@@ -42,9 +42,9 @@ test('uses exact local RIB chip action glyphs', () => {
 
 test('matches Standard Chip size, state, and foundation contracts', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-chip--large\{[^}]*height:32px[^}]*padding:0 16px[^}]*border-radius:8px/);
+  assert.match(css, /\.rib-chip--large\{[^}]*height:32px[^}]*padding:0 16px[^}]*border-radius:var\(--r-sm\)/);
   assert.match(css, /\.rib-chip--medium\{[^}]*height:24px[^}]*padding:0 8px[^}]*font-size:11px[^}]*line-height:16px/);
-  assert.match(css, /\.rib-chip--small\{[^}]*height:20px[^}]*padding:0 8px[^}]*border-radius:4px[^}]*font-size:10px/);
+  assert.match(css, /\.rib-chip--small\{[^}]*height:20px[^}]*padding:0 8px[^}]*border-radius:var\(--r-xs\)[^}]*font-size:10px/);
   assert.match(css, /\.rib-chip--standard\.is-selected\{[^}]*border-color:var\(--primary-orange-100\)[^}]*background:var\(--pastel-amber-90\)/);
   assert.match(css, /\.rib-chip--standard\.is-hover\{[^}]*border-color:var\(--neutral-grey-80\)/);
 });
@@ -52,7 +52,7 @@ test('matches Standard Chip size, state, and foundation contracts', () => {
 test('matches white and translucent Label Chip contracts', () => {
   const css = read('css/app.css');
   assert.match(css, /\.rib-chip--label-white\{[^}]*height:32px[^}]*padding:0 12px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*box-shadow:var\(--effect-shadow-button-white\)/);
-  assert.match(css, /\.rib-chip--label-translucent\{[^}]*height:36px[^}]*padding:0 16px[^}]*border:1px solid var\(--alpha-white-20\)[^}]*background:rgba\(255,255,255,\.10\)/);
+  assert.match(css, /\.rib-chip--label-translucent\{[^}]*height:36px[^}]*padding:0 16px[^}]*border:1px solid var\(--alpha-white-20\)[^}]*background:color-mix\(in srgb,var\(--neutral-base-white\) 10%,transparent\)/);
   assert.match(css, /\.rib-chip--label-translucent\.is-hover\{[^}]*background:var\(--alpha-white-20\)/);
 });
 
@@ -67,7 +67,7 @@ test('publishes Chip in the catalogue and playground', () => {
 });
 
 test('provides a controlled Flutter RibChip backed by foundations', () => {
-  const flutter = read('flutter/rib_chip.dart');
+  const flutter = read('flutter/lib/src/components/rib_chip.dart');
   assert.match(flutter, /enum RibChipVariant/);
   assert.match(flutter, /enum RibChipSize/);
   assert.match(flutter, /class RibChip extends StatelessWidget/);
@@ -79,6 +79,6 @@ test('provides a controlled Flutter RibChip backed by foundations', () => {
 
 test('provides visible focus and narrow-screen wrapping', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-chip:focus-visible\{[^}]*outline:3px solid #FFE8DD/);
+  assert.match(css, /\.rib-chip:focus-visible\{[^}]*outline:3px solid var\(--effect-ring-focus-color\)/);
   assert.match(css, /@media \(max-width:560px\)\{[\s\S]*?\.rib-chip-showcase\{grid-template-columns:1fr\}/);
 });

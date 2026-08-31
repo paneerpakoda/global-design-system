@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibLoadingSize { small, medium, large }
 
@@ -37,15 +37,10 @@ class RibLoadingIndicator extends StatelessWidget {
               backgroundColor: DsColors.pastelAmber110,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: DsSpacing.sm),
           Text(
             label,
-            style: const TextStyle(
-              color: DsColors.neutralGrey130,
-              fontSize: 12,
-              height: 16 / 12,
-              letterSpacing: .25,
-            ),
+            style: DsText.s1Regular.copyWith(color: DsColors.neutralGrey130),
           ),
         ],
       ),

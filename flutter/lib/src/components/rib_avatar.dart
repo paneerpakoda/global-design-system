@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibAvatarColor { picture, orange, blue, gold, maroon, multi }
 
@@ -12,9 +12,9 @@ class RibAvatarData {
     this.image,
     this.bankLogo,
   }) : assert(
-         color != RibAvatarColor.picture || image != null,
-         'Picture avatars require an image.',
-       );
+          color != RibAvatarColor.picture || image != null,
+          'Picture avatars require an image.',
+        );
 
   final String label;
   final RibAvatarColor color;
@@ -33,9 +33,9 @@ class RibAvatar extends StatelessWidget {
     this.bankLogo,
     super.key,
   }) : assert(
-         color != RibAvatarColor.picture || image != null,
-         'Picture avatars require an image.',
-       );
+          color != RibAvatarColor.picture || image != null,
+          'Picture avatars require an image.',
+        );
 
   factory RibAvatar.fromData(RibAvatarData data, {Key? key}) {
     return RibAvatar(
@@ -62,12 +62,12 @@ class RibAvatar extends StatelessWidget {
       label: bankLogo == null ? label : '$label, ICICI Bank',
       child: ExcludeSemantics(
         child: SizedBox(
-          width: 64,
+          width: DsSpacing.xl6,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 64,
+                width: DsSpacing.xl6,
                 height: 40,
                 child: Stack(
                   clipBehavior: Clip.none,
@@ -125,11 +125,12 @@ class RibAvatar extends StatelessWidget {
 
     final palette = _RibAvatarPalette.fromColor(color);
     final fallback = label.trim().isEmpty ? 'A' : label.trim().characters.first;
-    final mnemonic = (initials?.trim().isNotEmpty == true ? initials! : fallback)
-        .characters
-        .take(2)
-        .toString()
-        .toUpperCase();
+    final mnemonic =
+        (initials?.trim().isNotEmpty == true ? initials! : fallback)
+            .characters
+            .take(2)
+            .toString()
+            .toUpperCase();
 
     return Container(
       width: 40,
@@ -186,7 +187,7 @@ class RibAvatarGroup extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: avatars.length,
-                separatorBuilder: (_, _) =>
+                separatorBuilder: (context, index) =>
                     const SizedBox(width: DsSpacing.md),
                 itemBuilder: (context, index) =>
                     RibAvatar.fromData(avatars[index]),

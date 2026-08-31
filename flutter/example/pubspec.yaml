@@ -1,0 +1,15 @@
+name: global_ds_example
+description: Minimal application demonstrating the GlobalDS Flutter package.
+publish_to: none
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  global_ds:
+    path: ..
+
+flutter:
+  uses-material-design: true

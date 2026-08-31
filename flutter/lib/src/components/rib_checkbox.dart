@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibCheckboxSize { small, large }
 
@@ -22,7 +22,12 @@ class RibCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onChanged != null;
-    final labelSize = size == RibCheckboxSize.small ? 12.0 : 14.0;
+    final labelStyle = switch ((size, value)) {
+      (RibCheckboxSize.small, true) => DsText.p1Semi.copyWith(letterSpacing: 0),
+      (RibCheckboxSize.small, false) => DsText.p1Reg.copyWith(letterSpacing: 0),
+      (RibCheckboxSize.large, true) => DsText.h3Semi,
+      (RibCheckboxSize.large, false) => DsText.h3Regular,
+    };
 
     return Semantics(
       checked: value,
@@ -30,30 +35,23 @@ class RibCheckbox extends StatelessWidget {
       label: label,
       child: InkWell(
         onTap: enabled ? () => onChanged!(!value) : null,
-        borderRadius: BorderRadius.circular(4),
-        focusColor: const Color(0xFFFFE8DD),
+        borderRadius: BorderRadius.circular(DsRadius.xs),
+        focusColor: DsEffects.ringFocus.color,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
+          padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 value ? Icons.check_box : Icons.check_box_outline_blank,
                 size: 20,
-                color: value
-                    ? DsColors.primaryOrange100
-                    : DsColors.neutralGrey120,
+                color:
+                    value ? DsColors.primaryOrange100 : DsColors.neutralGrey120,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: DsSpacing.sm),
               Text(
                 label,
-                style: TextStyle(
-                  color: DsColors.neutralGrey140,
-                  fontSize: labelSize,
-                  height: 20 / labelSize,
-                  letterSpacing: size == RibCheckboxSize.large ? .5 : 0,
-                  fontWeight: value ? FontWeight.w600 : FontWeight.w400,
-                ),
+                style: labelStyle.copyWith(color: DsColors.neutralGrey140),
               ),
             ],
           ),

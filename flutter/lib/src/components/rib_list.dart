@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibListVariant {
   single,
@@ -56,7 +56,8 @@ class RibList extends StatelessWidget {
       RibListVariant.twoColumn || RibListVariant.container => 356.0,
       RibListVariant.iconCircle ||
       RibListVariant.lineIcon ||
-      RibListVariant.iconSquare => 288.0,
+      RibListVariant.iconSquare =>
+        288.0,
       RibListVariant.noHeadlineLarge => 276.0,
       _ => 308.0,
     };
@@ -80,16 +81,14 @@ class RibList extends StatelessWidget {
     final child = Container(
       constraints: const BoxConstraints(minHeight: 40),
       padding: EdgeInsets.symmetric(
-        horizontal:
-            variant == RibListVariant.container ||
+        horizontal: variant == RibListVariant.container ||
                 variant == RibListVariant.headline
-            ? 16
+            ? DsSpacing.lg
             : 0,
-        vertical: 12,
+        vertical: DsSpacing.md,
       ),
       decoration: BoxDecoration(
-        color:
-            variant == RibListVariant.container ||
+        color: variant == RibListVariant.container ||
                 variant == RibListVariant.headline
             ? DsColors.surfaceCoolGrey100
             : Colors.transparent,
@@ -98,8 +97,8 @@ class RibList extends StatelessWidget {
         ),
         borderRadius:
             variant == RibListVariant.container && index == items.length - 1
-            ? const BorderRadius.vertical(bottom: Radius.circular(12))
-            : null,
+                ? const BorderRadius.vertical(bottom: Radius.circular(12))
+                : null,
       ),
       child: Row(
         children: [
@@ -115,13 +114,10 @@ class RibList extends StatelessWidget {
               ),
               child: Text(
                 '${index + 1}',
-                style: const TextStyle(
-                  color: DsColors.neutralGrey140,
-                  fontSize: 11,
-                ),
+                style: DsText.p2Reg.copyWith(color: DsColors.neutralGrey140),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: DsSpacing.md),
           ],
           if (_hasIcon) ...[
             Container(
@@ -154,11 +150,8 @@ class RibList extends StatelessWidget {
             Expanded(
               child: Text(
                 item.title,
-                style: const TextStyle(
+                style: DsText.h3Regular.copyWith(
                   color: DsColors.neutralGrey120,
-                  fontSize: 14,
-                  height: 20 / 14,
-                  letterSpacing: .5,
                 ),
               ),
             ),
@@ -171,12 +164,8 @@ class RibList extends StatelessWidget {
                   if (!_noHeadline)
                     Text(
                       item.title,
-                      style: const TextStyle(
+                      style: DsText.s1Semi.copyWith(
                         color: DsColors.neutralGrey140,
-                        fontSize: 12,
-                        height: 16 / 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: .25,
                       ),
                     ),
                   if (_noHeadline)
@@ -185,45 +174,35 @@ class RibList extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: item.title,
-                            style: TextStyle(
+                            style: (variant == RibListVariant.noHeadlineSmall
+                                    ? DsText.p2Semi
+                                    : DsText.p1Semi)
+                                .copyWith(
                               color: variant == RibListVariant.noHeadlineSmall
                                   ? DsColors.neutralGrey150
                                   : DsColors.neutralGrey140,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           if (item.subtitle != null)
                             TextSpan(
                               text: ' ${item.subtitle}',
-                              style: TextStyle(
-                                color: DsColors.neutralGrey120,
-                                fontWeight:
-                                    variant == RibListVariant.noHeadlineSmall
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                              ),
+                              style: (variant == RibListVariant.noHeadlineSmall
+                                      ? DsText.p2Semi
+                                      : DsText.p1Reg)
+                                  .copyWith(color: DsColors.neutralGrey120),
                             ),
                         ],
                       ),
-                      style: TextStyle(
-                        fontSize: variant == RibListVariant.noHeadlineSmall
-                            ? 11
-                            : 12,
-                        height: variant == RibListVariant.noHeadlineSmall
-                            ? 16 / 11
-                            : 20 / 12,
-                        letterSpacing: .25,
-                      ),
+                      style: variant == RibListVariant.noHeadlineSmall
+                          ? DsText.p2Reg
+                          : DsText.p1Reg,
                     )
                   else if (item.subtitle != null) ...[
-                    if (!_noHeadline) const SizedBox(height: 4),
+                    if (!_noHeadline) const SizedBox(height: DsSpacing.xs),
                     Text(
                       item.subtitle!,
-                      style: const TextStyle(
+                      style: DsText.p2Reg.copyWith(
                         color: DsColors.neutralGrey120,
-                        fontSize: 11,
-                        height: 16 / 11,
-                        letterSpacing: .25,
                       ),
                     ),
                   ],
@@ -232,17 +211,11 @@ class RibList extends StatelessWidget {
             ),
           if ((_isTwoColumn || variant == RibListVariant.headline) &&
               item.subject != null) ...[
-            const SizedBox(width: 16),
+            const SizedBox(width: DsSpacing.lg),
             Text(
               item.subject!,
               textAlign: TextAlign.right,
-              style: const TextStyle(
-                color: DsColors.neutralGrey150,
-                fontSize: 12,
-                height: 16 / 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: .25,
-              ),
+              style: DsText.s1Semi.copyWith(color: DsColors.neutralGrey150),
             ),
           ],
         ],
@@ -258,25 +231,25 @@ class RibList extends StatelessWidget {
   }
 
   bool get _isTwoColumn => const [
-    RibListVariant.twoColumn,
-    RibListVariant.container,
-    RibListVariant.checklist,
-  ].contains(variant);
+        RibListVariant.twoColumn,
+        RibListVariant.container,
+        RibListVariant.checklist,
+      ].contains(variant);
   bool get _hasIcon => const [
-    RibListVariant.iconCircle,
-    RibListVariant.lineIcon,
-    RibListVariant.iconSquare,
-    RibListVariant.noHeadlineLarge,
-    RibListVariant.noHeadlineSmall,
-  ].contains(variant);
+        RibListVariant.iconCircle,
+        RibListVariant.lineIcon,
+        RibListVariant.iconSquare,
+        RibListVariant.noHeadlineLarge,
+        RibListVariant.noHeadlineSmall,
+      ].contains(variant);
   double get _iconDimension => switch (variant) {
-    RibListVariant.iconSquare || RibListVariant.noHeadlineSmall => 32,
-    _ => 36,
-  };
+        RibListVariant.iconSquare || RibListVariant.noHeadlineSmall => 32,
+        _ => 36,
+      };
   double get _iconGlyphDimension =>
       variant == RibListVariant.lineIcon ? 24 : 16;
   bool get _noHeadline => const [
-    RibListVariant.noHeadlineLarge,
-    RibListVariant.noHeadlineSmall,
-  ].contains(variant);
+        RibListVariant.noHeadlineLarge,
+        RibListVariant.noHeadlineSmall,
+      ].contains(variant);
 }

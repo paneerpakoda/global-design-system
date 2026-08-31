@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 /// RIB Empty state from Figma component set 56:237.
 class RibEmptyState extends StatelessWidget {
@@ -30,21 +30,21 @@ class RibEmptyState extends StatelessWidget {
       container: true,
       child: Container(
         width: 468,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(DsSpacing.lg),
         decoration: BoxDecoration(
           color: showHeading
               ? Colors.transparent
               : hovered
-              ? DsColors.pastelAmber90
-              : DsColors.surfaceCoolGrey90,
+                  ? DsColors.pastelAmber90
+                  : DsColors.surfaceCoolGrey90,
           border: Border.all(
             color: showHeading
                 ? Colors.transparent
                 : hovered
-                ? DsColors.primaryOrange80
-                : DsColors.surfaceCoolGrey110,
+                    ? DsColors.primaryOrange80
+                    : DsColors.surfaceCoolGrey110,
           ),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -59,44 +59,28 @@ class RibEmptyState extends StatelessWidget {
               child: icon ?? const Icon(Icons.remove_circle_outline),
             ),
             if (showHeading) ...[
-              const SizedBox(height: 4),
+              const SizedBox(height: DsSpacing.xs),
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: DsColors.neutralGrey140,
-                  fontSize: 12,
-                  height: 16 / 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: .25,
-                ),
+                style: DsText.s1Semi.copyWith(color: DsColors.neutralGrey140),
               ),
             ],
-            const SizedBox(height: 4),
+            const SizedBox(height: DsSpacing.xs),
             Text(
               subline,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: DsColors.neutralGrey120,
-                fontSize: 11,
-                height: 16 / 11,
-                letterSpacing: .25,
-              ),
+              style: DsText.p2Reg.copyWith(color: DsColors.neutralGrey120),
             ),
             if (onAction != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: DsSpacing.sm),
               TextButton.icon(
                 onPressed: onAction,
                 icon: const Icon(Icons.add, size: 14),
                 label: Text(actionLabel),
                 style: TextButton.styleFrom(
                   foregroundColor: DsColors.primaryOrange100,
-                  textStyle: const TextStyle(
-                    fontSize: 12,
-                    height: 16 / 12,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: .25,
-                  ),
+                  textStyle: DsText.buttonSmall,
                 ),
               ),
             ],

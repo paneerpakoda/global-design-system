@@ -16,10 +16,14 @@ for (const relativePath of ['js/rib-atoms.js', 'js/iconography.js', 'js/tokens.j
 const DS = vm.runInContext('DS', context);
 const exportsApi = vm.runInContext('GlobalDSExports', context);
 
-test('publishes one stable contract for the three required targets', () => {
+test('publishes Flutter as supported and keeps native references deferred', () => {
   assert.deepEqual(
-    Array.from(exportsApi.targets, target => target.id),
-    ['kotlin-react', 'flutter', 'swiftui'],
+    Array.from(exportsApi.targets, target => [target.id, target.status]),
+    [
+      ['kotlin-react', 'deferred'],
+      ['flutter', 'supported'],
+      ['swiftui', 'deferred'],
+    ],
   );
 
   assert.deepEqual(
@@ -133,7 +137,7 @@ test('preserves the established Flutter token and component-theme surface', () =
   }
 });
 
-test('keeps the platform-neutral JSON export available', () => {
+test('keeps platform-neutral JSON available for internal validation', () => {
   const parsed = JSON.parse(exportsApi.generate('ds_tokens.json'));
   assert.equal(parsed.meta.name, DS.meta.name);
   assert.equal(parsed.typography.length, DS.type.length);
@@ -153,7 +157,7 @@ test('keeps the platform-neutral JSON export available', () => {
 test('keeps checked-in platform snapshots identical to live generation', () => {
   const directories = {
     'kotlin-react': 'kotlin-react',
-    flutter: 'flutter',
+    flutter: 'flutter/lib/src/foundations',
     swiftui: 'swiftui',
   };
 

@@ -1,7 +1,7 @@
 /* ============================================================
    GlobalDS — design tokens (single source of truth)
-   The app renders foundations from this object AND generates
-   Kotlin/React, Flutter, SwiftUI and JSON exports from it.
+   The app renders foundations from this object and generates the
+   supported Flutter package plus deferred reference snapshots from it.
    ============================================================ */
 
 const DS = {
@@ -12,6 +12,12 @@ const DS = {
     version: '0.5.0',
     updated: '28 Aug 2026'
   },
+
+  deliveryTargets: [
+    { id:'kotlin-react', label:'Kotlin · ReactJS', status:'deferred' },
+    { id:'flutter', label:'Flutter', status:'supported' },
+    { id:'swiftui', label:'SwiftUI', status:'deferred' }
+  ],
 
   /* RIB is the canonical foundation source for this release. */
   ribAtoms: GlobalDSRIBAtoms,
@@ -315,24 +321,10 @@ function copyText(text, btn){
   }
 }
 
-function downloadFile(name, text, mime){
-  const blob = new Blob([text], { type: mime || 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 200);
-}
-
 /* Code block builder used across pages */
-function codeblock(code, lang, opts){
-  opts = opts || {};
-  const dl = opts.file
-    ? '<button class="dlbtn" data-dl="' + esc(opts.file) + '"><i class="ti ti-download"></i> ' + esc(opts.file) + '</button>'
-    : '';
+function codeblock(code, lang){
   return '<div class="codeblock"><div class="codebar"><span>' + esc(lang || 'code') + '</span>' +
-    '<div class="bar-actions">' + dl +
+    '<div class="bar-actions">' +
     '<button class="copybtn" data-copy><i class="ti ti-copy"></i> Copy</button></div></div>' +
     '<pre>' + esc(code) + '</pre></div>';
 }

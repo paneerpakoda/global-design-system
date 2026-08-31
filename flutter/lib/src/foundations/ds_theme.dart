@@ -82,14 +82,16 @@ class DsTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
-          borderSide: const BorderSide(color: DsColors.primaryOrange100, width: 1.5),
+          borderSide:
+              const BorderSide(color: DsColors.primaryOrange100, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.error100),
         ),
         labelStyle: DsText.inputMediumRegular,
-        hintStyle: DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
+        hintStyle:
+            DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: DsColors.neutralBaseWhite,

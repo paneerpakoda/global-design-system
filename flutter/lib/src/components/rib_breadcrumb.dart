@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 class RibBreadcrumbItem {
   const RibBreadcrumbItem({required this.label, this.onTap});
@@ -44,8 +44,8 @@ class RibBreadcrumb extends StatelessWidget {
         builder: (context, constraints) {
           final width =
               constraints.hasBoundedWidth && constraints.maxWidth < 472
-              ? constraints.maxWidth
-              : 472.0;
+                  ? constraints.maxWidth
+                  : 472.0;
           return SizedBox(
             width: width,
             child: Column(
@@ -67,7 +67,7 @@ class RibBreadcrumb extends StatelessWidget {
 
   Widget _buildPath() {
     return SizedBox(
-      height: 16,
+      height: DsSpacing.lg,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -76,18 +76,17 @@ class RibBreadcrumb extends StatelessWidget {
             for (var index = 0; index < items.length; index++) ...[
               _buildItem(items[index], current: index == items.length - 1),
               if (index < items.length - 1) ...[
-                const SizedBox(width: 2),
+                const SizedBox(width: DsSpacing.xxs),
                 SizedBox.square(
                   dimension: 12,
-                  child:
-                      separatorIcon ??
+                  child: separatorIcon ??
                       const Icon(
                         Icons.chevron_right_rounded,
                         size: 12,
                         color: DsColors.neutralGrey120,
                       ),
                 ),
-                const SizedBox(width: 2),
+                const SizedBox(width: DsSpacing.xxs),
               ],
             ],
           ],
@@ -127,7 +126,7 @@ class RibBreadcrumb extends StatelessWidget {
   Widget _buildTitleRow() {
     final resolvedShowDropdown = showDropdown ?? items.length < 3;
     return SizedBox(
-      height: 24,
+      height: DsSpacing.xl2,
       child: Row(
         children: [
           SizedBox.square(
@@ -137,8 +136,7 @@ class RibBreadcrumb extends StatelessWidget {
               tooltip: 'Back',
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints.tightFor(width: 24, height: 24),
-              icon:
-                  backIcon ??
+              icon: backIcon ??
                   const Icon(
                     Icons.chevron_left_rounded,
                     size: 16,
@@ -172,8 +170,7 @@ class RibBreadcrumb extends StatelessWidget {
           const SizedBox(width: DsSpacing.sm),
           SizedBox.square(
             dimension: 16,
-            child:
-                dropdownIcon ??
+            child: dropdownIcon ??
                 const Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 16,

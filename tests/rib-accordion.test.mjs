@@ -59,7 +59,7 @@ test('ships the exact local Figma glyphs and deploys them with the portal', () =
 });
 
 test('provides a reusable controlled Flutter RIB Accordion implementation', () => {
-  const flutter = read('flutter/rib_accordion.dart');
+  const flutter = read('flutter/lib/src/components/rib_accordion.dart');
 
   assert.match(flutter, /enum RibAccordionVariant/);
   for (const variant of [
@@ -85,7 +85,7 @@ test('provides a reusable controlled Flutter RIB Accordion implementation', () =
 
 test('keeps disclosure semantics on the header and sanitises catalogue inputs', () => {
   const components = read('js/components.js');
-  const flutter = read('flutter/rib_accordion.dart');
+  const flutter = read('flutter/lib/src/components/rib_accordion.dart');
 
   assert.match(flutter, /Widget _buildHeader[\s\S]*?return Semantics\(/);
   assert.match(components, /function ribAccordionId/);
@@ -144,7 +144,7 @@ test('keeps small Accordion documentation labels at AA-safe contrast', () => {
 
 test('documents and applies the AA body-copy contrast correction', () => {
   const components = read('js/components.js');
-  const flutter = read('flutter/rib_accordion.dart');
+  const flutter = read('flutter/lib/src/components/rib_accordion.dart');
 
   assert.match(components, /AA contrast correction/);
   assert.match(components, /Grey 110.*Grey 120/);
@@ -174,14 +174,14 @@ test('publishes Accordion and Activity timeline across the catalogue and playgro
 test('uses white labels on the orange landing-page buttons', () => {
   const css = read('css/app.css');
 
-  assert.match(css, /\.hero \.ds-btn\.primary,[^{]+\{[^}]*color:#fff/);
-  assert.match(css, /\.peek-button\{[^}]*color:#fff/);
+  assert.match(css, /\.hero \.ds-btn\.primary,[^{]+\{[^}]*color:var\(--neutral-base-white\)/);
+  assert.match(css, /\.peek-button\{[^}]*color:var\(--neutral-base-white\)/);
 });
 
 test('keeps the Accordion component faithful to the Figma typography contract', () => {
   const components = read('js/components.js');
   const css = read('css/app.css');
-  const flutter = read('flutter/rib_accordion.dart');
+  const flutter = read('flutter/lib/src/components/rib_accordion.dart');
 
   assert.match(components, /typography, sizing, spacing and surface behaviour remain 1:1 with Figma/);
   assert.match(css, /\.rib-accordion__title\{[^}]*font-size:11px;line-height:16px/);
@@ -203,7 +203,7 @@ test('keeps Figma surfaces exact while previews provide readable context', () =>
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
   const css = read('css/app.css');
-  const flutter = read('flutter/rib_accordion.dart');
+  const flutter = read('flutter/lib/src/components/rib_accordion.dart');
 
   assert.match(components, /is-variant-\$\{variant\.key\}/);
   assert.match(components, /rib-accordion-preview-scale/);
@@ -211,16 +211,16 @@ test('keeps Figma surfaces exact while previews provide readable context', () =>
   assert.match(css, /\.rib-accordion-preview-scale\{[^}]*--rib-preview-scale:1\.18[^}]*width:100%[^}]*zoom:var\(--rib-preview-scale\)/);
   assert.doesNotMatch(css, /\.rib-accordion-preview-scale\{[^}]*width:calc\(/);
   assert.match(css, /\.rib-accordion-showcase__stage\{[^}]*background:var\(--surface-cool-grey-100\)/);
-  assert.match(css, /\.is-variant-coloured-background \.rib-accordion-showcase__stage\{[^}]*background:#fff/);
+  assert.match(css, /\.is-variant-coloured-background \.rib-accordion-showcase__stage\{[^}]*background:var\(--neutral-base-white\)/);
   assert.match(css, /\.rib-accordion--coloured-background\{[^}]*background:transparent/);
   assert.match(css, /\.rib-accordion--coloured-background\.is-expanded\{[^}]*background:var\(--surface-cool-grey-100\)/);
-  assert.match(css, /\.rib-accordion-scenario__list\{[^}]*background:#fff/);
+  assert.match(css, /\.rib-accordion-scenario__list\{[^}]*background:var\(--neutral-base-white\)/);
   assert.match(css, /\.rib-accordion-scenario__list\.is-plain,[^{]+\{[^}]*background:var\(--surface-cool-grey-100\)/);
   assert.doesNotMatch(css, /\.rib-accordion-scenario__list\.is-plain \.rib-accordion,[^{]+\{[^}]*padding:/);
   assert.match(css, /\.rib-accordion--plain \.rib-accordion__divider\{[^}]*background:var\(--neutral-grey-60\)/);
   assert.match(css, /\.rib-accordion--no-container \.rib-accordion__divider\{[^}]*background:var\(--surface-cool-grey-110\)/);
   assert.match(flutter, /color: variant == RibAccordionVariant\.plain[\s\S]*?DsColors\.neutralGrey60[\s\S]*?DsColors\.surfaceCoolGrey110/);
-  assert.match(flutter, /case RibAccordionVariant\.colouredBackground:[\s\S]*?surfaceColor: expanded[\s\S]*?DsColors\.surfaceCoolGrey100[\s\S]*?: Colors\.transparent/);
+  assert.match(flutter, /case RibAccordionVariant\.colouredBackground:[\s\S]*?surfaceColor:\s*expanded[\s\S]*?DsColors\.surfaceCoolGrey100[\s\S]*?: Colors\.transparent/);
 });
 
 test('keeps the Accordion preview visible beside compact controls at the 1200px desktop target', () => {

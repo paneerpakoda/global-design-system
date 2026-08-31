@@ -55,8 +55,8 @@ test('implements an accessible foundation-backed Loading indicator', () => {
 });
 
 test('provides List and Loading Flutter components backed by foundations', () => {
-  const list = read('flutter/rib_list.dart');
-  const loading = read('flutter/rib_loading_indicator.dart');
+  const list = read('flutter/lib/src/components/rib_list.dart');
+  const loading = read('flutter/lib/src/components/rib_loading_indicator.dart');
   assert.match(list, /class RibList extends StatelessWidget/);
   assert.match(list, /enum RibListVariant/);
   assert.match(list, /DsColors\.surfaceCoolGrey110/);

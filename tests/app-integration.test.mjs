@@ -7,17 +7,16 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = relativePath => fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 
-test('loads the export contract after tokens and before the app shell', () => {
+test('keeps browser-side export generation out of the portal runtime', () => {
   const index = read('index.html');
   const ribAtomsIndex = index.indexOf('js/rib-atoms.js');
   const tokensIndex = index.indexOf('js/tokens.js');
-  const exportsIndex = index.indexOf('js/exports.js');
   const appIndex = index.indexOf('js/app.js');
 
   assert.ok(ribAtomsIndex >= 0);
   assert.ok(tokensIndex > ribAtomsIndex);
-  assert.ok(exportsIndex > tokensIndex);
-  assert.ok(appIndex > exportsIndex);
+  assert.ok(appIndex > tokensIndex);
+  assert.doesNotMatch(index, /js\/exports\.js/);
 });
 
 test('documents complete RIB foundation coverage and all three responsive grids', () => {
@@ -45,20 +44,23 @@ test('presents RIB effects as primitive groups without premature semantic aliase
   assert.doesNotMatch(app, /DsElevation\./);
 });
 
-test('exposes one Developers destination for all three development targets', () => {
+test('exposes a Flutter-first Developers destination', () => {
   const app = read('js/app.js');
   assert.match(app, /route: '#\/developers'/);
-  assert.match(app, /Platform exports/);
-  assert.match(app, /Kotlin · ReactJS/);
-  assert.match(app, /Flutter/);
-  assert.match(app, /SwiftUI/);
-  assert.match(app, /Three native targets/);
+  assert.match(app, /label: 'Flutter'/);
+  assert.match(app, /Flutter package/);
+  assert.match(app, /package:global_ds\/global_ds\.dart/);
+  assert.match(app, /Kotlin\/React and SwiftUI are deferred/);
+  assert.doesNotMatch(app, /Platform exports/);
 });
 
-test('routes every download through the shared export contract', () => {
+test('removes browser downloads and generated-file previews', () => {
   const app = read('js/app.js');
-  assert.match(app, /GlobalDSExports\.generate\(filename\)/);
-  assert.doesNotMatch(app, /if \(f === 'ds_tokens\.dart'\)/);
+  const tokens = read('js/tokens.js');
+  assert.doesNotMatch(app, /GlobalDSExports/);
+  assert.doesNotMatch(app, /data-dl/);
+  assert.doesNotMatch(tokens, /downloadFile/);
+  assert.doesNotMatch(tokens, /data-dl/);
 });
 
 test('keeps the previous Flutter route as a backwards-compatible alias', () => {

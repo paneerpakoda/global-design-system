@@ -15,6 +15,12 @@ test('validates pull requests and main before publishing the portal', () => {
   assert.match(workflow, /node --test tests\/\*\.test\.mjs/);
   assert.match(workflow, /node scripts\/generate-exports\.mjs/);
   assert.match(workflow, /git diff --exit-code -- flutter kotlin-react swiftui/);
+  assert.match(workflow, /subosito\/flutter-action@v2/);
+  assert.match(workflow, /channel: stable/);
+  assert.match(workflow, /working-directory: flutter/);
+  assert.match(workflow, /flutter pub get/);
+  assert.match(workflow, /flutter analyze/);
+  assert.match(workflow, /flutter test/);
 });
 
 test('publishes only the static portal through the official Pages actions', () => {

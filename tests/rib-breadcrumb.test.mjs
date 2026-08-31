@@ -69,7 +69,7 @@ test('publishes Breadcrumb in the catalogue and playground', () => {
 });
 
 test('provides a reusable Flutter RibBreadcrumb implementation', () => {
-  const flutter = read('flutter/rib_breadcrumb.dart');
+  const flutter = read('flutter/lib/src/components/rib_breadcrumb.dart');
 
   assert.match(flutter, /class RibBreadcrumbItem/);
   assert.match(flutter, /class RibBreadcrumb extends StatelessWidget/);

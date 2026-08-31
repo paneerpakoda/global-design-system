@@ -58,7 +58,7 @@ test('matches the Figma avatar geometry, typography and colour tokens', () => {
   assert.match(css, /\.rib-avatar--blue \.rib-avatar__visual\{[^}]*background:var\(--pastel-blue-90\)/);
   assert.match(css, /\.rib-avatar--gold \.rib-avatar__visual,[^{]+\{[^}]*background:var\(--pastel-brown-100\)/);
   assert.match(css, /\.rib-avatar--maroon \.rib-avatar__visual\{[^}]*background:var\(--pastel-peach-90\)/);
-  assert.match(css, /\.rib-avatar__bank-badge\{[^}]*left:36px[^}]*top:-4px[^}]*padding:4px[^}]*border-radius:16px/);
+  assert.match(css, /\.rib-avatar__bank-badge\{[^}]*left:36px[^}]*top:-4px[^}]*padding:4px[^}]*border-radius:var\(--r-lg\)/);
 });
 
 test('publishes Avatar in the catalogue and playground', () => {
@@ -73,7 +73,7 @@ test('publishes Avatar in the catalogue and playground', () => {
 });
 
 test('provides reusable Flutter Avatar and AvatarGroup implementations', () => {
-  const flutter = read('flutter/rib_avatar.dart');
+  const flutter = read('flutter/lib/src/components/rib_avatar.dart');
 
   assert.match(flutter, /enum RibAvatarColor/);
   assert.match(flutter, /class RibAvatar extends StatelessWidget/);

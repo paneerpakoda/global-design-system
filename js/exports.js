@@ -176,21 +176,23 @@ function flutterHex(hex){
 }
 
 function flutterTokens(){
-  let output = "import 'dart:ui' show FontFeature;\n";
-  output += "import 'package:flutter/material.dart';\n\n";
+  let output = "import 'package:flutter/material.dart';\n\n";
   output += exportHeader('///');
   output += 'class DsColors {\n  DsColors._();\n\n';
   for (const token of exportColorEntries()) {
     output += '  /// TOKEN_COLOR: ' + token.path + '\n';
-    output += '  static const Color ' + token.name + ' = Color(' + flutterHex(token.value) + ');\n';
+    output += '  static const Color ' + token.name + ' = Color(' + flutterHex(token.value) + ');\n\n';
   }
-  output += '\n  // Semantic variables resolved from the RIB Tokens collection.\n';
+  output += '  // Semantic variables resolved from the RIB Tokens collection.\n';
   DS.variables.forEach(variable => {
     output += '  /// TOKEN_VARIABLE: ' + variable.name + ' -> ' + variable.sourceAlias + '\n';
-    output += '  static const Color ' + exportVariableName(variable.name) + ' = Color(' + flutterHex(variable.resolvedValue) + ');\n';
+    output += '  static const Color ' + exportVariableName(variable.name) + ' = Color(' + flutterHex(variable.resolvedValue) + ');\n\n';
   });
-  output += '\n  static const Gradient hero = LinearGradient(\n';
+  output += '  static const Gradient hero = LinearGradient(\n';
   output += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
+  output += '    colors: [Color(' + flutterHex(DS.gradient.hero.stops[0]) + '), Color(' + flutterHex(DS.gradient.hero.stops[1]) + ')],\n  );\n';
+  output += '\n  static const Gradient cardHero = LinearGradient(\n';
+  output += '    begin: Alignment.centerLeft,\n    end: Alignment.centerRight,\n';
   output += '    colors: [Color(' + flutterHex(DS.gradient.hero.stops[0]) + '), Color(' + flutterHex(DS.gradient.hero.stops[1]) + ')],\n  );\n';
   output += '\n  static const Color buttonPrimaryFillBase = primaryOrange100;\n';
   output += '  static const Gradient buttonPrimaryFill = LinearGradient(\n';
@@ -201,28 +203,40 @@ function flutterTokens(){
   output += '    begin: Alignment.topCenter,\n    end: Alignment.bottomCenter,\n';
   output += '    colors: [Color(0x80FFFFFF), Color(0x00FFFFFF)],\n  );\n';
   output += '}\n\nclass DsLayoutGrid {\n';
-  output += '  const DsLayoutGrid({required this.pattern, required this.alignment, required this.count, this.sectionSize, required this.gutterSize, required this.offset, required this.visible});\n';
+  output += '  const DsLayoutGrid({\n';
+  output += '    required this.pattern,\n    required this.alignment,\n    required this.count,\n';
+  output += '    this.sectionSize,\n    required this.gutterSize,\n    required this.offset,\n';
+  output += '    required this.visible,\n  });\n';
   output += '  final String pattern;\n  final String alignment;\n  final int count;\n  final double? sectionSize;\n  final double gutterSize;\n  final double offset;\n  final bool visible;\n}\n\n';
   output += 'class DsGrids {\n  DsGrids._();\n\n';
-  DS.grid.forEach(style => {
+  DS.grid.forEach((style, styleIndex) => {
     output += '  /// TOKEN_GRID: grid.' + style.viewport + '\n';
     output += '  static const List<DsLayoutGrid> ' + exportVariableName(style.name) + ' = [\n';
     style.layoutGrids.forEach(grid => {
-      output += "    DsLayoutGrid(pattern: '" + grid.pattern + "', alignment: '" + grid.alignment + "', count: " + grid.count +
-        ', sectionSize: ' + (grid.sectionSize === undefined ? 'null' : grid.sectionSize) + ', gutterSize: ' + grid.gutterSize +
-        ', offset: ' + grid.offset + ', visible: ' + grid.visible + '),\n';
+      output += '    DsLayoutGrid(\n';
+      output += "      pattern: '" + grid.pattern + "',\n";
+      output += "      alignment: '" + grid.alignment + "',\n";
+      output += '      count: ' + grid.count + ',\n';
+      output += '      sectionSize: ' + (grid.sectionSize === undefined ? 'null' : grid.sectionSize) + ',\n';
+      output += '      gutterSize: ' + grid.gutterSize + ',\n';
+      output += '      offset: ' + grid.offset + ',\n';
+      output += '      visible: ' + grid.visible + ',\n';
+      output += '    ),\n';
     });
-    output += '  ];\n';
+    output += styleIndex === DS.grid.length - 1 ? '  ];\n' : '  ];\n\n';
   });
   output += '}\n\nclass DsEffectToken {\n';
-  output += '  const DsEffectToken(this.color, this.offsetX, this.offsetY, this.radius, this.spread);\n';
+  output += '  const DsEffectToken(\n';
+  output += '    this.color,\n    this.offsetX,\n    this.offsetY,\n    this.radius,\n    this.spread,\n  );\n';
   output += '  final Color color;\n  final double offsetX;\n  final double offsetY;\n  final double radius;\n  final double spread;\n}\n\n';
   output += 'class DsEffects {\n  DsEffects._();\n\n';
-  DS.effects.forEach(style => {
+  DS.effects.forEach((style, styleIndex) => {
     const effect = style.effects[0];
     output += '  /// TOKEN_EFFECT: ' + style.path + ' · ' + style.name + '\n';
-    output += '  static const DsEffectToken ' + style.token + ' = DsEffectToken(Color(' + flutterHex(effect.color) + '), ' +
-      effect.offset.x + ', ' + effect.offset.y + ', ' + effect.radius + ', ' + effect.spread + ');\n';
+    output += '  static const DsEffectToken ' + style.token + ' =\n';
+    output += '      DsEffectToken(Color(' + flutterHex(effect.color) + '), ' + effect.offset.x + ', ' +
+      effect.offset.y + ', ' + effect.radius + ', ' + effect.spread + ');\n';
+    if (styleIndex !== DS.effects.length - 1) output += '\n';
   });
   output += '}\n\nclass DsSpacing {\n  DsSpacing._();\n\n';
   DS.space.forEach(token => {
@@ -233,11 +247,13 @@ function flutterTokens(){
     output += '  static const double ' + token.dart + ' = ' + token.px + ';\n';
   });
   output += '}\n\nclass DsText {\n  DsText._();\n\n';
-  output += "  static const String fontFamily = '" + DS.typeface.family + "';\n\n";
+  output += "  static const String fontFamilyName = '" + DS.typeface.family + "';\n";
+  output += "  static const String fontPackage = 'global_ds';\n";
+  output += "  static const String fontFamily = 'packages/global_ds/" + DS.typeface.family + "';\n\n";
   DS.type.forEach(token => {
     output += '  /// TOKEN_TYPE: typography.' + token.token + '\n';
     output += '  static const TextStyle ' + token.token + ' = TextStyle(\n';
-    output += '    fontFamily: fontFamily,\n    fontSize: ' + token.size + ',\n';
+    output += '    fontFamily: fontFamilyName,\n    package: fontPackage,\n    fontSize: ' + token.size + ',\n';
     output += '    height: ' + (token.height / token.size).toFixed(2) + ',\n';
     output += '    fontWeight: FontWeight.w' + token.weight + ',\n';
     output += '    letterSpacing: ' + token.tracking + ',\n';
@@ -335,14 +351,16 @@ import 'ds_tokens.dart';
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
-          borderSide: const BorderSide(color: DsColors.primaryOrange100, width: 1.5),
+          borderSide:
+              const BorderSide(color: DsColors.primaryOrange100, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.error100),
         ),
         labelStyle: DsText.inputMediumRegular,
-        hintStyle: DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
+        hintStyle:
+            DsText.inputMediumRegular.copyWith(color: DsColors.neutralGrey90),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: DsColors.neutralBaseWhite,
@@ -591,9 +609,9 @@ const GlobalDSExportGenerators = Object.freeze({
 
 const GlobalDSExports = Object.freeze({
   targets: Object.freeze([
-    Object.freeze({ id: 'kotlin-react', label: 'Kotlin · ReactJS', language: 'Kotlin', files: Object.freeze(['global_ds_tokens.kt', 'global_ds_theme.kt']) }),
-    Object.freeze({ id: 'flutter', label: 'Flutter', language: 'Dart', files: Object.freeze(['ds_tokens.dart', 'ds_theme.dart']) }),
-    Object.freeze({ id: 'swiftui', label: 'SwiftUI', language: 'Swift', files: Object.freeze(['GlobalDSTokens.swift', 'GlobalDSTheme.swift']) })
+    Object.freeze({ id: 'kotlin-react', label: 'Kotlin · ReactJS', language: 'Kotlin', status: 'deferred', files: Object.freeze(['global_ds_tokens.kt', 'global_ds_theme.kt']) }),
+    Object.freeze({ id: 'flutter', label: 'Flutter', language: 'Dart', status: 'supported', files: Object.freeze(['ds_tokens.dart', 'ds_theme.dart']) }),
+    Object.freeze({ id: 'swiftui', label: 'SwiftUI', language: 'Swift', status: 'deferred', files: Object.freeze(['GlobalDSTokens.swift', 'GlobalDSTheme.swift']) })
   ]),
   commonFiles: Object.freeze(['ds_tokens.json']),
   generate(filename){

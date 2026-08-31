@@ -31,7 +31,7 @@ test('renders semantic, escaped Input field controls', () => {
 test('matches Input field geometry, type, and state foundations', () => {
   const css = read('css/app.css');
   assert.match(css, /\.rib-input-field\{[^}]*width:245px[^}]*gap:8px/);
-  assert.match(css, /\.rib-input-field__shell\{[^}]*height:48px[^}]*padding:12px 16px 12px 8px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:12px/);
+  assert.match(css, /\.rib-input-field__shell\{[^}]*height:48px[^}]*padding:12px 16px 12px 8px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:var\(--r-md\)/);
   assert.match(css, /\.rib-input-field\.is-typing \.rib-input-field__shell\{[^}]*border-color:var\(--primary-orange-100\)/);
   assert.match(css, /\.rib-input-field\.has-error \.rib-input-field__shell\{[^}]*border-color:var\(--error-100\)/);
   assert.match(css, /\.rib-input-field--textarea \.rib-input-field__shell\{[^}]*height:84px/);
@@ -52,17 +52,17 @@ test('documents every RIB Label size and colour', () => {
 
 test('matches Label geometry and foundation colour mapping', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-label--large,.rib-label--icon-large\{[^}]*min-height:24px[^}]*padding:4px 8px[^}]*border-radius:8px/);
-  assert.match(css, /\.rib-label--medium\{[^}]*min-height:20px[^}]*padding:2px 8px[^}]*border-radius:4px/);
+  assert.match(css, /\.rib-label--large,.rib-label--icon-large\{[^}]*min-height:24px[^}]*padding:4px 8px[^}]*border-radius:var\(--r-sm\)/);
+  assert.match(css, /\.rib-label--medium\{[^}]*min-height:20px[^}]*padding:2px 8px[^}]*border-radius:var\(--r-xs\)/);
   assert.match(css, /\.rib-label--small\{[^}]*min-height:16px[^}]*padding:0 4px/);
-  assert.match(css, /\.rib-label--badge\{[^}]*min-height:16px[^}]*padding:0 8px[^}]*border-radius:4px 4px 0 0/);
+  assert.match(css, /\.rib-label--badge\{[^}]*min-height:16px[^}]*padding:0 8px[^}]*border-radius:var\(--r-xs\) var\(--r-xs\) 0 0/);
   assert.match(css, /\.rib-label--orange\{[^}]*background:var\(--pastel-amber-100\)[^}]*color:var\(--primary-orange-100\)/);
   assert.match(css, /\.rib-label--green\{[^}]*background:var\(--pastel-green-100\)[^}]*color:var\(--success-100\)/);
 });
 
 test('provides Flutter Input field and Label components backed by foundations', () => {
-  const input = read('flutter/rib_input_field.dart');
-  const label = read('flutter/rib_label.dart');
+  const input = read('flutter/lib/src/components/rib_input_field.dart');
+  const label = read('flutter/lib/src/components/rib_label.dart');
   assert.match(input, /class RibInputField extends StatelessWidget/);
   assert.match(input, /enum RibInputFieldType/);
   assert.match(input, /DsColors\.surfaceCoolGrey110/);
@@ -83,4 +83,3 @@ test('publishes Input fields and Label in catalogue and playground', () => {
   assert.match(sandbox, /RibInputField\(/);
   assert.match(sandbox, /RibLabel\(/);
 });
-

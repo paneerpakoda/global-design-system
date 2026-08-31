@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 /// Visual presentations defined by the RIB Accordion component set.
 enum RibAccordionVariant {
@@ -91,7 +91,7 @@ class RibAccordion extends StatelessWidget {
         excludeFromSemantics: true,
         onTap: () => onChanged(!expanded),
         borderRadius: spec.borderRadius,
-        focusColor: const Color(0xFFFFE8DD),
+        focusColor: DsEffects.ringFocus.color,
         child: Padding(
           padding: spec.headerPadding,
           child: Row(
@@ -262,9 +262,8 @@ class _RibAccordionSpec {
           titleStyle: DsText.s1Semi.copyWith(color: DsColors.neutralGrey140),
           subtitleStyle: DsText.p2Reg,
           bodyStyle: DsText.p2Reg.copyWith(color: DsColors.neutralGrey120),
-          surfaceColor: expanded
-              ? DsColors.surfaceCoolGrey100
-              : Colors.transparent,
+          surfaceColor:
+              expanded ? DsColors.surfaceCoolGrey100 : Colors.transparent,
           bodyColor: Colors.transparent,
           borderRadius: BorderRadius.zero,
           leadingGap: DsSpacing.sm,
@@ -304,9 +303,8 @@ class _RibAccordionSpec {
           subtitleStyle: DsText.p2Reg.copyWith(color: DsColors.neutralGrey130),
           bodyStyle: DsText.s1Regular.copyWith(color: DsColors.neutralGrey120),
           surfaceColor: DsColors.neutralBaseWhite,
-          bodyColor: expanded
-              ? DsColors.surfaceCoolGrey90
-              : DsColors.neutralBaseWhite,
+          bodyColor:
+              expanded ? DsColors.surfaceCoolGrey90 : DsColors.neutralBaseWhite,
           borderColor: DsColors.surfaceCoolGrey110,
           borderRadius: BorderRadius.circular(DsRadius.md),
           leadingGap: DsSpacing.sm,

@@ -52,15 +52,15 @@ test('renders semantic, escaped buttons with the exact local Figma add glyph', (
 test('uses the audited RIB foundation colours for every Button state', () => {
   const css = read('css/app.css');
 
-  assert.match(css, /\.ds-btn\.primary\{[^}]*--rib-button-bg:var\(--primary-orange-100\)[^}]*color:#fff/);
+  assert.match(css, /\.ds-btn\.primary\{[^}]*--rib-button-bg:var\(--primary-orange-100\)[^}]*color:var\(--neutral-base-white\)/);
   assert.match(css, /\.ds-btn\.primary:hover,[^{]+\{[^}]*--rib-button-bg:var\(--primary-orange-110\)/);
   assert.match(css, /\.ds-btn\.primary:disabled\{[^}]*--rib-button-bg:var\(--neutral-grey-70\)[^}]*background:var\(--rib-button-bg\)[^}]*color:var\(--neutral-grey-110\)/);
   assert.match(css, /\.ds-btn\.outline\{[^}]*border-color:var\(--primary-orange-100\)[^}]*color:var\(--primary-orange-100\)/);
   assert.match(css, /\.ds-btn\.pastel\{[^}]*--rib-button-bg:var\(--pastel-amber-90\)[^}]*color:var\(--primary-orange-100\)/);
   assert.match(css, /\.ds-btn\.pastel:disabled\{[^}]*--rib-button-bg:var\(--neutral-grey-70\)[^}]*background:var\(--rib-button-bg\)[^}]*color:var\(--neutral-grey-110\)/);
-  assert.match(css, /\.ds-btn\.white\{[^}]*--rib-button-bg:#fff[^}]*border-color:var\(--surface-cool-grey-110\)[^}]*color:var\(--neutral-grey-130\)/);
+  assert.match(css, /\.ds-btn\.white\{[^}]*--rib-button-bg:var\(--neutral-base-white\)[^}]*border-color:var\(--surface-cool-grey-110\)[^}]*color:var\(--neutral-grey-130\)/);
   assert.match(css, /\.ds-btn\.destructive-outline\{[^}]*border-color:var\(--err-600\)[^}]*color:var\(--err-600\)/);
-  assert.match(css, /\.ds-btn\.destructive-filled\{[^}]*--rib-button-bg:var\(--err-600\)[^}]*color:#fff/);
+  assert.match(css, /\.ds-btn\.destructive-filled\{[^}]*--rib-button-bg:var\(--err-600\)[^}]*color:var\(--neutral-base-white\)/);
   assert.match(css, /\.ds-btn\.destructive-filled:disabled,[^{]+\{[^}]*--rib-button-bg:var\(--pastel-peach-110\)[^}]*color:var\(--err-500\)/);
 });
 
@@ -69,11 +69,11 @@ test('matches the Figma Button geometry, typography and state effects', () => {
 
   assert.match(css, /\.ds-btn\.lg\{[^}]*min-width:120px[^}]*height:44px[^}]*padding:0 12px[^}]*font-size:14px/);
   assert.match(css, /\.ds-btn\.sm\{[^}]*min-width:120px[^}]*height:36px[^}]*padding:0 12px[^}]*font-size:12px/);
-  assert.match(css, /\.ds-btn\.xs\{[^}]*height:28px[^}]*padding:0 8px[^}]*font-size:12px[^}]*border-radius:8px/);
+  assert.match(css, /\.ds-btn\.xs\{[^}]*height:28px[^}]*padding:0 8px[^}]*font-size:12px[^}]*border-radius:var\(--r-sm\)/);
   assert.match(css, /\.ds-btn\{[^}]*gap:4px[^}]*font-weight:600[^}]*line-height:16px[^}]*letter-spacing:\.25px/);
   assert.match(css, /\.ds-btn\.is-focus,[^{]+\{[^}]*box-shadow:var\(--effect-ring-focus\)/);
   assert.match(css, /\.ds-btn\.destructive-outline\.is-focus,[^{]+\{[^}]*box-shadow:0 0 0 3px var\(--pastel-peach-120\)/);
-  assert.match(css, /\.ds-btn\.white\.is-focus,[^{]+\{[^}]*box-shadow:0 0 0 3px rgba\(235,241,248,\.8\)/);
+  assert.match(css, /\.ds-btn\.white\.is-focus,[^{]+\{[^}]*box-shadow:0 0 0 3px color-mix\(in srgb,var\(--pastel-blue-90\) 80%,transparent\)/);
 });
 
 test('publishes Button in the component catalogue and playground', () => {
@@ -89,7 +89,7 @@ test('publishes Button in the component catalogue and playground', () => {
 });
 
 test('provides a reusable Flutter RibButton backed by generated foundation tokens', () => {
-  const flutter = read('flutter/rib_button.dart');
+  const flutter = read('flutter/lib/src/components/rib_button.dart');
 
   assert.match(flutter, /enum RibButtonVariant/);
   assert.match(flutter, /enum RibButtonSize/);
@@ -104,8 +104,8 @@ test('provides a reusable Flutter RibButton backed by generated foundation token
   assert.match(flutter, /DsColors\.pastelPeach110/);
   assert.match(flutter, /DsText\.buttonLarge/);
   assert.match(flutter, /DsText\.buttonSmall/);
-  assert.match(flutter, /8 - borderWidth/);
-  assert.match(flutter, /12 - borderWidth/);
+  assert.match(flutter, /DsSpacing\.sm - borderWidth/);
+  assert.match(flutter, /DsSpacing\.md - borderWidth/);
   assert.doesNotMatch(flutter, /double _borderWidth[\s\S]*?if \(secondary \|\| widget\.size == RibButtonSize\.xSmall\)/);
 });
 

@@ -21,7 +21,7 @@ test('documents the audited Dropdown area variants from Figma', () => {
 
 test('matches Dropdown geometry and audited foundation colours', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-dropdown-menu\{[^}]*width:258px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:12px[^}]*box-shadow:var\(--effect-shadow-200\)/);
+  assert.match(css, /\.rib-dropdown-menu\{[^}]*width:258px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:var\(--r-md\)[^}]*box-shadow:var\(--effect-shadow-200\)/);
   assert.match(css, /\.rib-dropdown-option\{[^}]*padding:12px 16px[^}]*font-size:12px[^}]*line-height:16px/);
   assert.match(css, /\.rib-dropdown-option\.is-hover\{[^}]*background:var\(--neutral-grey-60\)/);
   assert.match(css, /\.rib-dropdown-option\.is-selected\{[^}]*color:var\(--primary-orange-100\)/);
@@ -43,7 +43,7 @@ test('implements the exact Empty state contract and assets', () => {
 
 test('matches Empty state default, hover, and heading geometry', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-empty-state\{[^}]*width:468px[^}]*padding:16px[^}]*gap:8px[^}]*border-radius:12px[^}]*background:var\(--surface-cool-grey-90\)/);
+  assert.match(css, /\.rib-empty-state\{[^}]*width:468px[^}]*padding:16px[^}]*gap:8px[^}]*border-radius:var\(--r-md\)[^}]*background:var\(--surface-cool-grey-90\)/);
   assert.match(css, /\.rib-empty-state\.is-hover\{[^}]*border-color:var\(--primary-orange-80\)[^}]*background:var\(--pastel-amber-90\)/);
   assert.match(css, /\.rib-empty-state\.has-heading\{[^}]*background:transparent[^}]*border-color:transparent/);
 });
@@ -62,7 +62,7 @@ test('implements all Info tone, alignment, and stroke variants', () => {
 
 test('maps Info tones to audited semantic foundations', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-info\{[^}]*width:516px[^}]*padding:12px 16px[^}]*gap:8px[^}]*border-radius:12px/);
+  assert.match(css, /\.rib-info\{[^}]*width:516px[^}]*padding:12px 16px[^}]*gap:8px[^}]*border-radius:var\(--r-md\)/);
   assert.match(css, /\.rib-info--default\{[^}]*background:var\(--pastel-amber-100\)/);
   assert.match(css, /\.rib-info--success\{[^}]*background:var\(--pastel-green-90\)/);
   assert.match(css, /\.rib-info--error\{[^}]*background:var\(--pastel-peach-90\)[^}]*color:var\(--error-100\)/);
@@ -70,9 +70,9 @@ test('maps Info tones to audited semantic foundations', () => {
 });
 
 test('provides Flutter components backed by foundation tokens', () => {
-  const dropdown = read('flutter/rib_dropdown.dart');
-  const empty = read('flutter/rib_empty_state.dart');
-  const info = read('flutter/rib_info.dart');
+  const dropdown = read('flutter/lib/src/components/rib_dropdown.dart');
+  const empty = read('flutter/lib/src/components/rib_empty_state.dart');
+  const info = read('flutter/lib/src/components/rib_info.dart');
   assert.match(dropdown, /class RibDropdown<.*> extends StatelessWidget/);
   assert.match(dropdown, /DsColors\.primaryOrange100/);
   assert.match(empty, /class RibEmptyState extends StatelessWidget/);
@@ -91,4 +91,3 @@ test('publishes the first three audited component sets in catalogue and playgrou
     assert.match(sandbox, new RegExp(`${id}:\\s*\\{`));
   }
 });
-

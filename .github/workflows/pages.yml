@@ -36,6 +36,24 @@ jobs:
       - name: Confirm generated snapshots are current
         run: git diff --exit-code -- flutter kotlin-react swiftui
 
+      - name: Use stable Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Resolve Flutter package dependencies
+        working-directory: flutter
+        run: flutter pub get
+
+      - name: Analyze Flutter package
+        working-directory: flutter
+        run: flutter analyze
+
+      - name: Test Flutter package
+        working-directory: flutter
+        run: flutter test
+
   build:
     name: Package static portal
     if: github.event_name != 'pull_request'

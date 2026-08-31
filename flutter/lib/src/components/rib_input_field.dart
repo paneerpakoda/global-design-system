@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibInputFieldType { labelInline, labelOut, textArea }
 
@@ -37,57 +37,56 @@ class RibInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     final isArea = type == RibInputFieldType.textArea;
     final hasError = errorText != null;
-    final borderColor = hasError
-        ? DsColors.error100
-        : DsColors.surfaceCoolGrey110;
+    final borderColor =
+        hasError ? DsColors.error100 : DsColors.surfaceCoolGrey110;
     final field = TextField(
       controller: controller,
       enabled: enabled,
       onChanged: onChanged,
       minLines: isArea ? 3 : 1,
       maxLines: isArea ? 3 : 1,
-      style: TextStyle(
+      style: (textSize == RibInputTextSize.large
+              ? DsText.h3Regular
+              : DsText.inputRRegular)
+          .copyWith(
         color: enabled ? DsColors.neutralGrey140 : DsColors.neutralGrey90,
-        fontSize: textSize == RibInputTextSize.large ? 14 : 13,
-        height: 20 / (textSize == RibInputTextSize.large ? 14 : 13),
-        fontWeight: FontWeight.w500,
-        letterSpacing: .25,
       ),
       decoration: InputDecoration(
         hintText: type == RibInputFieldType.labelInline ? label : null,
-        hintStyle: const TextStyle(color: DsColors.neutralGrey110),
+        hintStyle: DsText.inputRRegular.copyWith(
+          color: DsColors.neutralGrey110,
+        ),
         prefixIcon: leading,
         suffixText: rightLabel,
-        suffixStyle: const TextStyle(
-          color: DsColors.neutralGrey120,
-          fontSize: 12,
-          height: 16 / 12,
-          letterSpacing: .25,
-        ),
+        suffixStyle: DsText.s1Regular.copyWith(color: DsColors.neutralGrey120),
         filled: true,
-        fillColor: enabled
-            ? DsColors.neutralBaseWhite
-            : DsColors.surfaceCoolGrey100,
-        contentPadding: const EdgeInsets.fromLTRB(8, 12, 16, 12),
+        fillColor:
+            enabled ? DsColors.neutralBaseWhite : DsColors.surfaceCoolGrey100,
+        contentPadding: const EdgeInsets.fromLTRB(
+          DsSpacing.sm,
+          DsSpacing.md,
+          DsSpacing.lg,
+          DsSpacing.md,
+        ),
         constraints: BoxConstraints(minHeight: isArea ? 84 : 48),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: BorderSide(color: borderColor),
         ),
         disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.surfaceCoolGrey110),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.primaryOrange100),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.error100),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(DsRadius.md),
           borderSide: const BorderSide(color: DsColors.error100),
         ),
       ),
@@ -104,25 +103,19 @@ class RibInputField extends StatelessWidget {
           children: [
             if (type == RibInputFieldType.labelOut) ...[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs),
                 child: Text(
                   label,
-                  style: const TextStyle(
-                    color: DsColors.neutralGrey140,
-                    fontSize: 12,
-                    height: 16 / 12,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: .25,
-                  ),
+                  style: DsText.s1Semi.copyWith(color: DsColors.neutralGrey140),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: DsSpacing.sm),
             ],
             field,
             if (helper != null || hasError) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: DsSpacing.sm),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: DsSpacing.xs),
                 child: Row(
                   children: [
                     Icon(
@@ -132,17 +125,14 @@ class RibInputField extends StatelessWidget {
                           ? DsColors.error100
                           : DsColors.neutralGrey120,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: DsSpacing.xs),
                     Expanded(
                       child: Text(
                         errorText ?? helper!,
-                        style: TextStyle(
+                        style: DsText.p2Reg.copyWith(
                           color: hasError
                               ? DsColors.error100
                               : DsColors.neutralGrey120,
-                          fontSize: 11,
-                          height: 16 / 11,
-                          letterSpacing: .25,
                         ),
                       ),
                     ),

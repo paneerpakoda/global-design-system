@@ -25,7 +25,8 @@ yarn-error.log*
 dist/
 build/
 
-# Flutter / Dart (the flutter/ source snapshots are tracked; ignore generated artifacts)
+# Flutter / Dart (package sources are tracked; ignore generated artifacts)
 .dart_tool/
 .packages
 *.iml
+/flutter/pubspec.lock

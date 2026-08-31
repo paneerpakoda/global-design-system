@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibActivityTimelineState { current, inactive, completed, warning, failed }
 
@@ -36,9 +36,9 @@ class RibActivityTimeline extends StatelessWidget {
     this.semanticLabel = 'Activity timeline',
     super.key,
   }) : assert(
-         !rightIcon || onItemTap != null,
-         'rightIcon requires onItemTap so the chevron always represents an action.',
-       );
+          !rightIcon || onItemTap != null,
+          'rightIcon requires onItemTap so the chevron always represents an action.',
+        );
 
   final List<RibActivityTimelineItem> items;
   final RibActivityTimelineType type;
@@ -72,7 +72,8 @@ class RibActivityTimeline extends StatelessWidget {
               shrinkWrap: shrinkWrap,
               physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
               itemCount: items.length,
-              separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.md),
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: DsSpacing.md),
               itemBuilder: (context, index) => _RibActivityCard(
                 item: items[index],
                 type: type,
@@ -94,8 +95,8 @@ class RibActivityCalendarItem {
   }) : isDivider = false;
 
   const RibActivityCalendarItem.divider({required this.dateLabel})
-    : activity = null,
-      isDivider = true;
+      : activity = null,
+        isDivider = true;
 
   final String dateLabel;
   final RibActivityTimelineItem? activity;
@@ -111,10 +112,10 @@ class RibActivityCalendarTimeline extends StatelessWidget {
     this.semanticLabel = 'Calendar activity timeline',
     super.key,
   }) : assert(
-         currentState == RibActivityTimelineState.current ||
-             currentState == RibActivityTimelineState.inactive,
-         'currentState only supports current or inactive.',
-       );
+          currentState == RibActivityTimelineState.current ||
+              currentState == RibActivityTimelineState.inactive,
+          'currentState only supports current or inactive.',
+        );
 
   final List<RibActivityCalendarItem> items;
   final RibActivityTimelineState currentState;
@@ -150,7 +151,8 @@ class RibActivityCalendarTimeline extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: visibleItems.length,
-              separatorBuilder: (_, _) => const SizedBox(height: DsSpacing.lg),
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: DsSpacing.lg),
               itemBuilder: (context, index) => _RibActivityCalendarRow(
                 item: visibleItems[index],
                 currentState: currentState,
@@ -356,7 +358,7 @@ class _RibActivityCard extends StatelessWidget {
                 ? content
                 : InkWell(
                     onTap: onTap,
-                    focusColor: const Color(0xFFFFE8DD),
+                    focusColor: DsEffects.ringFocus.color,
                     child: content,
                   ),
           ),
@@ -366,13 +368,12 @@ class _RibActivityCard extends StatelessWidget {
   }
 
   Widget _buildLeading() {
-    final labelColor =
-        type == RibActivityTimelineType.singleLine &&
+    final labelColor = type == RibActivityTimelineType.singleLine &&
             item.state == RibActivityTimelineState.failed
         ? DsColors.error100
         : item.state == RibActivityTimelineState.inactive
-        ? DsColors.neutralGrey130
-        : DsColors.neutralGrey140;
+            ? DsColors.neutralGrey130
+            : DsColors.neutralGrey140;
     final label = Text(
       item.label,
       maxLines: 1,
@@ -449,42 +450,42 @@ class _StateIcon extends StatelessWidget {
 
 extension on RibActivityTimelineState {
   String get semanticLabel => switch (this) {
-    RibActivityTimelineState.current => 'Current',
-    RibActivityTimelineState.inactive => 'Inactive',
-    RibActivityTimelineState.completed => 'Completed',
-    RibActivityTimelineState.warning => 'Warning',
-    RibActivityTimelineState.failed => 'Failed',
-  };
+        RibActivityTimelineState.current => 'Current',
+        RibActivityTimelineState.inactive => 'Inactive',
+        RibActivityTimelineState.completed => 'Completed',
+        RibActivityTimelineState.warning => 'Warning',
+        RibActivityTimelineState.failed => 'Failed',
+      };
 
   String get defaultStatus => switch (this) {
-    RibActivityTimelineState.current => '',
-    RibActivityTimelineState.inactive => '',
-    RibActivityTimelineState.completed => 'Completed',
-    RibActivityTimelineState.warning => 'Pending',
-    RibActivityTimelineState.failed => 'Failed',
-  };
+        RibActivityTimelineState.current => '',
+        RibActivityTimelineState.inactive => '',
+        RibActivityTimelineState.completed => 'Completed',
+        RibActivityTimelineState.warning => 'Pending',
+        RibActivityTimelineState.failed => 'Failed',
+      };
 
   IconData get icon => switch (this) {
-    RibActivityTimelineState.current => Icons.radio_button_checked,
-    RibActivityTimelineState.inactive => Icons.radio_button_checked,
-    RibActivityTimelineState.completed => Icons.check_circle,
-    RibActivityTimelineState.warning => Icons.error,
-    RibActivityTimelineState.failed => Icons.error,
-  };
+        RibActivityTimelineState.current => Icons.radio_button_checked,
+        RibActivityTimelineState.inactive => Icons.radio_button_checked,
+        RibActivityTimelineState.completed => Icons.check_circle,
+        RibActivityTimelineState.warning => Icons.error,
+        RibActivityTimelineState.failed => Icons.error,
+      };
 
   Color get iconColor => switch (this) {
-    RibActivityTimelineState.current => DsColors.primaryOrange100,
-    RibActivityTimelineState.inactive => DsColors.neutralGrey90,
-    RibActivityTimelineState.completed => DsColors.success100,
-    RibActivityTimelineState.warning => DsColors.warning100,
-    RibActivityTimelineState.failed => DsColors.error100,
-  };
+        RibActivityTimelineState.current => DsColors.primaryOrange100,
+        RibActivityTimelineState.inactive => DsColors.neutralGrey90,
+        RibActivityTimelineState.completed => DsColors.success100,
+        RibActivityTimelineState.warning => DsColors.warning100,
+        RibActivityTimelineState.failed => DsColors.error100,
+      };
 
   Color get statusColor => switch (this) {
-    RibActivityTimelineState.current => DsColors.neutralGrey140,
-    RibActivityTimelineState.inactive => DsColors.neutralGrey120,
-    RibActivityTimelineState.completed => DsColors.success110,
-    RibActivityTimelineState.warning => DsColors.neutralGrey140,
-    RibActivityTimelineState.failed => DsColors.error100,
-  };
+        RibActivityTimelineState.current => DsColors.neutralGrey140,
+        RibActivityTimelineState.inactive => DsColors.neutralGrey120,
+        RibActivityTimelineState.completed => DsColors.success110,
+        RibActivityTimelineState.warning => DsColors.neutralGrey140,
+        RibActivityTimelineState.failed => DsColors.error100,
+      };
 }

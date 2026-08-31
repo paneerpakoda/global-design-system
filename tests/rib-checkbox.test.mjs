@@ -58,7 +58,7 @@ test('publishes Checkbox in the catalogue and playground', () => {
 });
 
 test('provides a controlled Flutter RibCheckbox using foundation tokens', () => {
-  const flutter = read('flutter/rib_checkbox.dart');
+  const flutter = read('flutter/lib/src/components/rib_checkbox.dart');
   assert.match(flutter, /enum RibCheckboxSize/);
   assert.match(flutter, /class RibCheckbox extends StatelessWidget/);
   assert.match(flutter, /Semantics\(/);
@@ -69,5 +69,5 @@ test('provides a controlled Flutter RibCheckbox using foundation tokens', () => 
 
 test('provides a visible keyboard focus treatment', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-checkbox__input:focus-visible\+\.rib-checkbox__control\{[^}]*outline:3px solid #FFE8DD/);
+  assert.match(css, /\.rib-checkbox__input:focus-visible\+\.rib-checkbox__control\{[^}]*outline:3px solid var\(--effect-ring-focus-color\)/);
 });

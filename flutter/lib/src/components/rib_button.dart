@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibButtonVariant {
   primary,
@@ -25,14 +25,14 @@ class RibButton extends StatefulWidget {
     this.expanded = false,
     this.onPressed,
     super.key,
-  }) : assert(
-         leadingIcon == null || trailingIcon == null,
-         'RIB Button supports one icon position at a time.',
-       ),
-       assert(
-         variant != RibButtonVariant.secondary || size == RibButtonSize.small,
-         'The RIB Secondary button is available in Small only.',
-       );
+  })  : assert(
+          leadingIcon == null || trailingIcon == null,
+          'RIB Button supports one icon position at a time.',
+        ),
+        assert(
+          variant != RibButtonVariant.secondary || size == RibButtonSize.small,
+          'The RIB Secondary button is available in Small only.',
+        );
 
   final String label;
   final RibButtonVariant variant;
@@ -65,9 +65,8 @@ class _RibButtonState extends State<RibButton> {
             RibButtonSize.small => 36.0,
             RibButtonSize.xSmall => 28.0,
           };
-    final minimumWidth = secondary || widget.size == RibButtonSize.xSmall
-        ? 0.0
-        : 120.0;
+    final minimumWidth =
+        secondary || widget.size == RibButtonSize.xSmall ? 0.0 : 120.0;
     final borderWidth = _borderWidth(secondary);
     final button = Semantics(
       button: true,
@@ -129,16 +128,15 @@ class _RibButtonState extends State<RibButton> {
 
   Widget _buildContent(Color color, bool secondary) {
     final iconSize = secondary ? 14.0 : 16.0;
-    final textStyle =
-        (widget.size == RibButtonSize.large
-                ? DsText.buttonLarge
-                : DsText.buttonSmall)
-            .copyWith(color: color);
+    final textStyle = (widget.size == RibButtonSize.large
+            ? DsText.buttonLarge
+            : DsText.buttonSmall)
+        .copyWith(color: color);
     final children = <Widget>[];
 
     if (widget.leadingIcon != null) {
       children.add(_icon(widget.leadingIcon!, iconSize, color));
-      children.add(const SizedBox(width: 4));
+      children.add(const SizedBox(width: DsSpacing.xs));
     }
     children.add(
       Flexible(
@@ -151,7 +149,7 @@ class _RibButtonState extends State<RibButton> {
       ),
     );
     if (widget.trailingIcon != null) {
-      children.add(const SizedBox(width: 4));
+      children.add(const SizedBox(width: DsSpacing.xs));
       children.add(_icon(widget.trailingIcon!, iconSize, color));
     }
 
@@ -175,10 +173,16 @@ class _RibButtonState extends State<RibButton> {
   EdgeInsets _contentPadding(bool secondary, double borderWidth) {
     if (secondary) return EdgeInsets.zero;
     if (widget.leadingIcon != null) {
-      return EdgeInsets.only(left: 8 - borderWidth, right: 12 - borderWidth);
+      return EdgeInsets.only(
+        left: DsSpacing.sm - borderWidth,
+        right: DsSpacing.md - borderWidth,
+      );
     }
     if (widget.trailingIcon != null) {
-      return EdgeInsets.only(left: 12 - borderWidth, right: 8 - borderWidth);
+      return EdgeInsets.only(
+        left: DsSpacing.md - borderWidth,
+        right: DsSpacing.sm - borderWidth,
+      );
     }
     final horizontal = widget.size == RibButtonSize.xSmall ? 8.0 : 12.0;
     return EdgeInsets.symmetric(horizontal: horizontal - borderWidth);
@@ -201,33 +205,30 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-              ? DsColors.primaryOrange110
-              : DsColors.primaryOrange100,
-          contentColor: disabled
-              ? DsColors.neutralGrey110
-              : DsColors.neutralBaseWhite,
+                  ? DsColors.primaryOrange110
+                  : DsColors.primaryOrange100,
+          contentColor:
+              disabled ? DsColors.neutralGrey110 : DsColors.neutralBaseWhite,
           borderColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-              ? DsColors.primaryOrange110
-              : Colors.transparent,
+                  ? DsColors.primaryOrange110
+                  : Colors.transparent,
           borderGradient: disabled || hovered ? null : DsColors.buttonStroke,
           fillGradient: disabled || hovered ? null : DsColors.buttonPrimaryFill,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
         );
       case RibButtonVariant.outline:
         return _RibButtonVisual(
-          surfaceColor: hovered
-              ? DsColors.primaryOrange100
-              : DsColors.neutralBaseWhite,
+          surfaceColor:
+              hovered ? DsColors.primaryOrange100 : DsColors.neutralBaseWhite,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-              ? DsColors.neutralBaseWhite
-              : DsColors.primaryOrange100,
-          borderColor: disabled
-              ? DsColors.neutralGrey70
-              : DsColors.primaryOrange100,
+                  ? DsColors.neutralBaseWhite
+                  : DsColors.primaryOrange100,
+          borderColor:
+              disabled ? DsColors.neutralGrey70 : DsColors.primaryOrange100,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
         );
       case RibButtonVariant.secondary:
@@ -236,21 +237,21 @@ class _RibButtonState extends State<RibButton> {
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered || focused
-              ? DsColors.primaryOrange110
-              : DsColors.primaryOrange100,
+                  ? DsColors.primaryOrange110
+                  : DsColors.primaryOrange100,
         );
       case RibButtonVariant.pastel:
         return _RibButtonVisual(
           surfaceColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-              ? DsColors.pastelAmber100
-              : DsColors.pastelAmber90,
+                  ? DsColors.pastelAmber100
+                  : DsColors.pastelAmber90,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-              ? DsColors.primaryOrange110
-              : DsColors.primaryOrange100,
+                  ? DsColors.primaryOrange110
+                  : DsColors.primaryOrange100,
           borderColor: disabled ? DsColors.neutralGrey70 : Colors.transparent,
           borderGradient: disabled ? null : DsColors.buttonStroke,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
@@ -260,23 +261,28 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: focused
               ? DsColors.surfaceCoolGrey90
               : hovered
-              ? DsColors.surfaceCoolGrey110
-              : DsColors.neutralBaseWhite,
+                  ? DsColors.surfaceCoolGrey110
+                  : DsColors.neutralBaseWhite,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-              ? DsColors.neutralGrey140
-              : DsColors.neutralGrey130,
+                  ? DsColors.neutralGrey140
+                  : DsColors.neutralGrey130,
           borderColor: disabled
               ? DsColors.neutralGrey70
               : focused
-              ? DsColors.pastelBlue90
-              : DsColors.surfaceCoolGrey110,
+                  ? DsColors.pastelBlue90
+                  : DsColors.surfaceCoolGrey110,
           shadows: focused
-              ? const [BoxShadow(color: Color(0xCCEBF1F8), spreadRadius: 3)]
+              ? [
+                  BoxShadow(
+                    color: DsColors.pastelBlue90.withValues(alpha: .8),
+                    spreadRadius: DsEffects.ringFocus.spread,
+                  ),
+                ]
               : disabled
-              ? const []
-              : [_boxShadow(DsEffects.shadowButtonWhite)],
+                  ? const []
+                  : [_boxShadow(DsEffects.shadowButtonWhite)],
         );
       case RibButtonVariant.destructiveOutline:
         return _RibButtonVisual(
@@ -284,11 +290,16 @@ class _RibButtonState extends State<RibButton> {
           contentColor: disabled
               ? DsColors.error90
               : hovered
-              ? DsColors.neutralBaseWhite
-              : DsColors.error100,
+                  ? DsColors.neutralBaseWhite
+                  : DsColors.error100,
           borderColor: disabled ? DsColors.pastelPeach120 : DsColors.error100,
           shadows: focused
-              ? const [BoxShadow(color: Color(0xFFEEC9CC), spreadRadius: 3)]
+              ? [
+                  BoxShadow(
+                    color: DsColors.pastelPeach120,
+                    spreadRadius: DsEffects.ringFocus.spread,
+                  ),
+                ]
               : const [],
         );
       case RibButtonVariant.destructiveFilled:
@@ -296,11 +307,16 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: disabled
               ? DsColors.pastelPeach110
               : hovered
-              ? DsColors.error110
-              : DsColors.error100,
+                  ? DsColors.error110
+                  : DsColors.error100,
           contentColor: disabled ? DsColors.error90 : DsColors.neutralBaseWhite,
           shadows: focused
-              ? const [BoxShadow(color: Color(0xFFEEC9CC), spreadRadius: 3)]
+              ? [
+                  BoxShadow(
+                    color: DsColors.pastelPeach120,
+                    spreadRadius: DsEffects.ringFocus.spread,
+                  ),
+                ]
               : const [],
         );
     }

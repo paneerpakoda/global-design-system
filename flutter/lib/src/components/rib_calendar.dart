@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ds_tokens.dart';
+import '../foundations/ds_tokens.dart';
 
 enum RibCalendarMode { date, range, monthYear }
 
@@ -59,11 +59,11 @@ class RibCalendar extends StatelessWidget {
           decoration: BoxDecoration(
             color: DsColors.neutralBaseWhite,
             border: Border.all(color: DsColors.surfaceCoolGrey110),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(DsRadius.md),
             boxShadow: [_shadow(DsEffects.shadow200)],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(DsSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -74,10 +74,10 @@ class RibCalendar extends StatelessWidget {
                         : 'Choose end date',
                     style: _paragraphSemibold,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: DsSpacing.sm),
                 ],
                 _buildNavigation(monthYear),
-                const SizedBox(height: 16),
+                const SizedBox(height: DsSpacing.lg),
                 Expanded(
                   child: monthYear ? _buildMonthYearPicker() : _buildDateGrid(),
                 ),
@@ -95,12 +95,12 @@ class RibCalendar extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {},
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(DsRadius.xs),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(label, style: _paragraphSemibold),
-              const SizedBox(width: 2),
+              const SizedBox(width: DsSpacing.xxs),
               Icon(
                 monthYear ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                 size: 16,
@@ -115,7 +115,7 @@ class RibCalendar extends StatelessWidget {
             Icons.chevron_left,
             onPreviousMonth,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: DsSpacing.sm),
           _navigationButton('Next month', Icons.chevron_right, onNextMonth),
         ],
       ],
@@ -128,7 +128,7 @@ class RibCalendar extends StatelessWidget {
       button: true,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(DsRadius.xs),
         child: Icon(icon, size: 16, color: DsColors.neutralGrey140),
       ),
     );
@@ -154,7 +154,7 @@ class RibCalendar extends StatelessWidget {
               )
               .toList(),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: DsSpacing.sm),
         Expanded(
           child: GridView.builder(
             padding: EdgeInsets.zero,
@@ -180,12 +180,10 @@ class RibCalendar extends StatelessWidget {
   }
 
   Widget _buildDate(DateTime date) {
-    final selected =
-        _sameDay(date, selectedDate) ||
+    final selected = _sameDay(date, selectedDate) ||
         _sameDay(date, rangeStart) ||
         _sameDay(date, rangeEnd);
-    final inRange =
-        rangeStart != null &&
+    final inRange = rangeStart != null &&
         rangeEnd != null &&
         !date.isBefore(rangeStart!) &&
         !date.isAfter(rangeEnd!);
@@ -205,18 +203,16 @@ class RibCalendar extends StatelessWidget {
               height: 24,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: selected
-                    ? DsColors.primaryOrange100
-                    : Colors.transparent,
+                color:
+                    selected ? DsColors.primaryOrange100 : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Text(
                 '${date.day}',
-                style: _dayStyle.copyWith(
+                style: (selected ? DsText.p2Semi : DsText.p2Reg).copyWith(
                   color: selected
                       ? DsColors.neutralBaseWhite
                       : DsColors.neutralGrey120,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),
             ),
@@ -232,7 +228,7 @@ class RibCalendar extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: DsColors.surfaceCoolGrey110),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(DsRadius.sm),
       ),
       child: Row(
         children: [
@@ -267,16 +263,18 @@ class RibCalendar extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DsSpacing.sm,
+                      ),
                       child: Text(
                         value,
-                        style: _dayStyle.copyWith(
+                        style: (value == selectedValue
+                                ? DsText.p2Semi
+                                : DsText.p2Reg)
+                            .copyWith(
                           color: value == selectedValue
                               ? DsColors.primaryOrange100
                               : DsColors.neutralGrey120,
-                          fontWeight: value == selectedValue
-                              ? FontWeight.w600
-                              : FontWeight.w400,
                         ),
                       ),
                     ),
@@ -296,28 +294,11 @@ class RibCalendar extends StatelessWidget {
         date.day == other.day;
   }
 
-  static const _paragraphSemibold = TextStyle(
-    fontFamily: DsText.fontFamily,
-    fontSize: 12,
-    height: 20 / 12,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.25,
+  static final _paragraphSemibold = DsText.p1Semi.copyWith(
     color: DsColors.neutralGrey140,
   );
-  static const _weekdayStyle = TextStyle(
-    fontFamily: DsText.fontFamily,
-    fontSize: 11,
-    height: 16 / 11,
-    fontWeight: FontWeight.w700,
-    letterSpacing: 0.25,
+  static final _weekdayStyle = DsText.p2Bold.copyWith(
     color: DsColors.neutralGrey140,
-  );
-  static const _dayStyle = TextStyle(
-    fontFamily: DsText.fontFamily,
-    fontSize: 11,
-    height: 16 / 11,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.25,
   );
 }
 

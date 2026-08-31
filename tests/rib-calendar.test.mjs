@@ -58,11 +58,11 @@ test('uses exact local RIB calendar glyphs without expiring URLs', () => {
 test('matches Calendar geometry, typography, colours, and effects from Figma', () => {
   const css = read('css/app.css');
 
-  assert.match(css, /\.rib-calendar\{[^}]*width:258px[^}]*padding:16px[^}]*gap:16px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:12px[^}]*box-shadow:var\(--effect-shadow-200\)/);
+  assert.match(css, /\.rib-calendar\{[^}]*width:258px[^}]*padding:16px[^}]*gap:16px[^}]*border:1px solid var\(--surface-cool-grey-110\)[^}]*border-radius:var\(--r-md\)[^}]*box-shadow:var\(--effect-shadow-200\)/);
   assert.match(css, /\.rib-calendar__month-label\{[^}]*font-size:12px[^}]*line-height:20px[^}]*font-weight:600[^}]*letter-spacing:\.25px[^}]*color:var\(--neutral-grey-140\)/);
   assert.match(css, /\.rib-calendar__weekday\{[^}]*font-size:11px[^}]*line-height:16px[^}]*font-weight:700/);
   assert.match(css, /\.rib-calendar__date\{[^}]*width:24px[^}]*height:24px[^}]*font-size:11px[^}]*line-height:16px/);
-  assert.match(css, /\.rib-calendar__date\.is-selected\{[^}]*background:var\(--primary-orange-100\)[^}]*color:#fff/);
+  assert.match(css, /\.rib-calendar__date\.is-selected\{[^}]*background:var\(--primary-orange-100\)[^}]*color:var\(--neutral-base-white\)/);
   assert.match(css, /\.rib-calendar__date\.is-hover\{[^}]*background:var\(--surface-cool-grey-100\)/);
   assert.match(css, /\.rib-calendar__cell\.is-range-selected\{[^}]*background:var\(--pastel-amber-100\)/);
 });
@@ -79,7 +79,7 @@ test('publishes Calendar in the catalogue and playground', () => {
 });
 
 test('provides a reusable Flutter RibCalendar backed by foundation tokens', () => {
-  const flutter = read('flutter/rib_calendar.dart');
+  const flutter = read('flutter/lib/src/components/rib_calendar.dart');
 
   assert.match(flutter, /enum RibCalendarMode/);
   assert.match(flutter, /class RibCalendar extends StatelessWidget/);

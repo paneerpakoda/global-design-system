@@ -46,13 +46,40 @@ test('uses exact committed product icons and offer ornaments', () => {
   assert.doesNotMatch(components, /figma\.com\/api\/mcp\/asset/);
 });
 
+test('matches the audited loan and investment card content from Figma', () => {
+  const components = read('js/components.js');
+  for (const text of [
+    'HBAT02340290231',
+    'Principal outstanding',
+    '₹ 12,65,808',
+    'Next EMI on',
+    '3 Jul ‘24',
+    'Upcoming EMI',
+    'PRAN ID: 892384097901',
+    'Tier I',
+    '₹ 1,25,067',
+    'As on date',
+    '12 Jan ‘24',
+  ]) {
+    assert.match(components, new RegExp(text));
+  }
+  assert.match(components, /rib-card__badge/);
+  assert.match(components, /<\/header><p class="rib-card__identifier">/);
+  assert.match(components, /rib-card__ornament is-top/);
+  assert.match(components, /rib-card__ornament is-bottom/);
+});
+
 test('matches representative Figma card geometry and audited foundations', () => {
   const css = read('css/app.css');
-  assert.match(css, /\.rib-card--loan\{[^}]*width:272px[^}]*height:150px[^}]*background:var\(--primary-orange-100\)[^}]*border-radius:12px/);
-  assert.match(css, /\.rib-card--investment\{[^}]*width:290px[^}]*height:130px[^}]*background:var\(--grad-hero\)[^}]*border-radius:12px/);
+  assert.match(css, /\.rib-card--loan\{[^}]*width:272px[^}]*height:150px[^}]*background:var\(--primary-orange-100\)[^}]*border-radius:var\(--r-md\)/);
+  assert.match(css, /\.rib-card--investment\{[^}]*width:290px[^}]*height:130px[^}]*background:var\(--grad-card-hero\)[^}]*border-radius:var\(--r-md\)/);
   assert.match(css, /\.rib-card--insurance\{[^}]*width:272px[^}]*height:160px[^}]*background:var\(--primary-orange-100\)/);
   assert.match(css, /\.rib-card--offer\{[^}]*width:288px[^}]*height:160px[^}]*border:1px solid var\(--pastel-amber-90\)/);
-  assert.match(css, /\.rib-card__footer\{[^}]*height:44px[^}]*background:var\(--alpha-black-20\)/);
+  assert.match(css, /\.rib-card__footer\{[^}]*height:44px[^}]*background:color-mix\(in srgb,var\(--primary-maroon-100\) 20%,transparent\)/);
+  assert.match(css, /\.rib-card__action\{[^}]*font-size:12px[^}]*font-weight:600/);
+  assert.match(css, /\.rib-card__footer::after\{[^}]*width:1px[^}]*height:28px/);
+  assert.match(css, /\.rib-card__badge\{[^}]*background:var\(--alpha-white-20\)/);
+  assert.match(css, /\.rib-card--investment::before\{[^}]*top:66px[^}]*height:64px/);
   assert.match(css, /\.rib-card--offer \.rib-card__footer\{[^}]*background:var\(--grad-hero\)/);
   assert.doesNotMatch(css, /#FDE9DD/i);
 });
@@ -68,13 +95,17 @@ test('publishes Cards in the catalogue and playground', () => {
 });
 
 test('provides a reusable Flutter RibCard backed by foundation tokens', () => {
-  const flutter = read('flutter/rib_card.dart');
+  const flutter = read('flutter/lib/src/components/rib_card.dart');
   assert.match(flutter, /enum RibCardVariant/);
   assert.match(flutter, /class RibCard extends StatelessWidget/);
   assert.match(flutter, /Semantics\(/);
   assert.match(flutter, /DsColors\.primaryOrange100/);
   assert.match(flutter, /DsColors\.pastelAmber90/);
   assert.match(flutter, /DsColors\.hero/);
+  assert.match(flutter, /final String\? badge/);
+  assert.match(flutter, /DsColors\.cardHero/);
+  assert.match(flutter, /DsColors\.primaryMaroon100\.withValues\(alpha: \.2\)/);
+  assert.match(flutter, /VerticalDivider/);
   assert.match(flutter, /onSecondaryAction/);
 });
 

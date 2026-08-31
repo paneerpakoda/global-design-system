@@ -628,12 +628,13 @@ function renderRibCardIcon(asset, className = ''){
 function renderRibCard(options = {}){
   const variant = RIB_CARD_VARIANTS.find(item => item.key === options.variant) || RIB_CARD_VARIANTS[0];
   const content = {
-    loan: { title:'Education loan', number:'LN 003501 ···· 8472', metricLabel:'Outstanding', metric:'₹ 8,40,000', secondaryLabel:'Next EMI', secondary:'₹ 18,420' },
-    investment: { title:'National Pension System', number:'PRAN ···· 9021', metricLabel:'Current value', metric:'₹ 4,28,650', secondaryLabel:'Returns', secondary:'+12.4%' },
+    loan: { title:'Education loan', number:'HBAT02340290231', badge:'Upcoming EMI', metricLabel:'Principal outstanding', metric:'₹ 12,65,808', secondaryLabel:'Next EMI on', secondary:'3 Jul ‘24' },
+    investment: { title:'National Pension System', number:'PRAN ID: 892384097901', badge:'Tier I', metricLabel:'Tier I', metric:'₹ 1,25,067', secondaryLabel:'As on date', secondary:'12 Jan ‘24' },
     insurance: { title:'Life insurance', number:'Policy ···· 6734', metricLabel:'Sum assured', metric:'₹ 50,00,000', secondaryLabel:'Premium due', secondary:'18 Sep' },
     offer: { title:'Build wealth for tomorrow', number:'Start an SIP from ₹500', metricLabel:'', metric:'', secondaryLabel:'', secondary:'' }
   }[variant.key];
   const title = String(options.title || content.title);
+  const badge = options.badge ?? content.badge;
   const icon = RIB_CARD_ASSETS[variant.key];
 
   if(variant.key === 'offer') {
@@ -647,8 +648,10 @@ function renderRibCard(options = {}){
 
   const aria = variant.key === 'loan' ? 'Education loan account card' : `${variant.label} account card`;
   return `<article class="rib-card rib-card--${variant.key}" aria-label="${aria}">
+    ${variant.key === 'loan' || variant.key === 'investment' ? `<img class="rib-card__ornament is-top" src="${RIB_CARD_ASSETS.ornamentTop}" alt="">` : ''}
+    ${variant.key === 'loan' ? `<img class="rib-card__ornament is-bottom" src="${RIB_CARD_ASSETS.ornamentBottom}" alt="">` : ''}
     <div class="rib-card__body">
-      <header class="rib-card__heading">${renderRibCardIcon(icon, 'is-product')}<div><h3>${esc(title)}</h3><p>${esc(content.number)}</p></div></header>
+      <div class="rib-card__top"><header class="rib-card__heading">${renderRibCardIcon(icon, 'is-product')}<div><h3>${esc(title)}</h3></div>${badge ? `<span class="rib-card__badge">${esc(String(badge))}</span>` : ''}</header><p class="rib-card__identifier">${esc(content.number)}</p></div>
       <div class="rib-card__metrics"><span><small>${content.metricLabel}</small><b>${content.metric}</b></span><span><small>${content.secondaryLabel}</small><b>${content.secondary}</b></span></div>
     </div>
     ${variant.key === 'investment' ? '' : `<footer class="rib-card__footer"><button type="button" class="rib-card__action">${renderRibCardIcon(RIB_CARD_ASSETS.download)} Statement</button><button type="button" class="rib-card__action">See details ${renderRibCardIcon(RIB_CARD_ASSETS.next)}</button></footer>`}
@@ -978,12 +981,13 @@ const COMPONENTS = {
     desc: 'RIB Cards present loans, investments, insurance policies, and offers in compact branded product surfaces with clear metrics and actions.',
     sections: [
       { title:'RIB source components', note:'Representative source cards preserve their exact Figma dimensions, product hierarchy, actions, and local decorative artwork.', html:renderRibCardShowcase() },
-      { title:'Foundation mapping', note:'Branded cards use Orange100 or the approved Hero gradient. Offer surfaces use Amber90, while Amber110 remains the audited #F7E1D4 foundation value.', html:`<div class="button-foundation-grid"><article><span>Product fill</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Investment fill</span><b>Hero gradient</b><code>#EF8C24 → #F06837</code></article><article><span>Offer border</span><b>Amber 90</b><code>#FCF6F2</code></article><article><span>Offer support</span><b>Amber 110</b><code>#F7E1D4</code></article><article><span>Footer</span><b>Black 20%</b><code>rgba(0,0,0,.20)</code></article><article><span>Content</span><b>White 100</b><code>#FFFFFF</code></article></div>` }
+      { title:'Foundation mapping', note:'Branded cards use Orange100 or the approved Hero gradient. Offer surfaces use Amber90, while Amber110 remains the audited #F7E1D4 foundation value.', html:`<div class="button-foundation-grid"><article><span>Product fill</span><b>Orange 100</b><code>#F0792E</code></article><article><span>Investment fill</span><b>Hero gradient</b><code>#EF8C24 → #F06837</code></article><article><span>Offer border</span><b>Amber 90</b><code>#FCF6F2</code></article><article><span>Offer support</span><b>Amber 110</b><code>#F7E1D4</code></article><article><span>Footer</span><b>Maroon 100 · 20%</b><code>#982F35 · 20%</code></article><article><span>Content</span><b>White 100</b><code>#FFFFFF</code></article></div>` }
     ],
     props: [
       ['variant','RibCardVariant','loan','loan · investment · insurance · offer'],
       ['title','String','required','Product or offer title.'],
       ['identifier','String?','null','Masked account, policy, or investment identifier.'],
+      ['badge','String?','null','Optional status or product-tier label.'],
       ['primaryMetric','RibCardMetric?','null','Primary amount or value.'],
       ['secondaryMetric','RibCardMetric?','null','Supporting value such as due date or return.'],
       ['onPrimaryAction','VoidCallback?','null','Primary footer action.'],
@@ -992,8 +996,10 @@ const COMPONENTS = {
     flutter:`RibCard(
   variant: RibCardVariant.loan,
   title: 'Education loan',
-  identifier: 'LN 003501 ···· 8472',
-  primaryMetric: const RibCardMetric('Outstanding', '₹ 8,40,000'),
+  identifier: 'HBAT02340290231',
+  badge: 'Upcoming EMI',
+  primaryMetric: const RibCardMetric('Principal outstanding', '₹ 12,65,808'),
+  secondaryMetric: const RibCardMetric('Next EMI on', '3 Jul ‘24'),
   onPrimaryAction: downloadStatement,
 )`,
     sandbox: 'cards'
