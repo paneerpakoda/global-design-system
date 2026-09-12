@@ -49,39 +49,27 @@ class RibInfo extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(DsRadius.md),
           ),
-          child: title == null
-              ? _iconRow(
+          child: _iconRow(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (title != null) ...[
                   Text(
-                    message,
-                    style: (textStyle ?? DsText.p1Reg).copyWith(
-                      color: colors.text,
-                    ),
+                    title!,
+                    style: DsText.h3Semi.copyWith(color: colors.text),
                   ),
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _iconRow(
-                      Text(
-                        title!,
-                        style: DsText.h3Semi.copyWith(color: colors.text),
-                      ),
-                    ),
-                    const SizedBox(height: DsSpacing.xs),
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(
-                        start: showIcon ? 24 + DsSpacing.sm : 0,
-                      ),
-                      child: Text(
-                        message,
-                        style: (textStyle ?? DsText.p1Reg).copyWith(
-                          color: colors.text,
-                        ),
-                      ),
-                    ),
-                  ],
+                  const SizedBox(height: DsSpacing.xs),
+                ],
+                Text(
+                  message,
+                  style: (textStyle ?? DsText.p1Reg).copyWith(
+                    color: colors.text,
+                  ),
                 ),
+              ],
+            ),
+          ),
         ),
       ),
     );

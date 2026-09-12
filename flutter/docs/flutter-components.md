@@ -52,8 +52,29 @@ blocks, record editors, document/review layouts, dialogs, navigation, landing
 sections, selection lists and toast helpers also stay in M2I. They are deferred
 as potential patterns and are not exported from GlobalDS by this change.
 
-The catalog displays the eight new and six improved components individually,
-with representative states. Run `flutter run -d chrome` from `example/`.
+The catalog groups the APIs into 13 Flutter component families. Date fields sit
+within Input; select fields and menus sit within Dropdown. Each family exposes
+all implemented variants with interactive state selectors. Run `flutter run -d chrome` from `example/`.
 Testing this Flutter web build in a browser executes compiled Dart; the emitted
 JavaScript does not imply a separately authored JavaScript UI. Native-platform
 validation is still a separate step.
+
+## Complete variant families
+
+| Family | Variants | States and options |
+| --- | --- | --- |
+| Accordion | Standard, plain, no container, coloured, heading/subheading | Collapsed/expanded; 48px minimum header target; retained content |
+| Button | Primary, outline, text, pastel, white, destructive outline/filled | Three supported sizes; leading/trailing icons; default, hover, focus, pressed, disabled, optional loading; text button stays small |
+| Checkbox | Small, large, checkbox only | Checked/unchecked and disabled; padded rounded 44px targets |
+| Input | Inline/outside labels, leading icon, trailing text/icon, password, helper/error, phone, amount, text area, inline/outside date | Empty, filled, error, disabled, read-only; password visibility toggle; date bounds/calendar |
+| Dropdown | Outside/inline labels, searchable, compact, calling code, subheading options | Empty, filled, disabled, open; down/up caret; keyboard selection |
+| Info | Body only, heading/body, outline, icon-free, centred content | Information, success, warning, error; icon centres against the text block |
+| OTP | Single field, four boxes, six boxes, grouped six, masked boxes | Empty, timer/resend slot, error, verifying, verified, disabled; one native editor supports full-code paste and autofill |
+| Segmented control | Two or three connected options | Selected, hover, focus, disabled; use for a short related choice |
+| Stepper | Horizontal, vertical, compact, short labelled flow | Upcoming, current, completed, error; optional descriptions; completed-stage navigation |
+| Upload | Upload area, compact selector | Empty, uploading/progress, uploaded, error/retry, disabled; file details and removal |
+
+`RibOtpVariant`, `RibOtpStatus`, `RibStepperVariant` and `RibUploadVariant`
+make those choices explicit in Dart. Existing constructor defaults and exports
+remain compatible. New icons for close and password visibility are byte-identical
+GlobalDS SVG exports, included in the 21-asset provenance audit.

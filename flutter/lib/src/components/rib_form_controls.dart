@@ -1,10 +1,11 @@
+export 'rib_otp_field.dart';
+export 'rib_segmented_control.dart';
+export 'rib_upload.dart';
 // Radio's groupValue/onChanged keep this package compatible with Flutter 3.27.
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../foundations/ds_tokens.dart';
 import '../foundations/ds_icons.dart';
-import 'rib_input_field.dart';
 
 class RibRadioGroup<T> extends StatelessWidget {
   const RibRadioGroup({
@@ -207,78 +208,9 @@ class RibToggle extends StatelessWidget {
   );
 }
 
-class RibSegmentedControl<T> extends StatelessWidget {
-  const RibSegmentedControl({
-    required this.options,
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
-  final Map<T, String> options;
-  final T value;
-  final ValueChanged<T> onChanged;
-  @override
-  Widget build(BuildContext context) => Wrap(
-    spacing: DsSpacing.sm,
-    runSpacing: DsSpacing.sm,
-    children: options.entries
-        .map(
-          (entry) => ChoiceChip(
-            label: Text(entry.value),
-            selected: value == entry.key,
-            onSelected: (_) => onChanged(entry.key),
-          ),
-        )
-        .toList(),
-  );
-}
+enum RibStepperVariant { adaptive, horizontal, vertical, compact }
 
-/// OTP lifecycle (expiry, resend, verification) belongs to the consumer.
-class RibOtpField extends StatelessWidget {
-  const RibOtpField({
-    required this.onChanged,
-    this.controller,
-    this.length = 6,
-    this.resend,
-    this.errorText,
-    this.enabled = true,
-    this.autofocus = false,
-    super.key,
-  });
-  final ValueChanged<String> onChanged;
-  final TextEditingController? controller;
-  final int length;
-
-  /// Optional resend action displayed inside the trailing end of the input.
-  final Widget? resend;
-  final String? errorText;
-  final bool enabled;
-  final bool autofocus;
-  @override
-  Widget build(BuildContext context) => RibInputField(
-    label: 'Enter OTP',
-    trailing: resend == null
-        ? null
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: DsSpacing.lg),
-            child: Center(widthFactor: 1, heightFactor: 1, child: resend),
-          ),
-    type: RibInputFieldType.labelInline,
-    width: double.infinity,
-    controller: controller,
-    autofocus: autofocus,
-    keyboardType: TextInputType.number,
-    autofillHints: const [AutofillHints.oneTimeCode],
-    inputFormatters: [
-      FilteringTextInputFormatter.digitsOnly,
-      LengthLimitingTextInputFormatter(length),
-    ],
-    errorText: errorText,
-    enabled: enabled,
-    onChanged: onChanged,
-  );
-}
-
+/// Progress for complete journeys. Completed stages can be revisited.
 class RibStepper extends StatelessWidget {
   const RibStepper({
     required this.steps,
@@ -287,8 +219,257 @@ class RibStepper extends StatelessWidget {
     this.showLabels = false,
     this.completedIcon,
     this.onStepSelected,
+    this.variant = RibStepperVariant.adaptive,
+    this.descriptions,
+    this.errorIndex,
     super.key,
+  }) : assert(steps.length > 0),
+       assert(descriptions == null || descriptions.length == steps.length);
+  final List<String> steps;
+  final int currentIndex;
+  final Set<int> completed;
+  final bool showLabels;
+  final Widget? completedIcon;
+  final ValueChanged<int>? onStepSelected;
+  final RibStepperVariant variant;
+  final List<String>? descriptions;
+  final int? errorIndex;
+  int get current => completed.length == steps.length
+      ? -1
+      : currentIndex.clamp(0, steps.length - 1);
+  String status(int i) => errorIndex == i
+      ? 'error'
+      : completed.contains(i)
+      ? 'completed'
+      : current == i
+      ? 'current'
+      : 'upcoming';
+  Color colour(int i) => errorIndex == i
+      ? DsColors.error100
+      : current == i
+      ? DsColors.primaryOrange100
+      : DsColors.neutralGrey120;
+  Widget marker(int i) => Container(
+    width: 32,
+    height: 32,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      color: current == i ? colour(i) : DsColors.neutralBaseWhite,
+      border: Border.all(
+        color: completed.contains(i)
+            ? DsColors.neutralGrey120
+            : current == i || errorIndex == i
+            ? colour(i)
+            : DsColors.surfaceCoolGrey110,
+      ),
+    ),
+    child: errorIndex == i
+        ? DsIcon(
+            DsIconData.error,
+            size: 20,
+            color: current == i ? DsColors.neutralBaseWhite : DsColors.error100,
+          )
+        : completed.contains(i)
+        ? completedIcon ??
+              const DsIcon(
+                DsIconData.tick,
+                size: 16,
+                color: DsColors.neutralGrey120,
+              )
+        : Text(
+            '${i + 1}',
+            style: DsText.h3Semi.copyWith(
+              color: current == i
+                  ? DsColors.neutralBaseWhite
+                  : DsColors.neutralGrey120,
+            ),
+          ),
+  );
+  Widget target(int i, Widget child) {
+    final action =
+        onStepSelected != null && (completed.contains(i) || current == i)
+        ? () => onStepSelected!(i)
+        : null;
+    return Semantics(
+      label: 'Step ${i + 1} of ${steps.length}: ${steps[i]}, ${status(i)}',
+      selected: current == i,
+      button: action != null,
+      onTap: action,
+      child: ExcludeSemantics(
+        child: InkWell(
+          onTap: action,
+          borderRadius: BorderRadius.circular(DsRadius.sm),
+          hoverColor: DsColors.surfaceCoolGrey100,
+          focusColor: DsEffects.ringFocus.color,
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Widget label(int i) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(steps[i], style: DsText.h3Semi.copyWith(color: colour(i))),
+      if (descriptions != null) ...[
+        const SizedBox(height: DsSpacing.xs),
+        Text(
+          descriptions![i],
+          style: DsText.p1Reg.copyWith(color: DsColors.neutralGrey120),
+        ),
+      ],
+      if (errorIndex == i)
+        Text(
+          'Action required',
+          style: DsText.p1Reg.copyWith(color: DsColors.error100),
+        ),
+    ],
+  );
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      if (variant == RibStepperVariant.adaptive && showLabels) {
+        return _RibLegacyStepper(
+          steps: steps,
+          currentIndex: currentIndex,
+          completed: completed,
+          showLabels: true,
+          completedIcon: completedIcon,
+          onStepSelected: onStepSelected,
+          errorIndex: errorIndex,
+        );
+      }
+      final display = variant == RibStepperVariant.adaptive
+          ? (constraints.maxWidth < 600
+                ? RibStepperVariant.compact
+                : RibStepperVariant.horizontal)
+          : variant;
+      if (display == RibStepperVariant.compact) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              current < 0
+                  ? 'All steps complete'
+                  : 'Step ${current + 1} of ${steps.length} · ${steps[current]}',
+              style: DsText.h3Semi,
+            ),
+            const SizedBox(height: DsSpacing.sm),
+            LinearProgressIndicator(
+              value: current < 0 ? 1 : (current + 1) / steps.length,
+              color: errorIndex == current
+                  ? DsColors.error100
+                  : DsColors.primaryOrange100,
+              backgroundColor: DsColors.surfaceCoolGrey110,
+              semanticsLabel: 'Application progress',
+            ),
+            if (errorIndex == current)
+              Padding(
+                padding: const EdgeInsets.only(top: DsSpacing.sm),
+                child: Text(
+                  'Action required',
+                  style: DsText.p1Reg.copyWith(color: DsColors.error100),
+                ),
+              ),
+          ],
+        );
+      }
+      if (display == RibStepperVariant.vertical) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < steps.length; i++) ...[
+              target(
+                i,
+                Padding(
+                  padding: const EdgeInsets.all(DsSpacing.sm),
+                  child: Row(
+                    children: [
+                      marker(i),
+                      const SizedBox(width: DsSpacing.md),
+                      Expanded(child: label(i)),
+                    ],
+                  ),
+                ),
+              ),
+              if (i < steps.length - 1)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: DsSpacing.xl2),
+                    width: 1,
+                    height: 20,
+                    color: DsColors.surfaceCoolGrey110,
+                  ),
+                ),
+            ],
+          ],
+        );
+      }
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < steps.length; i++)
+            Expanded(
+              child: target(
+                i,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 1,
+                              color: i == 0
+                                  ? Colors.transparent
+                                  : DsColors.surfaceCoolGrey110,
+                            ),
+                          ),
+                          marker(i),
+                          Expanded(
+                            child: Container(
+                              height: 1,
+                              color: i == steps.length - 1
+                                  ? Colors.transparent
+                                  : DsColors.surfaceCoolGrey110,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: DsSpacing.sm),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: DsSpacing.xs,
+                        ),
+                        child: label(i),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    },
+  );
+}
+
+class _RibLegacyStepper extends StatelessWidget {
+  const _RibLegacyStepper({
+    required this.steps,
+    required this.currentIndex,
+    this.completed = const {},
+    this.showLabels = false,
+    this.completedIcon,
+    this.onStepSelected,
+    this.errorIndex,
   }) : assert(steps.length > 0);
+  final int? errorIndex;
   final List<String> steps;
   final int currentIndex;
   final Set<int> completed;
@@ -300,7 +481,9 @@ class RibStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final current = currentIndex.clamp(0, steps.length - 1);
+      final current = completed.length == steps.length
+          ? -1
+          : currentIndex.clamp(0, steps.length - 1);
       if (showLabels) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -310,7 +493,9 @@ class RibStepper extends StatelessWidget {
               Flexible(
                 child: Semantics(
                   label:
-                      'Step ${i + 1} of ${steps.length}: ${steps[i]}, ${completed.contains(i)
+                      'Step ${i + 1} of ${steps.length}: ${steps[i]}, ${errorIndex == i
+                          ? 'error'
+                          : completed.contains(i)
                           ? 'completed'
                           : i == current
                           ? 'current'
@@ -318,65 +503,85 @@ class RibStepper extends StatelessWidget {
                   selected: i == current,
                   excludeSemantics: true,
                   child: InkWell(
+                    borderRadius: BorderRadius.circular(DsRadius.sm),
+                    hoverColor: DsColors.surfaceCoolGrey100,
+                    splashColor: Colors.transparent,
                     onTap:
                         onStepSelected != null &&
                             (completed.contains(i) || i == current)
                         ? () => onStepSelected!(i)
                         : null,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 44),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: errorIndex == i
+                                    ? DsColors.error100
+                                    : i == current
+                                    ? DsColors.primaryOrange100
+                                    : DsColors.surfaceCoolGrey110,
+                              ),
                               color: i == current
-                                  ? DsColors.primaryOrange100
-                                  : DsColors.surfaceCoolGrey110,
+                                  ? (errorIndex == i
+                                        ? DsColors.error100
+                                        : DsColors.primaryOrange100)
+                                  : DsColors.neutralBaseWhite,
                             ),
-                            color: i == current
-                                ? DsColors.primaryOrange100
-                                : DsColors.neutralBaseWhite,
-                          ),
-                          child: completed.contains(i)
-                              ? completedIcon ??
-                                    const DsIcon(
-                                      DsIconData.tick,
-                                      size: 16,
-                                      color: DsColors.neutralGrey100,
-                                    )
-                              : Text(
-                                  '${i + 1}',
-                                  style: DsText.s1Semi.copyWith(
+                            child: errorIndex == i
+                                ? DsIcon(
+                                    DsIconData.error,
+                                    size: 16,
                                     color: i == current
                                         ? DsColors.neutralBaseWhite
-                                        : DsColors.neutralGrey100,
+                                        : DsColors.error100,
+                                  )
+                                : completed.contains(i)
+                                ? completedIcon ??
+                                      const DsIcon(
+                                        DsIconData.tick,
+                                        size: 16,
+                                        color: DsColors.neutralGrey100,
+                                      )
+                                : Text(
+                                    '${i + 1}',
+                                    style: DsText.s1Semi.copyWith(
+                                      color: i == current
+                                          ? DsColors.neutralBaseWhite
+                                          : DsColors.neutralGrey100,
+                                    ),
                                   ),
-                                ),
-                        ),
-                        const SizedBox(width: DsSpacing.sm),
-                        Flexible(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              steps[i],
-                              maxLines: 1,
-                              softWrap: false,
-                              style:
-                                  (i == current ? DsText.s1Bold : DsText.p1Semi)
-                                      .copyWith(
-                                        color: i == current
-                                            ? DsColors.primaryOrange100
-                                            : DsColors.neutralGrey100,
-                                      ),
+                          ),
+                          const SizedBox(width: DsSpacing.sm),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                steps[i],
+                                maxLines: 1,
+                                softWrap: false,
+                                style:
+                                    (i == current
+                                            ? DsText.s1Bold
+                                            : DsText.p1Semi)
+                                        .copyWith(
+                                          color: i == current
+                                              ? DsColors.primaryOrange100
+                                              : DsColors.neutralGrey100,
+                                        ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -392,145 +597,7 @@ class RibStepper extends StatelessWidget {
           ],
         );
       }
-      if (constraints.maxWidth < 600) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Step ${current + 1} of ${steps.length} · ${steps[current]}',
-              style: DsText.s1Semi,
-            ),
-            const SizedBox(height: DsSpacing.sm),
-            LinearProgressIndicator(
-              value: (current + 1) / steps.length,
-              semanticsLabel: 'Application progress',
-            ),
-          ],
-        );
-      }
-      return Row(
-        children: [
-          for (var i = 0; i < steps.length; i++) ...[
-            Tooltip(
-              message: steps[i],
-              child: Semantics(
-                label:
-                    'Step ${i + 1}: ${steps[i]}${completed.contains(i) ? ', completed' : ''}',
-                selected: i == current,
-                child: InkWell(
-                  onTap:
-                      onStepSelected != null &&
-                          (completed.contains(i) || i == current)
-                      ? () => onStepSelected!(i)
-                      : null,
-                  customBorder: const CircleBorder(),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: i == current || completed.contains(i)
-                          ? DsColors.primaryOrange100
-                          : DsColors.neutralGrey70,
-                    ),
-                    child: Text(
-                      '${i + 1}',
-                      style: DsText.p2Semi.copyWith(
-                        color: i == current || completed.contains(i)
-                            ? DsColors.neutralBaseWhite
-                            : DsColors.neutralGrey120,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (i < steps.length - 1)
-              Expanded(
-                child: Container(
-                  height: 2,
-                  color: completed.contains(i)
-                      ? DsColors.primaryOrange80
-                      : DsColors.neutralGrey70,
-                ),
-              ),
-          ],
-        ],
-      );
+      return const SizedBox.shrink();
     },
-  );
-}
-
-enum RibUploadState { idle, uploading, uploaded, error }
-
-/// Platform-independent upload presentation; the app owns file access and I/O.
-class RibUpload extends StatelessWidget {
-  const RibUpload({
-    required this.label,
-    required this.requirements,
-    required this.onSelect,
-    this.state = RibUploadState.idle,
-    this.fileName,
-    this.errorText,
-    this.onRemove,
-    super.key,
-  });
-  final String label, requirements;
-  final String? fileName, errorText;
-  final RibUploadState state;
-  final VoidCallback? onSelect, onRemove;
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(DsSpacing.lg),
-    decoration: BoxDecoration(
-      color: DsColors.surfaceCoolGrey90,
-      border: Border.all(
-        color: state == RibUploadState.error
-            ? DsColors.error100
-            : DsColors.surfaceCoolGrey110,
-      ),
-      borderRadius: BorderRadius.circular(DsRadius.md),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(label, style: DsText.s1Semi),
-        const SizedBox(height: DsSpacing.sm),
-        Text(requirements, style: DsText.p2Reg),
-        if (fileName != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: DsSpacing.sm),
-            child: Text(fileName!, style: DsText.inputRRegular),
-          ),
-        if (state == RibUploadState.uploading)
-          const LinearProgressIndicator(semanticsLabel: 'Uploading document'),
-        if (state == RibUploadState.uploaded) const Text('Document added'),
-        if (errorText != null)
-          Text(
-            errorText!,
-            style: DsText.p2Reg.copyWith(color: DsColors.error100),
-          ),
-        Wrap(
-          spacing: DsSpacing.sm,
-          children: [
-            TextButton.icon(
-              onPressed: state == RibUploadState.uploading ? null : onSelect,
-              icon: const DsIcon(DsIconData.document),
-              label: Text(
-                state == RibUploadState.error
-                    ? 'Retry / choose file'
-                    : 'Choose file',
-              ),
-            ),
-            if (onRemove != null)
-              TextButton(
-                onPressed: state == RibUploadState.uploading ? null : onRemove,
-                child: const Text('Remove'),
-              ),
-          ],
-        ),
-      ],
-    ),
   );
 }

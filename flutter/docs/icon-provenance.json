@@ -88,5 +88,20 @@
     "source": "assets/icons/general/filled/document-1--filled--571-335.svg",
     "packaged": "flutter/assets/icons/document-1--filled--571-335.svg",
     "sha256": "d59a46bf644e90748487a48367632678df394817247d556e3737e752e3d783e0"
+  },
+  "close": {
+    "source": "assets/icons/general/line/close--line--237-434.svg",
+    "packaged": "flutter/assets/icons/close--line--237-434.svg",
+    "sha256": "b0f538c1d71c198c0c0ab6b4e068c0ec1fa1650f3670ef6286374d743865e9af"
+  },
+  "visibilityOn": {
+    "source": "assets/icons/general/filled/visibility-on--filled--1442-16.svg",
+    "packaged": "flutter/assets/icons/visibility-on--filled--1442-16.svg",
+    "sha256": "8120797dc26576784e10d923d69ddf8696f85dfdd8b2fcdc47eff3317a10c144"
+  },
+  "visibilityOff": {
+    "source": "assets/icons/general/filled/visibility-off--filled--1442-15.svg",
+    "packaged": "flutter/assets/icons/visibility-off--filled--1442-15.svg",
+    "sha256": "0483056fcba2728db0e5510ca0b7e128e9f89a97404375ec2c6bd6c8e8feec5d"
   }
 }

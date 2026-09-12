@@ -4,6 +4,9 @@ import 'ds_tokens.dart';
 
 /// Audited GlobalDS assets. See docs/icon-provenance.json for source paths/hashes.
 enum DsIconData {
+  visibilityOff('visibility-off--filled--1442-15.svg'),
+  visibilityOn('visibility-on--filled--1442-16.svg'),
+  close('close--line--237-434.svg'),
   chevronLeft('chevron-left--line--235-116.svg'),
   chevronRight('chevron-right--line--235-115.svg'),
   chevronUp('chevron-up--line--235-117.svg'),

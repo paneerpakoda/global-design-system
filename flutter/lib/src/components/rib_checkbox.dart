@@ -37,15 +37,18 @@ class RibCheckbox extends StatelessWidget {
       enabled: enabled,
       label: label,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: size == RibCheckboxSize.large ? 44 : 24,
-        ),
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
         child: InkWell(
           onTap: enabled ? () => onChanged!(!value) : null,
-          borderRadius: BorderRadius.circular(DsRadius.xs),
+          borderRadius: BorderRadius.circular(DsRadius.sm),
+          hoverColor: DsColors.surfaceCoolGrey100,
+          splashColor: Colors.transparent,
           focusColor: DsEffects.ringFocus.color,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsSpacing.sm,
+              vertical: DsSpacing.sm,
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -54,7 +57,9 @@ class RibCheckbox extends StatelessWidget {
                       ? DsIconData.checkboxChecked
                       : DsIconData.checkboxUnchecked,
                   size: 20,
-                  color: value
+                  color: !enabled
+                      ? DsColors.neutralGrey90
+                      : value
                       ? DsColors.primaryOrange100
                       : DsColors.neutralGrey120,
                 ),
@@ -65,7 +70,9 @@ class RibCheckbox extends StatelessWidget {
                       child: Text(
                         label,
                         style: labelStyle.copyWith(
-                          color: DsColors.neutralGrey140,
+                          color: enabled
+                              ? DsColors.neutralGrey140
+                              : DsColors.neutralGrey90,
                         ),
                       ),
                     ),

@@ -96,29 +96,37 @@ class RibAccordion extends StatelessWidget {
     return Semantics(
       button: true,
       expanded: expanded,
+      onTap: () => onChanged(!expanded),
       child: InkWell(
         excludeFromSemantics: true,
         onTap: () => onChanged(!expanded),
-        borderRadius: spec.borderRadius,
+        borderRadius: spec.borderRadius == BorderRadius.zero
+            ? BorderRadius.circular(DsRadius.sm)
+            : spec.borderRadius,
+        hoverColor: DsColors.surfaceCoolGrey100,
+        splashColor: Colors.transparent,
         focusColor: DsEffects.ringFocus.color,
-        child: Padding(
-          padding: spec.headerPadding,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (hasLeading) ...[
-                resolvedLeading,
-                SizedBox(width: spec.leadingGap),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Padding(
+            padding: spec.headerPadding,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (hasLeading) ...[
+                  resolvedLeading,
+                  SizedBox(width: spec.leadingGap),
+                ],
+                Expanded(child: titleWidget),
+                ...actions,
+                const SizedBox(width: DsSpacing.sm),
+                DsIcon(
+                  expanded ? DsIconData.chevronUp : DsIconData.chevronDown,
+                  size: 20,
+                  color: DsColors.neutralGrey150,
+                ),
               ],
-              Expanded(child: titleWidget),
-              ...actions,
-              const SizedBox(width: DsSpacing.sm),
-              DsIcon(
-                expanded ? DsIconData.chevronUp : DsIconData.chevronDown,
-                size: 20,
-                color: DsColors.neutralGrey150,
-              ),
-            ],
+            ),
           ),
         ),
       ),

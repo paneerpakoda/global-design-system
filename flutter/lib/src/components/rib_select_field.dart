@@ -16,6 +16,7 @@ class RibSelectField<T> extends StatefulWidget {
     this.validator,
     this.enabled = true,
     this.searchable = false,
+    this.showSubheadings = false,
     this.compact = false,
     this.embedded = false,
     this.leading,
@@ -28,7 +29,7 @@ class RibSelectField<T> extends StatefulWidget {
   final T? value;
   final ValueChanged<T>? onChanged;
   final FormFieldValidator<T>? validator;
-  final bool enabled, searchable, compact, embedded;
+  final bool enabled, searchable, compact, embedded, showSubheadings;
   final Widget? leading;
   final String? placeholder;
   final RibInputFieldType type;
@@ -148,7 +149,9 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                   alignment: AlignmentDirectional.bottomStart,
                   minimumSize: WidgetStatePropertyAll(Size(width, 0)),
                   maximumSize: WidgetStatePropertyAll(Size(width, 320)),
-                  padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                  padding: const WidgetStatePropertyAll(
+                    EdgeInsets.all(DsSpacing.xs),
+                  ),
                   backgroundColor: const WidgetStatePropertyAll(
                     DsColors.neutralBaseWhite,
                   ),
@@ -181,7 +184,17 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                         if (widget.searchable) focus.unfocus();
                       },
                       style: ButtonStyle(
-                        minimumSize: WidgetStatePropertyAll(Size(width, 48)),
+                        minimumSize: WidgetStatePropertyAll(
+                          Size(width - 2 * DsSpacing.xs, 48),
+                        ),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(DsRadius.sm),
+                          ),
+                        ),
+                        overlayColor: const WidgetStatePropertyAll(
+                          Colors.transparent,
+                        ),
                         padding: const WidgetStatePropertyAll(
                           EdgeInsets.symmetric(
                             horizontal: DsSpacing.lg,
@@ -192,7 +205,7 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                           (s) =>
                               s.contains(WidgetState.hovered) ||
                                   s.contains(WidgetState.focused)
-                              ? DsColors.neutralGrey60
+                              ? DsColors.surfaceCoolGrey100
                               : DsColors.neutralBaseWhite,
                         ),
                       ),
@@ -205,7 +218,23 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                           : null,
                       child: SizedBox(
                         width: math.max(0, width - 72),
-                        child: Text(item.label, style: DsText.inputRRegular),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(item.label, style: DsText.inputRRegular),
+                            if (widget.showSubheadings &&
+                                item.subheading != null) ...[
+                              const SizedBox(height: DsSpacing.xs),
+                              Text(
+                                item.subheading!,
+                                style: DsText.p1Reg.copyWith(
+                                  color: DsColors.neutralGrey120,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ),
                 ],
@@ -291,8 +320,8 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                             suffixIcon: ExcludeSemantics(
                               child: DsIcon(
                                 menu.isOpen
-                                    ? DsIconData.chevronUp
-                                    : DsIconData.chevronDown,
+                                    ? DsIconData.caretUp
+                                    : DsIconData.caretDown,
                                 size: 20,
                               ),
                             ),
@@ -402,8 +431,8 @@ class _RibSelectFieldState<T> extends State<RibSelectField<T>> {
                           ),
                           DsIcon(
                             menu.isOpen
-                                ? DsIconData.chevronUp
-                                : DsIconData.chevronDown,
+                                ? DsIconData.caretUp
+                                : DsIconData.caretDown,
                             size: widget.embedded ? 16 : 20,
                           ),
                         ],

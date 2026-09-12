@@ -8,6 +8,6 @@ void main() {
     await tester.pumpWidget(const GlobalDSExample());
     await tester.pumpAndSettle();
     expect(find.text('Core components'), findsOneWidget);
-    expect(find.text('RibSelectField<T>'), findsOneWidget);
+    expect(find.text('All 6 variants'), findsOneWidget);
   });
 }

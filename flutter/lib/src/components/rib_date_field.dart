@@ -15,11 +15,16 @@ class RibDateField extends StatefulWidget {
     this.validator,
     this.icon,
     this.placeholder,
+    this.helper,
+    this.errorText,
+    this.enabled = true,
+    this.readOnly = false,
     this.type = RibInputFieldType.labelOut,
     super.key,
   });
   final String label;
-  final String? placeholder;
+  final String? placeholder, helper, errorText;
+  final bool enabled, readOnly;
   final RibInputFieldType type;
   final Widget? icon;
   final DateTime? value, firstDate, lastDate;
@@ -62,6 +67,7 @@ class _RibDateFieldState extends State<RibDateField> {
   }
 
   void open() {
+    if (!widget.enabled || widget.readOnly) return;
     if (menu.isOpen) {
       menu.close();
       return;
@@ -131,6 +137,9 @@ class _RibDateFieldState extends State<RibDateField> {
         label: widget.label,
         type: widget.type,
         placeholder: widget.placeholder,
+        helper: widget.helper,
+        errorText: widget.errorText,
+        enabled: widget.enabled,
         width: double.infinity,
         focusNode: focus,
         initialValue: widget.value == null
@@ -138,22 +147,25 @@ class _RibDateFieldState extends State<RibDateField> {
             : RibDateField.format(widget.value!),
         readOnly: true,
         validator: widget.validator,
-        onTap: open,
+        onTap: widget.enabled && !widget.readOnly ? open : null,
         trailing: Semantics(
           label: 'Choose ${widget.label}',
+          enabled: widget.enabled && !widget.readOnly,
           button: true,
-          onTap: open,
+          onTap: widget.enabled && !widget.readOnly ? open : null,
           child: ExcludeSemantics(
             child: IconButton(
-              onPressed: open,
+              onPressed: widget.enabled && !widget.readOnly ? open : null,
               style: const ButtonStyle(
                 overlayColor: WidgetStatePropertyAll(Colors.transparent),
               ),
               icon:
                   widget.icon ??
-                  const DsIcon(
+                  DsIcon(
                     DsIconData.calendar,
-                    color: DsColors.primaryOrange100,
+                    color: widget.enabled
+                        ? DsColors.primaryOrange100
+                        : DsColors.neutralGrey90,
                   ),
             ),
           ),

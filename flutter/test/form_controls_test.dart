@@ -208,7 +208,7 @@ void main() {
         find.byWidgetPredicate((w) => w is DsIcon && w.icon == DsIconData.tick),
         findsOneWidget,
       );
-      expect(tester.getSize(find.byType(RibStepper)).height, 24);
+      expect(tester.getSize(find.byType(RibStepper)).height, 44);
       expect(tester.takeException(), isNull);
       handle.dispose();
     },
@@ -502,9 +502,9 @@ void main() {
       final option = tester.getRect(
         find.widgetWithText(MenuItemButton, 'United States'),
       );
-      expect(option.left, closeTo(rect.left, 2));
-      expect(option.top, closeTo(rect.bottom + 4, 2));
-      expect(option.width, closeTo(rect.width, 2));
+      expect(option.left, closeTo(rect.left + DsSpacing.xs, 2));
+      expect(option.top, closeTo(rect.bottom + 4 + DsSpacing.xs, 2));
+      expect(option.width, closeTo(rect.width - 2 * DsSpacing.xs, 2));
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(find.byType(MenuItemButton), findsNothing);
@@ -555,7 +555,7 @@ void main() {
         tester
                 .getRect(
                   find.byWidgetPredicate(
-                    (w) => w is DsIcon && w.icon == DsIconData.chevronDown,
+                    (w) => w is DsIcon && w.icon == DsIconData.caretDown,
                   ),
                 )
                 .left -

@@ -10,7 +10,7 @@ Product layouts remain deferred patterns.
 | Colours and gradients | Generated `DsColors`, including Primary Orange 100 `#E3530F`; `js/tokens.js` remains authoritative. Transparent framework surfaces carry no extra brand colour. |
 | Spacing and corners | `DsSpacing` / `DsRadius`; replaced remaining literal select corners/gaps and expressed toggle padding using the spacing scale. |
 | Effects | Existing `DsEffects` shadows and focus-ring values; framework menu elevation remains a rendering parameter. |
-| Icons | `DsIcon` renders 18 original audited SVGs, copied byte-for-byte from repository `assets/icons`. Source paths and SHA-256 hashes are recorded in `icon-provenance.json`. |
+| Icons | `DsIcon` renders 21 original audited SVGs, copied byte-for-byte from repository `assets/icons`. Source paths and SHA-256 hashes are recorded in `icon-provenance.json`. |
 
 The scoped controls no longer use Material icon glyphs. Checkbox and radio
 marks use the GlobalDS checked/unchecked and on/off assets. Select, calendar,
