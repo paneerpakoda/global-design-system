@@ -852,6 +852,8 @@ function markActive(){
 }
 
 function route(){
+  const alias = {'#/c/select':'#/c/dropdown', '#/c/datefield':'#/c/textfield'}[location.hash];
+  if (alias) history.replaceState(null, '', alias);
   const h = location.hash || '#/home';
   const parts = h.replace('#/', '').split('/');
   let html = '';

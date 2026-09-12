@@ -50,7 +50,7 @@ test('matches RIB Checkbox geometry, type, and audited colour states', () => {
 test('publishes Checkbox in the catalogue and playground', () => {
   const components = read('js/components.js');
   const sandbox = read('js/sandbox.js');
-  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','datefield','dropdown','emptystate','info','textfield','label','lists','loadingindicator','otp','radio','segmented','select','stepper','toggle','upload'\]\)/);
+  assert.match(components, /PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator','otp','radio','segmented','stepper','toggle','upload'\]\)/);
   assert.match(components, /sandbox: 'checkbox'/);
   assert.match(sandbox, /PUBLISHED_SANDBOX_IDS = Object\.freeze\(\['accordion','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
   assert.match(sandbox, /checkbox:\s*\{/);
