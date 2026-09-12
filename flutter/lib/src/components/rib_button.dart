@@ -23,16 +23,18 @@ class RibButton extends StatefulWidget {
     this.leadingIcon,
     this.trailingIcon,
     this.expanded = false,
+    this.loading = false,
+    this.borderRadius,
     this.onPressed,
     super.key,
-  })  : assert(
-          leadingIcon == null || trailingIcon == null,
-          'RIB Button supports one icon position at a time.',
-        ),
-        assert(
-          variant != RibButtonVariant.secondary || size == RibButtonSize.small,
-          'The RIB Secondary button is available in Small only.',
-        );
+  }) : assert(
+         leadingIcon == null || trailingIcon == null,
+         'RIB Button supports one icon position at a time.',
+       ),
+       assert(
+         variant != RibButtonVariant.secondary || size == RibButtonSize.small,
+         'The RIB Secondary button is available in Small only.',
+       );
 
   final String label;
   final RibButtonVariant variant;
@@ -40,6 +42,12 @@ class RibButton extends StatefulWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final bool expanded;
+
+  /// Keeps the primary appearance while showing progress and blocking input.
+  final bool loading;
+
+  /// Optional journey-specific corner radius; defaults to the Figma size variant.
+  final double? borderRadius;
   final VoidCallback? onPressed;
 
   @override
@@ -51,13 +59,15 @@ class _RibButtonState extends State<RibButton> {
   bool _focused = false;
   bool _pressed = false;
 
-  bool get _enabled => widget.onPressed != null;
+  bool get _enabled => widget.onPressed != null && !widget.loading;
 
   @override
   Widget build(BuildContext context) {
     final visual = _resolveVisual();
     final secondary = widget.variant == RibButtonVariant.secondary;
-    final radius = widget.size == RibButtonSize.xSmall ? 8.0 : 12.0;
+    final radius =
+        widget.borderRadius ??
+        (widget.size == RibButtonSize.xSmall ? DsRadius.sm : DsRadius.md);
     final height = secondary
         ? 16.0
         : switch (widget.size) {
@@ -65,13 +75,17 @@ class _RibButtonState extends State<RibButton> {
             RibButtonSize.small => 36.0,
             RibButtonSize.xSmall => 28.0,
           };
-    final minimumWidth =
-        secondary || widget.size == RibButtonSize.xSmall ? 0.0 : 120.0;
+    final minimumWidth = secondary || widget.size == RibButtonSize.xSmall
+        ? 0.0
+        : 120.0;
     final borderWidth = _borderWidth(secondary);
     final button = Semantics(
+      container: true,
       button: true,
       enabled: _enabled,
+      liveRegion: widget.loading,
       label: widget.label,
+      onTap: _enabled ? widget.onPressed : null,
       child: ExcludeSemantics(
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -85,26 +99,31 @@ class _RibButtonState extends State<RibButton> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: visual.surfaceColor,
-                gradient: visual.fillGradient,
                 borderRadius: BorderRadius.circular(radius - borderWidth),
               ),
-              child: Material(
-                type: MaterialType.transparency,
-                child: InkWell(
-                  onTap: widget.onPressed,
-                  onHover: _setHovered,
-                  onFocusChange: _setFocused,
-                  onHighlightChanged: _setPressed,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: visual.fillGradient,
                   borderRadius: BorderRadius.circular(radius - borderWidth),
-                  hoverColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  child: SizedBox(
-                    height: height - (borderWidth * 2),
-                    child: Padding(
-                      padding: _contentPadding(secondary, borderWidth),
-                      child: _buildContent(visual.contentColor, secondary),
+                ),
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    onTap: _enabled ? widget.onPressed : null,
+                    onHover: _setHovered,
+                    onFocusChange: _setFocused,
+                    onHighlightChanged: _setPressed,
+                    borderRadius: BorderRadius.circular(radius - borderWidth),
+                    hoverColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    child: SizedBox(
+                      height: height - (borderWidth * 2),
+                      child: Padding(
+                        padding: _contentPadding(secondary, borderWidth),
+                        child: _buildContent(visual.contentColor, secondary),
+                      ),
                     ),
                   ),
                 ),
@@ -128,13 +147,26 @@ class _RibButtonState extends State<RibButton> {
 
   Widget _buildContent(Color color, bool secondary) {
     final iconSize = secondary ? 14.0 : 16.0;
-    final textStyle = (widget.size == RibButtonSize.large
-            ? DsText.buttonLarge
-            : DsText.buttonSmall)
-        .copyWith(color: color);
+    final textStyle =
+        (widget.size == RibButtonSize.large
+                ? DsText.buttonLarge
+                : DsText.buttonSmall)
+            .copyWith(color: color);
     final children = <Widget>[];
 
-    if (widget.leadingIcon != null) {
+    if (widget.loading) {
+      children.add(
+        SizedBox.square(
+          dimension: iconSize,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: color,
+            value: MediaQuery.disableAnimationsOf(context) ? 0.75 : null,
+          ),
+        ),
+      );
+      children.add(const SizedBox(width: DsSpacing.sm));
+    } else if (widget.leadingIcon != null) {
       children.add(_icon(widget.leadingIcon!, iconSize, color));
       children.add(const SizedBox(width: DsSpacing.xs));
     }
@@ -148,7 +180,7 @@ class _RibButtonState extends State<RibButton> {
         ),
       ),
     );
-    if (widget.trailingIcon != null) {
+    if (!widget.loading && widget.trailingIcon != null) {
       children.add(const SizedBox(width: DsSpacing.xs));
       children.add(_icon(widget.trailingIcon!, iconSize, color));
     }
@@ -197,7 +229,7 @@ class _RibButtonState extends State<RibButton> {
   _RibButtonVisual _resolveVisual() {
     final focused = _enabled && _focused;
     final hovered = _enabled && (_hovered || _pressed) && !focused;
-    final disabled = !_enabled;
+    final disabled = !_enabled && !widget.loading;
 
     switch (widget.variant) {
       case RibButtonVariant.primary:
@@ -205,30 +237,33 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-                  ? DsColors.primaryOrange110
-                  : DsColors.primaryOrange100,
-          contentColor:
-              disabled ? DsColors.neutralGrey110 : DsColors.neutralBaseWhite,
+              ? DsColors.primaryOrange110
+              : DsColors.primaryOrange100,
+          contentColor: disabled
+              ? DsColors.neutralGrey110
+              : DsColors.neutralBaseWhite,
           borderColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-                  ? DsColors.primaryOrange110
-                  : Colors.transparent,
+              ? DsColors.primaryOrange110
+              : Colors.transparent,
           borderGradient: disabled || hovered ? null : DsColors.buttonStroke,
           fillGradient: disabled || hovered ? null : DsColors.buttonPrimaryFill,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
         );
       case RibButtonVariant.outline:
         return _RibButtonVisual(
-          surfaceColor:
-              hovered ? DsColors.primaryOrange100 : DsColors.neutralBaseWhite,
+          surfaceColor: hovered
+              ? DsColors.primaryOrange100
+              : DsColors.neutralBaseWhite,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-                  ? DsColors.neutralBaseWhite
-                  : DsColors.primaryOrange100,
-          borderColor:
-              disabled ? DsColors.neutralGrey70 : DsColors.primaryOrange100,
+              ? DsColors.neutralBaseWhite
+              : DsColors.primaryOrange100,
+          borderColor: disabled
+              ? DsColors.neutralGrey70
+              : DsColors.primaryOrange100,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
         );
       case RibButtonVariant.secondary:
@@ -237,21 +272,21 @@ class _RibButtonState extends State<RibButton> {
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered || focused
-                  ? DsColors.primaryOrange110
-                  : DsColors.primaryOrange100,
+              ? DsColors.primaryOrange110
+              : DsColors.primaryOrange100,
         );
       case RibButtonVariant.pastel:
         return _RibButtonVisual(
           surfaceColor: disabled
               ? DsColors.neutralGrey70
               : hovered
-                  ? DsColors.pastelAmber100
-                  : DsColors.pastelAmber90,
+              ? DsColors.pastelAmber100
+              : DsColors.pastelAmber90,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-                  ? DsColors.primaryOrange110
-                  : DsColors.primaryOrange100,
+              ? DsColors.primaryOrange110
+              : DsColors.primaryOrange100,
           borderColor: disabled ? DsColors.neutralGrey70 : Colors.transparent,
           borderGradient: disabled ? null : DsColors.buttonStroke,
           shadows: focused ? [_boxShadow(DsEffects.ringFocus)] : const [],
@@ -261,18 +296,18 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: focused
               ? DsColors.surfaceCoolGrey90
               : hovered
-                  ? DsColors.surfaceCoolGrey110
-                  : DsColors.neutralBaseWhite,
+              ? DsColors.surfaceCoolGrey110
+              : DsColors.neutralBaseWhite,
           contentColor: disabled
               ? DsColors.neutralGrey110
               : hovered
-                  ? DsColors.neutralGrey140
-                  : DsColors.neutralGrey130,
+              ? DsColors.neutralGrey140
+              : DsColors.neutralGrey130,
           borderColor: disabled
               ? DsColors.neutralGrey70
               : focused
-                  ? DsColors.pastelBlue90
-                  : DsColors.surfaceCoolGrey110,
+              ? DsColors.pastelBlue90
+              : DsColors.surfaceCoolGrey110,
           shadows: focused
               ? [
                   BoxShadow(
@@ -281,8 +316,8 @@ class _RibButtonState extends State<RibButton> {
                   ),
                 ]
               : disabled
-                  ? const []
-                  : [_boxShadow(DsEffects.shadowButtonWhite)],
+              ? const []
+              : [_boxShadow(DsEffects.shadowButtonWhite)],
         );
       case RibButtonVariant.destructiveOutline:
         return _RibButtonVisual(
@@ -290,8 +325,8 @@ class _RibButtonState extends State<RibButton> {
           contentColor: disabled
               ? DsColors.error90
               : hovered
-                  ? DsColors.neutralBaseWhite
-                  : DsColors.error100,
+              ? DsColors.neutralBaseWhite
+              : DsColors.error100,
           borderColor: disabled ? DsColors.pastelPeach120 : DsColors.error100,
           shadows: focused
               ? [
@@ -307,8 +342,8 @@ class _RibButtonState extends State<RibButton> {
           surfaceColor: disabled
               ? DsColors.pastelPeach110
               : hovered
-                  ? DsColors.error110
-                  : DsColors.error100,
+              ? DsColors.error110
+              : DsColors.error100,
           contentColor: disabled ? DsColors.error90 : DsColors.neutralBaseWhite,
           shadows: focused
               ? [

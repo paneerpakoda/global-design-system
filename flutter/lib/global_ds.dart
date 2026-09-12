@@ -19,3 +19,8 @@ export 'src/components/rib_input_field.dart';
 export 'src/components/rib_label.dart';
 export 'src/components/rib_list.dart';
 export 'src/components/rib_loading_indicator.dart';
+export 'src/components/rib_select_field.dart';
+export 'src/components/rib_date_field.dart';
+export 'src/components/rib_form_controls.dart';
+
+export 'src/foundations/ds_icons.dart';

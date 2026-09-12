@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../foundations/ds_tokens.dart';
+import '../foundations/ds_icons.dart';
 
 enum RibCheckboxSize { small, large }
 
@@ -11,6 +12,7 @@ class RibCheckbox extends StatelessWidget {
     required this.label,
     required this.onChanged,
     this.size = RibCheckboxSize.small,
+    this.showLabel = true,
     super.key,
   });
 
@@ -18,6 +20,7 @@ class RibCheckbox extends StatelessWidget {
   final String label;
   final ValueChanged<bool>? onChanged;
   final RibCheckboxSize size;
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -33,27 +36,42 @@ class RibCheckbox extends StatelessWidget {
       checked: value,
       enabled: enabled,
       label: label,
-      child: InkWell(
-        onTap: enabled ? () => onChanged!(!value) : null,
-        borderRadius: BorderRadius.circular(DsRadius.xs),
-        focusColor: DsEffects.ringFocus.color,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                value ? Icons.check_box : Icons.check_box_outline_blank,
-                size: 20,
-                color:
-                    value ? DsColors.primaryOrange100 : DsColors.neutralGrey120,
-              ),
-              const SizedBox(width: DsSpacing.sm),
-              Text(
-                label,
-                style: labelStyle.copyWith(color: DsColors.neutralGrey140),
-              ),
-            ],
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: size == RibCheckboxSize.large ? 44 : 24,
+        ),
+        child: InkWell(
+          onTap: enabled ? () => onChanged!(!value) : null,
+          borderRadius: BorderRadius.circular(DsRadius.xs),
+          focusColor: DsEffects.ringFocus.color,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsSpacing.xxs),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DsIcon(
+                  value
+                      ? DsIconData.checkboxChecked
+                      : DsIconData.checkboxUnchecked,
+                  size: 20,
+                  color: value
+                      ? DsColors.primaryOrange100
+                      : DsColors.neutralGrey120,
+                ),
+                if (showLabel) const SizedBox(width: DsSpacing.sm),
+                if (showLabel)
+                  Flexible(
+                    child: ExcludeSemantics(
+                      child: Text(
+                        label,
+                        style: labelStyle.copyWith(
+                          color: DsColors.neutralGrey140,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../foundations/ds_tokens.dart';
+import '../foundations/ds_icons.dart';
 
 enum RibCalendarMode { date, range, monthYear }
 
@@ -15,6 +16,10 @@ class RibCalendar extends StatelessWidget {
     this.onDateSelected,
     this.onPreviousMonth,
     this.onNextMonth,
+    this.firstDate,
+    this.lastDate,
+    this.onModeChanged,
+    this.onMonthChanged,
     super.key,
   });
 
@@ -26,6 +31,9 @@ class RibCalendar extends StatelessWidget {
   final ValueChanged<DateTime>? onDateSelected;
   final VoidCallback? onPreviousMonth;
   final VoidCallback? onNextMonth;
+  final DateTime? firstDate, lastDate;
+  final ValueChanged<RibCalendarMode>? onModeChanged;
+  final ValueChanged<DateTime>? onMonthChanged;
 
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   static const _months = [
@@ -47,7 +55,13 @@ class RibCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
     final range = mode == RibCalendarMode.range;
     final monthYear = mode == RibCalendarMode.monthYear;
-    final height = range || monthYear ? 272.0 : 244.0;
+    final rows =
+        ((DateTime(month.year, month.month).weekday -
+                    1 +
+                    DateUtils.getDaysInMonth(month.year, month.month)) /
+                7)
+            .ceil();
+    final height = monthYear ? 300.0 : (range ? 122.0 : 94.0) + rows * 30;
 
     return Semantics(
       label: monthYear ? 'Choose month and year' : 'Choose date',
@@ -69,7 +83,9 @@ class RibCalendar extends StatelessWidget {
               children: [
                 if (range || monthYear) ...[
                   Text(
-                    rangeStart == null
+                    monthYear
+                        ? 'Choose month and year'
+                        : rangeStart == null
                         ? 'Choose start date'
                         : 'Choose end date',
                     style: _paragraphSemibold,
@@ -93,43 +109,50 @@ class RibCalendar extends StatelessWidget {
     final label = '${_months[month.month - 1]} ${month.year}';
     return Row(
       children: [
-        InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(DsRadius.xs),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(label, style: _paragraphSemibold),
-              const SizedBox(width: DsSpacing.xxs),
-              Icon(
-                monthYear ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                size: 16,
-              ),
-            ],
+        Expanded(
+          child: InkWell(
+            onTap: onModeChanged == null
+                ? null
+                : () => onModeChanged!(
+                    monthYear
+                        ? RibCalendarMode.date
+                        : RibCalendarMode.monthYear,
+                  ),
+            borderRadius: BorderRadius.circular(DsRadius.xs),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(child: Text(label, style: _paragraphSemibold)),
+                const SizedBox(width: DsSpacing.xxs),
+                DsIcon(
+                  monthYear ? DsIconData.caretUp : DsIconData.caretDown,
+                  size: 16,
+                ),
+              ],
+            ),
           ),
         ),
-        const Spacer(),
         if (!monthYear) ...[
           _navigationButton(
             'Previous month',
-            Icons.chevron_left,
+            DsIconData.chevronLeft,
             onPreviousMonth,
           ),
           const SizedBox(width: DsSpacing.sm),
-          _navigationButton('Next month', Icons.chevron_right, onNextMonth),
+          _navigationButton('Next month', DsIconData.chevronRight, onNextMonth),
         ],
       ],
     );
   }
 
-  Widget _navigationButton(String label, IconData icon, VoidCallback? onTap) {
+  Widget _navigationButton(String label, DsIconData icon, VoidCallback? onTap) {
     return Semantics(
       label: label,
       button: true,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DsRadius.xs),
-        child: Icon(icon, size: 16, color: DsColors.neutralGrey140),
+        child: DsIcon(icon, size: 16, color: DsColors.neutralGrey140),
       ),
     );
   }
@@ -157,6 +180,7 @@ class RibCalendar extends StatelessWidget {
         const SizedBox(height: DsSpacing.sm),
         Expanded(
           child: GridView.builder(
+            primary: false,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: itemCount,
@@ -180,10 +204,19 @@ class RibCalendar extends StatelessWidget {
   }
 
   Widget _buildDate(DateTime date) {
-    final selected = _sameDay(date, selectedDate) ||
+    final available =
+        (firstDate == null ||
+            !DateUtils.dateOnly(
+              date,
+            ).isBefore(DateUtils.dateOnly(firstDate!))) &&
+        (lastDate == null ||
+            !DateUtils.dateOnly(date).isAfter(DateUtils.dateOnly(lastDate!)));
+    final selected =
+        _sameDay(date, selectedDate) ||
         _sameDay(date, rangeStart) ||
         _sameDay(date, rangeEnd);
-    final inRange = rangeStart != null &&
+    final inRange =
+        rangeStart != null &&
         rangeEnd != null &&
         !date.isBefore(rangeStart!) &&
         !date.isAfter(rangeEnd!);
@@ -196,15 +229,18 @@ class RibCalendar extends StatelessWidget {
           button: true,
           label: '${date.day} ${_months[date.month - 1]} ${date.year}',
           child: InkWell(
-            onTap: onDateSelected == null ? null : () => onDateSelected!(date),
+            onTap: onDateSelected == null || !available
+                ? null
+                : () => onDateSelected!(date),
             customBorder: const CircleBorder(),
             child: Container(
               width: 24,
               height: 24,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color:
-                    selected ? DsColors.primaryOrange100 : Colors.transparent,
+                color: selected
+                    ? DsColors.primaryOrange100
+                    : Colors.transparent,
                 shape: BoxShape.circle,
               ),
               child: Text(
@@ -212,7 +248,9 @@ class RibCalendar extends StatelessWidget {
                 style: (selected ? DsText.p2Semi : DsText.p2Reg).copyWith(
                   color: selected
                       ? DsColors.neutralBaseWhite
-                      : DsColors.neutralGrey120,
+                      : available
+                      ? DsColors.neutralGrey120
+                      : DsColors.neutralGrey90,
                 ),
               ),
             ),
@@ -223,8 +261,13 @@ class RibCalendar extends StatelessWidget {
   }
 
   Widget _buildMonthYearPicker() {
-    final visibleMonths = [7, 8, 9, 10, 11, 12];
-    final visibleYears = [2017, 2018, 2019, 2020, 2021, 2022];
+    final visibleMonths = List.generate(12, (i) => i + 1);
+    final startYear = firstDate?.year ?? DateTime.now().year - 120;
+    final endYear = lastDate?.year ?? DateTime.now().year + 20;
+    final visibleYears = List.generate(
+      endYear - startYear + 1,
+      (i) => endYear - i,
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(color: DsColors.surfaceCoolGrey110),
@@ -236,6 +279,9 @@ class RibCalendar extends StatelessWidget {
             child: _pickerColumn(
               visibleMonths.map((value) => _months[value - 1]),
               _months[month.month - 1],
+              (value) => onMonthChanged?.call(
+                DateTime(month.year, _months.indexOf(value) + 1),
+              ),
             ),
           ),
           Container(width: 1, color: DsColors.surfaceCoolGrey110),
@@ -243,6 +289,8 @@ class RibCalendar extends StatelessWidget {
             child: _pickerColumn(
               visibleYears.map((value) => '$value'),
               '${month.year}',
+              (value) =>
+                  onMonthChanged?.call(DateTime(int.parse(value), month.month)),
             ),
           ),
         ],
@@ -250,16 +298,21 @@ class RibCalendar extends StatelessWidget {
     );
   }
 
-  Widget _pickerColumn(Iterable<String> values, String selectedValue) {
-    return Column(
+  Widget _pickerColumn(
+    Iterable<String> values,
+    String selectedValue,
+    ValueChanged<String> onSelect,
+  ) {
+    return ListView(
       children: values
           .map(
-            (value) => Expanded(
+            (value) => SizedBox(
+              height: 36,
               child: Semantics(
                 selected: value == selectedValue,
                 button: true,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () => onSelect(value),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -268,14 +321,15 @@ class RibCalendar extends StatelessWidget {
                       ),
                       child: Text(
                         value,
-                        style: (value == selectedValue
-                                ? DsText.p2Semi
-                                : DsText.p2Reg)
-                            .copyWith(
-                          color: value == selectedValue
-                              ? DsColors.primaryOrange100
-                              : DsColors.neutralGrey120,
-                        ),
+                        style:
+                            (value == selectedValue
+                                    ? DsText.p2Semi
+                                    : DsText.p2Reg)
+                                .copyWith(
+                                  color: value == selectedValue
+                                      ? DsColors.primaryOrange100
+                                      : DsColors.neutralGrey120,
+                                ),
                       ),
                     ),
                   ),

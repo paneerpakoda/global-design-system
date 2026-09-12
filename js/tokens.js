@@ -27,7 +27,8 @@ const DS = {
     primaryOrange: {
       label: 'Primary orange',
       note: 'RIB action orange for CTAs, focus, selected states and interaction emphasis. 100 is the default action colour.',
-      stops: { 80:'#F7B68D',90:'#F3975D',100:'#F0792E',110:'#DB5E10',120:'#AB4A0C' }
+      // Primary 100 follows the user-approved GlobalDS value (2026-09-05).
+      stops: { 80:'#F7B68D',90:'#F3975D',100:'#E3530F',110:'#DB5E10',120:'#AB4A0C' }
     },
     primaryMaroon: {
       label: 'Primary maroon',
@@ -119,12 +120,12 @@ const DS = {
     hero: { stops: ['#EF8C24', '#F06837'], angle: 180,
       sourceStyle:'NEWGradient/General/Orange',
       note: 'RIB general-orange gradient for selected hero and feature surfaces. Never place small body text directly over it.' },
-    buttonPrimaryFill: { base:'#F0792E', stops: [
+    buttonPrimaryFill: { base:'#E3530F', stops: [
         { color:'#FFFFFF', opacity:.12 },
         { color:'#FFFFFF', opacity:0 }
       ], angle: 180,
       sourceStyle:'NEWGradient/Button Fill',
-      note: 'Exact RIB button fill: Primary Orange 100 plus a white-to-transparent overlay at 12% opacity.' },
+      note: 'GlobalDS button fill: Primary Orange 100 plus a white-to-transparent overlay at 12% opacity.' },
     buttonStroke: { width:1, opacity:.5, stops: ['#FFFFFF', '#FFFFFF00'], angle: 180,
       sourceStyle:'NEWGradient/Stroke',
       note: 'Exact RIB gradient stroke: white to transparent at 50% paint opacity.' }

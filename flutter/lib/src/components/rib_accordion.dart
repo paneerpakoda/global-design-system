@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../foundations/ds_tokens.dart';
+import '../foundations/ds_icons.dart';
 
 /// Visual presentations defined by the RIB Accordion component set.
 enum RibAccordionVariant {
@@ -24,6 +25,8 @@ class RibAccordion extends StatelessWidget {
     this.variant = RibAccordionVariant.plain,
     this.subtitle,
     this.leading,
+    this.actions = const [],
+    this.maintainState = false,
     this.animationDuration = const Duration(milliseconds: 200),
     super.key,
   });
@@ -35,6 +38,8 @@ class RibAccordion extends StatelessWidget {
   final RibAccordionVariant variant;
   final String? subtitle;
   final Widget? leading;
+  final List<Widget> actions;
+  final bool maintainState;
   final Duration animationDuration;
 
   @override
@@ -49,7 +54,11 @@ class RibAccordion extends StatelessWidget {
           duration: animationDuration,
           curve: Curves.easeInOut,
           alignment: Alignment.topCenter,
-          child: expanded ? _buildBody(spec) : const SizedBox.shrink(),
+          child: maintainState
+              ? Offstage(offstage: !expanded, child: _buildBody(spec))
+              : expanded
+              ? _buildBody(spec)
+              : const SizedBox.shrink(),
         ),
         if (spec.hasDivider)
           Padding(
@@ -102,11 +111,10 @@ class RibAccordion extends StatelessWidget {
                 SizedBox(width: spec.leadingGap),
               ],
               Expanded(child: titleWidget),
+              ...actions,
               const SizedBox(width: DsSpacing.sm),
-              Icon(
-                expanded
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded,
+              DsIcon(
+                expanded ? DsIconData.chevronUp : DsIconData.chevronDown,
                 size: 20,
                 color: DsColors.neutralGrey150,
               ),
@@ -118,7 +126,7 @@ class RibAccordion extends StatelessWidget {
   }
 
   Widget _buildBody(_RibAccordionSpec spec) {
-    return ColoredBox(
+    return Material(
       color: spec.bodyColor,
       child: Padding(
         padding: spec.bodyPadding,
@@ -147,22 +155,22 @@ class RibAccordion extends StatelessWidget {
       case RibAccordionVariant.plain:
         return const SizedBox.shrink();
       case RibAccordionVariant.noContainer:
-        return const Icon(
-          Icons.verified_user_rounded,
+        return const DsIcon(
+          DsIconData.shield,
           size: 16,
           color: DsColors.primaryOrange100,
         );
       case RibAccordionVariant.colouredBackground:
-        return const Icon(
-          Icons.work_rounded,
+        return const DsIcon(
+          DsIconData.document,
           size: 20,
           color: DsColors.primaryMaroon100,
         );
       case RibAccordionVariant.standardContainer:
         return const _RibShieldPlate();
       case RibAccordionVariant.explanationContainer:
-        return const Icon(
-          Icons.verified_user_rounded,
+        return const DsIcon(
+          DsIconData.shield,
           size: 20,
           color: DsColors.primaryOrange100,
         );
@@ -183,8 +191,8 @@ class _RibShieldPlate extends StatelessWidget {
         color: DsColors.neutralGrey60,
         shape: BoxShape.circle,
       ),
-      child: const Icon(
-        Icons.verified_user_rounded,
+      child: const DsIcon(
+        DsIconData.shield,
         size: 20,
         color: DsColors.primaryOrange100,
       ),
@@ -262,8 +270,9 @@ class _RibAccordionSpec {
           titleStyle: DsText.s1Semi.copyWith(color: DsColors.neutralGrey140),
           subtitleStyle: DsText.p2Reg,
           bodyStyle: DsText.p2Reg.copyWith(color: DsColors.neutralGrey120),
-          surfaceColor:
-              expanded ? DsColors.surfaceCoolGrey100 : Colors.transparent,
+          surfaceColor: expanded
+              ? DsColors.surfaceCoolGrey100
+              : Colors.transparent,
           bodyColor: Colors.transparent,
           borderRadius: BorderRadius.zero,
           leadingGap: DsSpacing.sm,
@@ -303,8 +312,9 @@ class _RibAccordionSpec {
           subtitleStyle: DsText.p2Reg.copyWith(color: DsColors.neutralGrey130),
           bodyStyle: DsText.s1Regular.copyWith(color: DsColors.neutralGrey120),
           surfaceColor: DsColors.neutralBaseWhite,
-          bodyColor:
-              expanded ? DsColors.surfaceCoolGrey90 : DsColors.neutralBaseWhite,
+          bodyColor: expanded
+              ? DsColors.surfaceCoolGrey90
+              : DsColors.neutralBaseWhite,
           borderColor: DsColors.surfaceCoolGrey110,
           borderRadius: BorderRadius.circular(DsRadius.md),
           leadingGap: DsSpacing.sm,

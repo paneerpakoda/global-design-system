@@ -3,8 +3,35 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:global_ds/global_ds.dart';
 
 void main() {
+  testWidgets('loading button blocks activation and resumes when ready',
+      (tester) async {
+    var calls = 0;
+    Future<void> render(bool loading) => tester.pumpWidget(MaterialApp(
+          theme: DsTheme.light,
+          home: Scaffold(
+              body: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: RibButton(
+                label: loading ? 'Verifying…' : 'Continue',
+                loading: loading,
+                onPressed: () => calls++),
+          )),
+        ));
+    await render(true);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Verifying…'));
+    expect(calls, 0);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(tester.binding.hasScheduledFrame, isFalse);
+    await render(false);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    expect(calls, 1);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
   test('exports governed foundations and the Material theme', () {
-    expect(DsColors.primaryOrange100, const Color(0xFFF0792E));
+    expect(DsColors.primaryOrange100, const Color(0xFFE3530F));
     expect(DsTheme.light.useMaterial3, isTrue);
     expect(DsText.fontFamilyName, 'Mulish');
     expect(DsText.fontFamily, 'packages/global_ds/Mulish');

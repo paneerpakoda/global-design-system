@@ -63,7 +63,7 @@ test('matches Label geometry and foundation colour mapping', () => {
 test('provides Flutter Input field and Label components backed by foundations', () => {
   const input = read('flutter/lib/src/components/rib_input_field.dart');
   const label = read('flutter/lib/src/components/rib_label.dart');
-  assert.match(input, /class RibInputField extends StatelessWidget/);
+  assert.match(input, /class RibInputField extends StatefulWidget/);
   assert.match(input, /enum RibInputFieldType/);
   assert.match(input, /DsColors\.surfaceCoolGrey110/);
   assert.match(input, /DsColors\.error100/);

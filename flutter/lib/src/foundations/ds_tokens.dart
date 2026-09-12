@@ -18,7 +18,7 @@ class DsColors {
   static const Color primaryOrange90 = Color(0xFFF3975D);
 
   /// TOKEN_COLOR: color.primaryOrange.100
-  static const Color primaryOrange100 = Color(0xFFF0792E);
+  static const Color primaryOrange100 = Color(0xFFE3530F);
 
   /// TOKEN_COLOR: color.primaryOrange.110
   static const Color primaryOrange110 = Color(0xFFDB5E10);

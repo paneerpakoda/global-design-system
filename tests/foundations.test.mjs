@@ -38,7 +38,7 @@ test('publishes the agreed canonical colour families', () => {
   );
 
   assert.deepEqual({ ...DS.color.primaryOrange.stops }, {
-    80: '#F7B68D', 90: '#F3975D', 100: '#F0792E', 110: '#DB5E10', 120: '#AB4A0C',
+    80: '#F7B68D', 90: '#F3975D', 100: '#E3530F', 110: '#DB5E10', 120: '#AB4A0C',
   });
   assert.deepEqual({ ...DS.color.primaryMaroon.stops }, {
     80: '#CE5F66', 90: '#BF3B43', 100: '#982F35', 110: '#712327', 120: '#4A171A',

@@ -3,6 +3,9 @@
 .AppleDouble
 .LSOverride
 Icon?
+# GlobalDS SVG assets must not match the macOS Icon? exclusion.
+!/flutter/assets/icons/
+!/flutter/example/web/icons/
 
 # Editor / IDE
 .vscode/

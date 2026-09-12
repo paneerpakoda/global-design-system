@@ -13,10 +13,10 @@ test('ships GlobalDS as a versioned, Git-consumable Flutter package', () => {
   const fontDirectory = path.join(projectRoot, 'flutter/lib/fonts');
 
   assert.match(pubspec, /^name: global_ds$/m);
-  assert.match(pubspec, /^version: 0\.5\.0$/m);
+  assert.match(pubspec, /^version: 0\.6\.0-dev\.1$/m);
   assert.match(pubspec, /^publish_to: none$/m);
-  assert.match(pubspec, /sdk: ['"]>=3\.6\.0 <4\.0\.0['"]/);
-  assert.match(pubspec, /flutter: ['"]>=3\.27\.0['"]/);
+  assert.match(pubspec, /sdk: ['"]>=3\.9\.0 <4\.0\.0['"]/);
+  assert.match(pubspec, /flutter: ['"]>=3\.35\.0['"]/);
   assert.match(pubspec, /Mulish-Regular\.ttf/);
   assert.match(pubspec, /Mulish-SemiBold\.ttf[\s\S]*?weight: 600/);
   assert.match(pubspec, /Mulish-Bold\.ttf[\s\S]*?weight: 700/);

@@ -1,0 +1,92 @@
+{
+  "chevronLeft": {
+    "source": "assets/icons/general/line/chevron-left--line--235-116.svg",
+    "packaged": "flutter/assets/icons/chevron-left--line--235-116.svg",
+    "sha256": "5c75e8c2f87c8102771483bbe7bd92dc8e73153ea418bead1346740a5514f67c"
+  },
+  "chevronRight": {
+    "source": "assets/icons/general/line/chevron-right--line--235-115.svg",
+    "packaged": "flutter/assets/icons/chevron-right--line--235-115.svg",
+    "sha256": "5044e4f46edc9258a0faf2ded07ba17e5e27b0f841c89ff96d4cc42da6d289df"
+  },
+  "chevronUp": {
+    "source": "assets/icons/general/line/chevron-up--line--235-117.svg",
+    "packaged": "flutter/assets/icons/chevron-up--line--235-117.svg",
+    "sha256": "4ec7d9b77a2eaef1987b0bd217828a364ba22f8740808dfea7dd2ffa81026954"
+  },
+  "chevronDown": {
+    "source": "assets/icons/general/line/chevron-down--line--235-118.svg",
+    "packaged": "flutter/assets/icons/chevron-down--line--235-118.svg",
+    "sha256": "111bf77084248fe70da12cb42f92dc9e89353d046e3f6af84bc3939954cc9a08"
+  },
+  "caretUp": {
+    "source": "assets/icons/general/filled/chevron-up--filled--717-260.svg",
+    "packaged": "flutter/assets/icons/chevron-up--filled--717-260.svg",
+    "sha256": "a453bacef3ff204f29af8c7a2882b6fca585214fef8df52be9a2043142c21b98"
+  },
+  "caretDown": {
+    "source": "assets/icons/general/filled/chevron-down--filled--679-239.svg",
+    "packaged": "flutter/assets/icons/chevron-down--filled--679-239.svg",
+    "sha256": "6a6eb97c61c9e8fd93b5c9f363ebb48dca88e84a88ee50768c9233f162ee3ae3"
+  },
+  "tick": {
+    "source": "assets/icons/general/line/tick--line--237-436.svg",
+    "packaged": "flutter/assets/icons/tick--line--237-436.svg",
+    "sha256": "62ff18ed72c531b2c26142951509e3ae67e8467fa8809f64336f64c7d56ac61d"
+  },
+  "calendar": {
+    "source": "assets/icons/general/filled/calendar--filled--237-437.svg",
+    "packaged": "flutter/assets/icons/calendar--filled--237-437.svg",
+    "sha256": "d0486d9a454dbf7a3ac9e180e6f87465e651f79f499002af6fe0ba77add49efc"
+  },
+  "info": {
+    "source": "assets/icons/general/filled/information--filled--237-442.svg",
+    "packaged": "flutter/assets/icons/information--filled--237-442.svg",
+    "sha256": "b52aa8a7441ea6b7f986adbe94e9de59aaeb07bd6a8c9c179003aa3a41b6e1c9"
+  },
+  "success": {
+    "source": "assets/icons/general/filled/done--filled--237-450.svg",
+    "packaged": "flutter/assets/icons/done--filled--237-450.svg",
+    "sha256": "47d767a2fb606d3e99d370a41149f50f5eaf32af082fc003fd14172d178cc7e5"
+  },
+  "error": {
+    "source": "assets/icons/general/filled/error--filled--237-451.svg",
+    "packaged": "flutter/assets/icons/error--filled--237-451.svg",
+    "sha256": "17b0eae5619e22c446833bbff439c66e24859210f6ba33146fbbce8a564d0f02"
+  },
+  "warning": {
+    "source": "assets/icons/general/filled/alert--filled--237-447.svg",
+    "packaged": "flutter/assets/icons/alert--filled--237-447.svg",
+    "sha256": "0ed094a966fc712b90703300200acd03147da4ebd276f46586b739c18adc4e19"
+  },
+  "checkboxChecked": {
+    "source": "assets/icons/general/filled/check-box-checked--filled--237-446.svg",
+    "packaged": "flutter/assets/icons/check-box-checked--filled--237-446.svg",
+    "sha256": "505dbe7a4cdb351fbefb09a3b7870b964cf886ee5c1ea78c620c24d0bddbe95c"
+  },
+  "checkboxUnchecked": {
+    "source": "assets/icons/general/filled/checkbox-unchecked--filled--237-445.svg",
+    "packaged": "flutter/assets/icons/checkbox-unchecked--filled--237-445.svg",
+    "sha256": "79ebda6bac585d3b0360510da0b8cee108c7a35c47115bc66d133cdd81c4143f"
+  },
+  "radioOn": {
+    "source": "assets/icons/general/filled/radio-button-on--filled--237-443.svg",
+    "packaged": "flutter/assets/icons/radio-button-on--filled--237-443.svg",
+    "sha256": "57df3cc2551195a792f983daaab8a65cd3514b77d4bad2f371363e553052a37c"
+  },
+  "radioOff": {
+    "source": "assets/icons/general/filled/radio-button-off--filled--237-444.svg",
+    "packaged": "flutter/assets/icons/radio-button-off--filled--237-444.svg",
+    "sha256": "7d4cb79827736f9e937e3b674883e84556f46b384c5a2133d11056a8314999bb"
+  },
+  "shield": {
+    "source": "assets/icons/general/filled/shield-1--filled--548-237.svg",
+    "packaged": "flutter/assets/icons/shield-1--filled--548-237.svg",
+    "sha256": "4a588d6839523aea522b84322900b2450c2ae50572bbfd74c07d6988d27c2bb5"
+  },
+  "document": {
+    "source": "assets/icons/general/filled/document-1--filled--571-335.svg",
+    "packaged": "flutter/assets/icons/document-1--filled--571-335.svg",
+    "sha256": "d59a46bf644e90748487a48367632678df394817247d556e3737e752e3d783e0"
+  }
+}
