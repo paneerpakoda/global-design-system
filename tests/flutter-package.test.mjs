@@ -88,7 +88,7 @@ test('documents package installation instead of browser downloads', () => {
   assert.match(app, /label: 'Flutter'/);
   assert.match(app, /title:'Flutter package'/);
   assert.match(app, /github\.com\/paneerpakoda\/global-design-system\.git/);
-  assert.match(app, /ref: v0\.5\.0/);
+  assert.match(app, /ref: codex\/flutter-core-components/);
   assert.match(app, /path: flutter/);
   assert.match(app, /package:global_ds\/global_ds\.dart/);
   assert.doesNotMatch(app, /data-dl=/);

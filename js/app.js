@@ -680,6 +680,7 @@ function renderShape(){
 function renderComponent(id){
   const c = COMPONENTS[id];
   if (!c || !PUBLISHED_COMPONENT_IDS.includes(id)) return '<div class="empty">Component not found.</div>';
+  if (c.flutterCore) return renderFlutterComponentPage(id, c);
   let html = pageHeader({ crumbs:['Components', c.group, c.title], title:c.title,
     version:c.version, updated:c.updated, desc:c.desc });
   if (c.sandbox) {
@@ -746,12 +747,12 @@ function renderDevelopers(){
 
   html += sectionHtml({
     title:'1 · Add the package',
-    note:'Pin production applications to a released tag so design-system updates are deliberate and reviewable.',
+    note:'The core controls are available on this development branch. Requires Flutter 3.35+ and Dart 3.9+. The v0.5.0 release does not include these additions.',
     html:codeblock(`dependencies:
   global_ds:
     git:
       url: https://github.com/paneerpakoda/global-design-system.git
-      ref: v0.5.0
+      ref: codex/flutter-core-components
       path: flutter`, 'pubspec.yaml'),
     guidance:{
       label:'Version guidance',

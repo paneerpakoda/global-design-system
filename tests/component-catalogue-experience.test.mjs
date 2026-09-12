@@ -7,24 +7,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = relativePath => fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 
-const alphabeticalComponentIds = [
-  'accordions',
-  'activity-timeline',
-  'avatar',
-  'breadcrumbs',
-  'button',
-  'calendar',
-  'cards',
-  'checkbox',
-  'chip',
-  'dropdown',
-  'emptystate',
-  'info',
-  'textfield',
-  'label',
-  'lists',
-  'loadingindicator',
-];
+const alphabeticalComponentIds = ["accordions", "activity-timeline", "avatar", "breadcrumbs", "button", "calendar", "cards", "checkbox", "chip", "datefield", "dropdown", "emptystate", "info", "textfield", "label", "lists", "loadingindicator", "otp", "radio", "segmented", "select", "stepper", "toggle", "upload"];
 
 test('publishes the component catalogue in alphabetical title order', () => {
   const components = read('js/components.js');

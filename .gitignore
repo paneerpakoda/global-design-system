@@ -33,3 +33,6 @@ build/
 .packages
 *.iml
 /flutter/pubspec.lock
+
+# Generated portal Flutter preview
+/flutter-preview/

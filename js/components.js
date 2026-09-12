@@ -897,7 +897,7 @@ function renderRibLoadingIndicator(options = {}){
   return `<span class="rib-loading-indicator rib-loading-indicator--${size}" role="status" aria-live="polite"><span class="rib-loading-indicator__spinner" aria-hidden="true"></span><span>${esc(label)}</span></span>`;
 }
 
-const PUBLISHED_COMPONENT_IDS = Object.freeze(['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator']);
+const PUBLISHED_COMPONENT_IDS = Object.freeze(['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','datefield','dropdown','emptystate','info','textfield','label','lists','loadingindicator','otp','radio','segmented','select','stepper','toggle','upload']);
 
 const COMPONENTS = {
 

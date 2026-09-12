@@ -21,7 +21,31 @@ class ComponentCatalog extends StatefulWidget {
 }
 
 class _ComponentCatalogState extends State<ComponentCatalog> {
-  int selected = 0, step = 1;
+  static const componentIds = [
+    'select',
+    'datefield',
+    'radio',
+    'toggle',
+    'segmented',
+    'otp',
+    'stepper',
+    'upload',
+    'textfield',
+    'button',
+    'checkbox',
+    'calendar',
+    'accordions',
+    'info',
+  ];
+  static int get initialSelection {
+    final index = componentIds.indexOf(
+      Uri.base.queryParameters['component'] ?? '',
+    );
+    return index < 0 ? 0 : index;
+  }
+
+  final embedded = Uri.base.queryParameters['embed'] == 'true';
+  int selected = initialSelection, step = 1;
   String? country;
   String segment = 'business';
   bool? radio;
@@ -81,74 +105,85 @@ class _ComponentCatalogState extends State<ComponentCatalog> {
   bool get isNew => selected < 8;
   Widget gap() => const SizedBox(height: DsSpacing.lg);
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('GlobalDS · Flutter components')),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text('Core components', style: DsText.h2Semi),
-              gap(),
-              const Text(
-                '8 new Flutter controls · 6 existing components improved',
-                style: DsText.h3Regular,
-              ),
-              gap(),
-              DropdownButtonFormField<int>(
-                initialValue: selected,
-                decoration: const InputDecoration(labelText: 'Component'),
-                isExpanded: true,
-                items: [
-                  for (var i = 0; i < names.length; i++)
-                    DropdownMenuItem(
-                      value: i,
-                      child: Text(
-                        '${i < 8 ? 'New' : 'Improved'} · ${names[i]}',
+  Widget build(BuildContext context) => embedded
+      ? Scaffold(
+          backgroundColor: DsColors.neutralBaseWhite,
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(DsSpacing.lg),
+            child: preview(),
+          ),
+        )
+      : Scaffold(
+          appBar: AppBar(title: const Text('GlobalDS · Flutter components')),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text('Core components', style: DsText.h2Semi),
+                    gap(),
+                    const Text(
+                      '8 new Flutter controls · 6 existing components improved',
+                      style: DsText.h3Regular,
+                    ),
+                    gap(),
+                    DropdownButtonFormField<int>(
+                      initialValue: selected,
+                      decoration: const InputDecoration(labelText: 'Component'),
+                      isExpanded: true,
+                      items: [
+                        for (var i = 0; i < names.length; i++)
+                          DropdownMenuItem(
+                            value: i,
+                            child: Text(
+                              '${i < 8 ? 'New' : 'Improved'} · ${names[i]}',
+                            ),
+                          ),
+                      ],
+                      onChanged: (value) => setState(() {
+                        selected = value!;
+                        loading = false;
+                        uploadState = RibUploadState.idle;
+                      }),
+                    ),
+                    const SizedBox(height: DsSpacing.xl2),
+                    Text(apis[selected], style: DsText.h2Semi),
+                    const SizedBox(height: DsSpacing.sm),
+                    Text(changes[selected], style: DsText.h3Regular),
+                    gap(),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: DsColors.neutralBaseWhite,
+                        border: Border.all(color: DsColors.surfaceCoolGrey110),
+                        borderRadius: BorderRadius.circular(DsRadius.md),
+                      ),
+                      child: KeyedSubtree(
+                        key: ValueKey(selected),
+                        child: preview(),
                       ),
                     ),
-                ],
-                onChanged: (value) => setState(() {
-                  selected = value!;
-                  loading = false;
-                  uploadState = RibUploadState.idle;
-                }),
-              ),
-              const SizedBox(height: DsSpacing.xl2),
-              Text(apis[selected], style: DsText.h2Semi),
-              const SizedBox(height: DsSpacing.sm),
-              Text(changes[selected], style: DsText.h3Regular),
-              gap(),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: DsColors.neutralBaseWhite,
-                  border: Border.all(color: DsColors.surfaceCoolGrey110),
-                  borderRadius: BorderRadius.circular(DsRadius.md),
+                    gap(),
+                    SelectableText(
+                      "import 'package:global_ds/global_ds.dart';",
+                      style: DsText.s1Regular,
+                    ),
+                    const SizedBox(height: DsSpacing.xl2),
+                    const Text('Patterns are deferred', style: DsText.h3Semi),
+                    const SizedBox(height: DsSpacing.sm),
+                    const Text(
+                      'Address blocks, record editors, review layouts, dialogs and branded sections remain in the product app.',
+                      style: DsText.h3Regular,
+                    ),
+                  ],
                 ),
-                child: KeyedSubtree(key: ValueKey(selected), child: preview()),
               ),
-              gap(),
-              SelectableText(
-                "import 'package:global_ds/global_ds.dart';",
-                style: DsText.s1Regular,
-              ),
-              const SizedBox(height: DsSpacing.xl2),
-              const Text('Patterns are deferred', style: DsText.h3Semi),
-              const SizedBox(height: DsSpacing.sm),
-              const Text(
-                'Address blocks, record editors, review layouts, dialogs and branded sections remain in the product app.',
-                style: DsText.h3Regular,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ),
-  );
+        );
   Widget preview() {
     switch (selected) {
       case 0:

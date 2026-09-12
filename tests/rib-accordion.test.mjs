@@ -159,7 +159,7 @@ test('publishes Accordion and Activity timeline across the catalogue and playgro
   const sandbox = read('js/sandbox.js');
   const app = read('js/app.js');
 
-  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','dropdown','emptystate','info','textfield','label','lists','loadingindicator'\]\)/);
+  assert.match(components, /const PUBLISHED_COMPONENT_IDS = Object\.freeze\(\['accordions','activity-timeline','avatar','breadcrumbs','button','calendar','cards','checkbox','chip','datefield','dropdown','emptystate','info','textfield','label','lists','loadingindicator','otp','radio','segmented','select','stepper','toggle','upload'\]\)/);
   assert.match(app, /PUBLISHED_COMPONENT_IDS\.map\(id =>/);
   assert.match(app, /const compCount = PUBLISHED_COMPONENT_IDS\.length/);
   assert.match(app, /if \(!c \|\| !PUBLISHED_COMPONENT_IDS\.includes\(id\)\)/);
